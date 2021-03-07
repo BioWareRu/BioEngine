@@ -18,6 +18,16 @@ ProjectSection(SolutionItems) = preProject
 	docker-compose.yml = docker-compose.yml
 EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{B9D9FA15-5475-403B-B068-7ADE19C93E85}"
+ProjectSection(SolutionItems) = preProject
+	.github\dependabot.yml = .github\dependabot.yml
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{6FA4AC64-2B2D-4C5C-AAB1-E00DA2E80590}"
+ProjectSection(SolutionItems) = preProject
+	.github\workflows\main.yml = .github\workflows\main.yml
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,5 +69,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{3FD8FE97-672E-4C7A-9C77-0915F007C6ED} = {B1463154-D5B3-496C-9874-F556BB8597BD}
 		{FCC5FF6F-4694-4EBD-980F-FA9DE8404636} = {B1463154-D5B3-496C-9874-F556BB8597BD}
+		{6FA4AC64-2B2D-4C5C-AAB1-E00DA2E80590} = {B9D9FA15-5475-403B-B068-7ADE19C93E85}
 	EndGlobalSection
 EndGlobal
