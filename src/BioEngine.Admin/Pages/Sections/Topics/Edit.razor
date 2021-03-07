@@ -1,0 +1,8 @@
+﻿@page "/Sections/Topics/{topicId:guid}"
+<TopicForm EntityId="TopicId"></TopicForm>
+
+@code
+{
+    [Parameter]
+    public Guid TopicId { get; set; }
+}

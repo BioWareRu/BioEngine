@@ -1,0 +1,14 @@
+@using Sitko.Core.Storage
+@inherits ModalTemplate<BioEngine.Admin.Extensions.StorageExplorerDialogOptions>
+
+@code {
+
+    private Task SelectItemsAsync(StorageItem[] items)
+    {
+        Options.Items = items;
+        return ModalRef.CloseAsync();
+    }
+    
+}
+
+<StorageExplorer Prefix="@Options.Prefix" SelectMode="true" IsMultiple="Options.IsMultiple" OnItemsSelect="@SelectItemsAsync"></StorageExplorer>

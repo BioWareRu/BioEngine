@@ -1,0 +1,8 @@
+﻿@page "/Sections/Developers/{developerId:guid}"
+<DeveloperForm EntityId="DeveloperId"></DeveloperForm>
+
+@code
+{
+    [Parameter]
+    public Guid DeveloperId { get; set; }
+}

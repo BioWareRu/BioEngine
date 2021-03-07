@@ -1,0 +1,8 @@
+﻿@page "/Sections/Games/{gameId:guid}"
+<GameForm EntityId="GameId"></GameForm>
+
+@code
+{
+    [Parameter]
+    public Guid GameId { get; set; }
+}

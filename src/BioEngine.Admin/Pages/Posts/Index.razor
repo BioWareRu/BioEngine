@@ -1,0 +1,71 @@
+﻿@page "/Posts"
+@using BioEngine.Core.Data.Entities
+@inherits BaseListPage<Post, Guid>
+<StickyHeader Title="@GetTitle()">
+    <Button Type="@ButtonType.Primary" OnClick="ToFormPage">
+        Добавить
+    </Button>
+</StickyHeader>
+<div class="site-layout-background" style="padding-top: 24px;">
+    <Table @ref="table"
+            TItem="Post"
+            DataSource="@Items"
+            Total="Count"
+            OnChange="@OnChange"
+            @bind-PageIndex="_pageIndex"
+            @bind-PageSize="_pageSize">
+        <Column Title="Заголовок" @bind-Field="@context.Title" Sortable>
+            @{
+                var url = $"/Posts/{context.Id}";
+            }
+            <a href="@url">@context.Title</a>
+        </Column>
+        <Column Title="Дата" @bind-Field="@context.DateAdded" Format="dd.MM.yyyy hh:mm:ss" Sortable Sort="descend"/>
+        <Column Title="Сайты" @bind-Field="@context.Sites" Sortable>
+            @foreach (var site in context.Sites)
+            {
+                <Tag Color="blue">@site.Title</Tag>            }
+        </Column>
+        <Column Title="Разделы" @bind-Field="@context.Sections" Sortable>
+            @foreach (var postSection in context.Sections)
+            {
+                <Tag Color="cyan">@postSection.Title</Tag>            }
+        </Column>
+        <Column Title="Теги" @bind-Field="@context.Tags" Sortable>
+            @foreach (var tag in context.Tags)
+            {
+                <Tag Color="green">@tag.Title</Tag>            }
+        </Column>
+        <Column Title="Автор" @bind-Field="@context.AuthorId" Sortable>
+            <a target="_blank" href="@context.Author.ProfileUrl">
+                <Avatar Src="@context.Author.PhotoUrl" Alt="@context.Author.Name"/> @context.Author.Name
+            </a>
+        </Column>
+        <ActionColumn>
+            <Space>
+                <SpaceItem>
+                    <Button>
+                        <i class="fas fa-copy" title="Сохранить как шаблон"></i>
+                    </Button>
+                </SpaceItem>
+                <SpaceItem>
+                    <Button Danger>
+                        <i class="fas fa-trash" title="Удалить"></i>
+                    </Button>
+                </SpaceItem>
+            </Space>
+        </ActionColumn>
+    </Table>
+</div>
+
+@code {
+    protected override string GetCreatePageUrl()
+    {
+        return "/Posts/Add";
+    }
+
+    protected override string GetTitle()
+    {
+        return "Посты";
+    }
+}

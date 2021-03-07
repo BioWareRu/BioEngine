@@ -1,0 +1,51 @@
+﻿@page "/Pages"
+@using BioEngine.Core.Data.Entities
+@inherits BaseListPage<Page, Guid>
+
+<StickyHeader Title="@GetTitle()">
+    <Button Type="@ButtonType.Primary" OnClick="ToFormPage">
+        Добавить
+    </Button>
+</StickyHeader>
+<div class="site-layout-background" style="padding-top: 24px;">
+    <Table @ref="            table"
+            TItem="Page"
+            DataSource="@Items"
+            Total="Count"
+            OnChange="@OnChange"
+            @bind-PageIndex="_pageIndex"
+            @bind-PageSize="_pageSize">
+        <Column Title="Название" @bind-Field="@context.Title" Sortable>
+            @{
+                var url = $"/Pages/{context.Id}";
+            }
+            <a href="@url">@context.Title</a>
+        </Column>
+        <Column Title="Дата" @bind-Field="@context.DateAdded" Format="dd.MM.yyyy hh:mm:ss" Sortable Sort="descend"/>
+        <Column Title="Адрес" @bind-Field="@context.Url" Sortable>
+            @context.Url
+        </Column>
+
+        <ActionColumn>
+            <Space>
+                <SpaceItem>
+                    <Button Danger>
+                        <i class="fas fa-trash" title="Удалить"></i>
+                    </Button>
+                </SpaceItem>
+            </Space>
+        </ActionColumn>
+    </Table>
+</div>
+
+@code {
+    protected override string GetCreatePageUrl()
+    {
+        return "/Pages/Add";
+    }
+
+    protected override string GetTitle()
+    {
+        return "Страницы";
+    }
+}

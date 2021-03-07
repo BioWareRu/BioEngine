@@ -1,0 +1,88 @@
+﻿@using BioEngine.Core.Data.Entities
+@using Tag = BioEngine.Core.Data.Entities.Tag
+@inherits BasePublishableFormPage<Post, Guid, PostFormModel>
+@if (IsInitialized)
+{
+    <StickyHeader Title="@(string.IsNullOrEmpty(FormModel.Title) ? "Новый пост" : FormModel.Title)">
+        <Button Type="@ButtonType.Primary" Disabled="!CanSave()" OnClick="Save">
+            Сохранить
+        </Button>
+        @if (!FormModel.GetEntity().IsPublished)
+        {
+            <Button Type="@ButtonType.Dashed" Danger Disabled="!CanPublish()" OnClick="Publish">
+                Опубликовать
+            </Button>
+        }
+        else
+        {
+            <Button Type="@ButtonType.Dashed" Danger Disabled="!CanUnPublish()" OnClick="UnPublish">
+                Спрятать
+            </Button>
+        }
+    </StickyHeader>
+    <div class="site-layout-background" style="padding-top: 24px;">
+        <Form ValidateOnChange="true" Model="FormModel" Loading="IsLoading" OnFinish="OnFinishAsync" @ref="            Form" OnFinishFailed="OnFinishFailedAsync">
+            <Validator>
+                <FluentValidator></FluentValidator>
+                <ChangesDetector FormPage="this"></ChangesDetector>
+            </Validator>
+            <ChildContent>
+                <div>
+                    <Row Gutter="24">
+                        <AntDesign.Col Span="12">
+                            <FormItem Label="Заголовок" LabelColSpan="4"
+                                      WrapperColSpan="20">
+                                <Input @bind-Value="@context.Title" OnkeyUp="TitleChanged"/>
+                            </FormItem>
+                        </AntDesign.Col>
+                        <AntDesign.Col Span="12">
+                            <FormItem Label="Адрес" LabelColSpan="4"
+                                      WrapperColSpan="20">
+                                <Input @bind-Value="@context.Url"/>
+                            </FormItem>
+                        </AntDesign.Col>
+                    </Row>
+                    <Row Gutter="24">
+                        <AntDesign.Col Span="12">
+                            <FormItem Label="Разделы" LabelColSpan="4"
+                                      WrapperColSpan="20">
+                                <Select Mode="multiple"
+                                        DataSource="@Sections"
+                                        @bind-Value="@context.DummySectionId"
+                                        @bind-Values="@context.SectionIds"
+                                        LabelName="@nameof(Section.Title)"
+                                        ValueName="@nameof(Section.Id)"
+                                        Placeholder="Укажите разделы"
+                                        DefaultActiveFirstItem="false"
+                                        TItemValue="Guid"
+                                        TItem="Section"
+                                        EnableSearch
+                                        AllowClear>
+                                </Select>
+                            </FormItem>
+                        </AntDesign.Col>
+                        <AntDesign.Col Span="12">
+                            <FormItem Label="Теги" LabelColSpan="4"
+                                      WrapperColSpan="20">
+                                <Select Mode="multiple"
+                                        DataSource="@Tags"
+                                        @bind-Value="@context.DummyTagId"
+                                        @bind-Values="@context.TagIds"
+                                        LabelName="@nameof(Tag.Title)"
+                                        ValueName="@nameof(Tag.Id)"
+                                        Placeholder="Укажите теги"
+                                        DefaultActiveFirstItem="false"
+                                        TItemValue="Guid"
+                                        TItem="Tag"
+                                        EnableSearch
+                                        AllowClear>
+                                </Select>
+                            </FormItem>
+                        </AntDesign.Col>
+                    </Row>
+                    <BlocksForm Item="FormModel"></BlocksForm>
+                </div>
+            </ChildContent>
+        </Form>
+    </div>
+}

@@ -1,0 +1,43 @@
+﻿@page "/"
+@namespace BioEngine.Admin.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>BioEngine.Admin</title>
+    <base href="~/"/>
+    <link href="~/dist/vendor.css" rel="stylesheet"/>
+    <link href="~/dist/index.css" rel="stylesheet"/>
+    <link href="BioEngine.Admin.styles.css" rel="stylesheet"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700|Roboto+Slab:wght@400;700|Material+Icons&display=swap"/>
+</head>
+<body>
+<component type="typeof(App)" render-mode="ServerPrerendered"/>
+
+<div id="blazor-error-ui">
+    <environment include="Staging,Production">
+        An error has occurred. This application may no longer respond until reloaded.
+    </environment>
+    <environment include="Development">
+        An unhandled exception has occurred. See browser dev tools for details.
+    </environment>
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+</div>
+
+<script src="_framework/blazor.server.js"></script>
+<script src="_content/Microsoft.AspNetCore.Components.Web.Extensions/headManager.js"></script>
+<script src="_content/AntDesign/js/ant-design-blazor.js"></script>
+<script src="~/dist/vendor.js"></script>
+<script src="~/cke/ckeditor.js"></script>
+<script src="~/dist/index.js"></script>
+<script src="https://player.twitch.tv/js/embed/v1.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+version: '2'
+services:
+    postgres:
+        image: postgres:13-alpine
+        ports:
+            - 5432:5432
+        volumes:
+            - postgres:/var/lib/postgresql/data
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_HOST_AUTH_METHOD=trust
+    minio:
+        image: minio/minio
+        command: server /data
+        ports:
+            - 9876:9000
+        volumes:
+            - minio_files:/data
+            - minio_config:/root/.minio
+        environment:
+            - MINIO_ACCESS_KEY=2zdj83LPN4pTCREJ
+            - MINIO_SECRET_KEY=rQPjWQqtFqJbH3furiNc2i9vrpBYJint
+volumes:
+    postgres:
+    minio_files:
+    minio_config:

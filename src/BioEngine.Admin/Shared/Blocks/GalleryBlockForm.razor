@@ -1,0 +1,67 @@
+﻿@using Sitko.Core.Storage
+@using BioEngine.Core
+@using BioEngine.Core.Data.Entities.Blocks
+@using BioEngine.Admin.Extensions
+@using BioEngine.Core.Extensions
+@inject IStorage<BRCStorageConfig> Storage
+@inject ModalService ModalService
+@inherits BaseBlockForm
+<div class="storageItems">
+
+    @if (Block.Data.Pictures.Any())
+    {
+        @foreach (var picture in Block.Data.Pictures)
+        {
+            <div class="item">
+                <img src="@(Storage.PublicUri(picture).ToString())" alt="@picture.FileName"/>
+                <span class="caption">
+                    <p>@picture.FileName</p>
+                    <a href="#" @onclick="@(() => DeleteItem(picture))" @onclick:preventDefault><i class="fas fa-trash"></i> Удалить</a>
+                </span>
+            </div>
+        }
+        <div class="item">
+            <Button OnClick="@ShowStorageDialogAsync">+</Button>
+        </div>
+    }
+    else
+    {
+        <Button Size="large" OnClick="@ShowStorageDialogAsync">Выбрать картинки</Button>    }
+</div>
+<ValidationMessage For="@(() => Block.Data.Pictures)"></ValidationMessage>
+
+@code
+{
+    [Parameter]
+    public GalleryBlock Block { get; set; }
+
+    public Task ShowStorageDialogAsync()
+    {
+        return ModalService.SelectStorageItemsAsync(items =>
+        {
+            if (items.Length > 0)
+            {
+                var newList = new HashSet<StorageItem>(Block.Data.Pictures);
+                foreach (var item in items)
+                {
+                    newList.Add(item);
+                }
+                Block.Data.Pictures = new ValueCollection<StorageItem>(newList.ToList());
+                NotifyChange();
+            }
+        }, isMultiple: true);
+    }
+
+    public void DeleteItem(StorageItem item)
+    {
+        var newList = new HashSet<StorageItem>(Block.Data.Pictures);
+        newList.Remove(item);
+        Block.Data.Pictures = new ValueCollection<StorageItem>(newList.ToList());
+        NotifyChange();
+    }
+
+    protected override FieldIdentifier CreateFieldIdentifier()
+    {
+        return FieldIdentifier.Create(() => Block.Data.Pictures);
+    }
+}

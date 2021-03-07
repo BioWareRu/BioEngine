@@ -1,0 +1,19 @@
+@using System.ComponentModel.DataAnnotations
+@inherits ConfirmTemplate<string, string>
+
+<div>
+    <Text>Новая папка</Text>
+    <Input @bind-Value="FolderName" Placeholder="Введите имя папки"/>
+</div>
+
+@code {
+
+    [Required]
+    public string FolderName { get; set; }
+
+    public override async Task OkAsync(ModalClosingEventArgs args)
+    {
+        await OnOkAsync(FolderName);
+        await base.OkAsync(args);
+    }
+}

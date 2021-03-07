@@ -1,0 +1,104 @@
+@inherits LayoutComponentBase
+
+<Layout>
+    <Sider Style="overflow: auto;height: 100vh;position: fixed;left: 0;">
+        <div class="logo">
+            <a href="/">BRCGames</a>
+        </div>
+        <Menu Theme="MenuTheme.Dark" Mode="MenuMode.Inline">
+            <MenuItem RouterLink="/" RouterMatch="NavLinkMatch.All">
+                <Icon Type="pie-chart" Theme="outline"/>
+                <span>Dashboard</span>
+            </MenuItem>
+            <SubMenu>
+                <TitleTemplate>
+                    <i class="fas fa-edit"></i><span>Посты</span>
+                </TitleTemplate>
+                <ChildContent>
+                    <MenuItem RouterLink="/Posts" RouterMatch="NavLinkMatch.All">
+                        <i class="fas fa-list"></i>
+                        <span>Список</span>
+                    </MenuItem>
+                    <MenuItem RouterLink="/Posts/Add" RouterMatch="NavLinkMatch.All">
+                        <i class="fas fa-plus"></i>
+                        <span>Добавить</span>
+                    </MenuItem>
+                </ChildContent>
+            </SubMenu>
+            <SubMenu>
+                <TitleTemplate>
+                    <i class="fas fa-th"></i><span>Разделы</span>
+                </TitleTemplate>
+                <ChildContent>
+                    <MenuItem RouterLink="/Sections/Developers" RouterMatch="NavLinkMatch.All">
+                        <i class="fas fa-users"></i>
+                        <span>Разработчики</span>
+                    </MenuItem>
+                    <MenuItem RouterLink="/Sections/Games" RouterMatch="NavLinkMatch.All">
+                        <i class="fas fa-gamepad"></i>
+                        <span>Игры</span>
+                    </MenuItem>
+                    <MenuItem RouterLink="/Sections/Topics" RouterMatch="NavLinkMatch.All">
+                        <i class="fas fa-comments"></i>
+                        <span>Темы</span>
+                    </MenuItem>
+                </ChildContent>
+            </SubMenu>
+            <SubMenu>
+                <TitleTemplate>
+                    <i class="fas fa-file"></i><span>Страницы</span>
+                </TitleTemplate>
+                <ChildContent>
+                    <MenuItem RouterLink="/Pages" RouterMatch="NavLinkMatch.All">
+                        <i class="fas fa-list"></i>
+                        <span>Список</span>
+                    </MenuItem>
+                    <MenuItem RouterLink="/Pages/Add" RouterMatch="NavLinkMatch.All">
+                        <i class="fas fa-plus"></i>
+                        <span>Добавить</span>
+                    </MenuItem>
+                </ChildContent>
+            </SubMenu>
+            <SubMenu>
+                <TitleTemplate>
+                    <i class="fas fa-globe"></i><span>Сайты</span>
+                </TitleTemplate>
+                <ChildContent>
+                    <MenuItem RouterLink="/Sites" RouterMatch="NavLinkMatch.All">
+                        <i class="fas fa-list"></i>
+                        <span>Список</span>
+                    </MenuItem>
+                    <MenuItem RouterLink="/Sites/Add" RouterMatch="NavLinkMatch.All">
+                        <i class="fas fa-plus"></i>
+                        <span>Добавить</span>
+                    </MenuItem>
+                </ChildContent>
+            </SubMenu>
+            <SubMenu>
+                <TitleTemplate>
+                    <i class="fas fa-tags"></i><span>Теги</span>
+                </TitleTemplate>
+                <ChildContent>
+                    <MenuItem RouterLink="/Tags" RouterMatch="NavLinkMatch.All">
+                        <i class="fas fa-list"></i>
+                        <span>Список</span>
+                    </MenuItem>
+                    <MenuItem RouterLink="/Tags/Add" RouterMatch="NavLinkMatch.All">
+                        <i class="fas fa-plus"></i>
+                        <span>Добавить</span>
+                    </MenuItem>
+                </ChildContent>
+            </SubMenu>
+            <MenuItem RouterLink="/Storage" RouterMatch="NavLinkMatch.All">
+                <i class="fas fa-database"></i>
+                <span>Хранилище файлов</span>
+            </MenuItem>
+        </Menu>
+    </Sider>
+    <Layout Class="site-layout" Style=" margin-left: 200px">
+        <Content Style="margin: 24px 16px 0; overflow: initial; ">
+            @Body
+        </Content>
+        <Footer Style=" text-align: center;">BioWare Russian Community ©@DateTimeOffset.UtcNow.Year Created by SonicGD</Footer>
+    </Layout>
+</Layout>

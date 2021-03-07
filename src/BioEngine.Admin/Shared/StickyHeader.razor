@@ -1,0 +1,20 @@
+﻿<div class="ant-page-header" style="position: sticky; top: 0; z-index:999">
+    <div class="ant-page-header-heading">
+        <div class="ant-page-header-heading-left">
+            <span class="ant-page-header-heading-title">@Title</span>
+        </div>
+        <div class="ant-page-header-heading-right">
+            @ChildContent
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+}

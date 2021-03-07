@@ -1,0 +1,26 @@
+﻿@inherits BaseFormPage<BioEngine.Core.Data.Entities.Site, Guid, SiteFormModel>
+
+@if (IsInitialized)
+{
+    <StickyHeader Title="@(string.IsNullOrEmpty(FormModel.Title) ? "Новый сайт" : FormModel.Title)">
+        <Button Type="@ButtonType.Primary" Disabled="!CanSave()" OnClick="Save">
+            Сохранить
+        </Button>
+    </StickyHeader>
+    <div class="site-layout-background" style="padding-top: 24px;">
+        <Form ValidateOnChange="true" Model="FormModel" Loading="IsLoading" OnFinish="OnFinishAsync" @ref="            Form" OnFinishFailed="OnFinishFailedAsync">
+            <Validator>
+                <FluentValidator></FluentValidator>
+                <ChangesDetector FormPage="this"></ChangesDetector>
+            </Validator>
+            <ChildContent>
+                <FormItem Label="Заголовок">
+                    <Input @bind-Value="@context.Title"/>
+                </FormItem>
+                <FormItem Label="Адрес">
+                    <Input @bind-Value="@context.Url"/>
+                </FormItem>
+            </ChildContent>
+        </Form>
+    </div>
+}

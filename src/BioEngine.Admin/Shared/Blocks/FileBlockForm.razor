@@ -1,0 +1,23 @@
+﻿@using Sitko.Core.Storage
+@using BioEngine.Core
+@using BioEngine.Core.Data.Entities.Blocks
+@inject IStorage<BRCStorageConfig> Storage
+@inject ModalService ModalService
+@using BioEngine.Admin.Extensions
+@using BioEngine.Core.Extensions
+@using System.IO
+@inherits BaseBlockForm
+
+<FileInput @bind-Value="Block.Data.File"></FileInput>
+<ValidationMessage For="@(() => Block.Data.File)"></ValidationMessage>
+
+@code
+{
+    [Parameter]
+    public FileBlock Block { get; set; }
+
+    protected override FieldIdentifier CreateFieldIdentifier()
+    {
+        return FieldIdentifier.Create(() => Block.Data.File);
+    }
+}

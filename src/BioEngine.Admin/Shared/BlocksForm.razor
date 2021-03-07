@@ -1,0 +1,158 @@
+﻿@using System.Collections.ObjectModel
+@using BioEngine.Core.Data.Entities.Abstractions
+@using BioEngine.Core.Data.Entities.Blocks
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@inject IJSRuntime JsRuntime
+
+<div id="blocks-@Item.Id">
+    @foreach (var block in Blocks)
+    {
+        var className = $"block-form block-{block.GetContentBlockTypeTitle().ToLowerInvariant()}";
+        <div class="block-row" @key="block.Id">
+            <div style="width:30px; text-align: center">
+                <i class="@block.GetIcon()" style="color: #999;"></i>
+            </div>
+            <div style="flex: 1; padding: 0 10px;">
+                <Dropdown Class="add-block add-block-top" Trigger="@(new[] {AntDesign.TriggerType.Click})">
+                    <Overlay>
+                        <Menu>
+                            @foreach (var descriptor in ContentBlock.BlockDescriptors)
+                            {
+                                <AntDesign.MenuItem OnClick="@(() => AddBlock(descriptor.Key, block, false))">
+                                    <i class="@descriptor.Value.Icon"></i> @descriptor.Value.Title
+                                </AntDesign.MenuItem>                            }
+                        </Menu>
+                    </Overlay>
+                    <ChildContent>
+                        <Button Size="small" Shape="circle">
+                            <i class="fas fa-plus"></i>
+                        </Button>
+                    </ChildContent>
+                </Dropdown>
+                <Card Class="@className">
+                    <Body>
+                    <BlockForm Block="block"></BlockForm>
+                    </Body>
+                </Card>
+                <Dropdown Class="add-block add-block-bottom" Trigger="@(new[] {AntDesign.TriggerType.Click})">
+                    <Overlay>
+                        <Menu>
+                            @foreach (var descriptor in ContentBlock.BlockDescriptors)
+                            {
+                                <AntDesign.MenuItem OnClick="@(() => AddBlock(descriptor.Key, block))">
+                                    <i class="@descriptor.Value.Icon"></i> @descriptor.Value.Title
+                                </AntDesign.MenuItem>                            }
+                        </Menu>
+                    </Overlay>
+                    <ChildContent>
+                        <Button Size="small" Shape="circle">
+                            <i class="fas fa-plus"></i>
+                        </Button>
+                    </ChildContent>
+                </Dropdown>
+            </div>
+            <div class="block-controls">
+                <Button Size="small" Disabled="!CanMoveBlockUp(block)" OnClick="@(() => MoveBlockUp(block))">
+                    <i class="fas fa-arrow-up"></i>
+                </Button>
+                <Popconfirm Placement="@PlacementType.Left" Title="Вы действительно хотите удалить это блок?"
+                            OnConfirm="@(() => DeleteBlockAsync(block))"
+                            OkText="Удалить"
+                            CancelText="Нет">
+                    <Button Size="small">
+                        <i class="fas fa-trash"></i>
+                    </Button>
+                </Popconfirm>
+                <Button Size="small" Disabled="!CanMoveBlockDown(block)" OnClick="@(() => MoveBlockDown(block))">
+                    <i class="fas fa-arrow-down"></i>
+                </Button>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+
+    [Parameter]
+    public IBlocksItem Item { get; set; }
+
+    private ObservableCollection<ContentBlock> Blocks;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        if (!Item.Blocks.Any())
+        {
+            Item.Blocks.Add(new TextBlock());
+        }
+        Blocks = new ObservableCollection<ContentBlock>(Item.Blocks.OrderBy(b => b.Position));
+    }
+
+    void AddBlock(ContentBlockType key, ContentBlock? neighbor = null, bool after = true)
+    {
+        var block = ContentBlock.CreateBlock(key);
+        if (block != null)
+        {
+            block.Id = Guid.NewGuid();
+            var position = 0;
+            if (neighbor != null)
+            {
+                position = after ? neighbor.Position + 1 : neighbor.Position;
+            }
+            Blocks.Insert(position, block);
+            FillPositions();
+        }
+    }
+
+    private bool CanMoveBlockUp(ContentBlock block)
+    {
+        return block.Position > 0;
+    }
+
+    private bool CanMoveBlockDown(ContentBlock block)
+    {
+        return block.Position < Blocks.Count - 1;
+    }
+
+    private void MoveBlockUp(ContentBlock block)
+    {
+        if (CanMoveBlockUp(block))
+        {
+            UpdateIndex(block.Position - 1, block.Position);
+        }
+    }
+
+    private void MoveBlockDown(ContentBlock block)
+    {
+        if (CanMoveBlockDown(block))
+        {
+            UpdateIndex(block.Position + 1, block.Position);
+        }
+    }
+
+    private void UpdateIndex(int newIndex, int oldIndex)
+    {
+        Blocks.Move(oldIndex, newIndex);
+        FillPositions();
+    }
+
+    private void FillPositions()
+    {
+        foreach (var block in Blocks)
+        {
+            block.Position = Blocks.IndexOf(block);
+        }
+        Item.Blocks = Blocks.ToList();
+    }
+
+    private async Task DeleteBlockAsync(ContentBlock block)
+    {
+        Blocks.Remove(block);
+        if (!Blocks.Any())
+        {
+            AddBlock(ContentBlockType.Text);
+        }
+        FillPositions();
+    }
+
+}

@@ -1,0 +1,22 @@
+//@import "~startbootstrap-sb-admin/src/scss/variables";
+//@import "~bootstrap/scss/bootstrap";
+//@import "~material-dashboard-dark-edition/assets/scss/material-dashboard";
+//@import "~startbootstrap-sb-admin/src/scss/global";
+
+// Layout
+//@import "~startbootstrap-sb-admin/src/scss/layout/authentication.scss";
+//@import "~startbootstrap-sb-admin/src/scss/layout/dashboard-default.scss";
+//@import "~startbootstrap-sb-admin/src/scss/layout/dashboard-fixed.scss";
+//@import "~startbootstrap-sb-admin/src/scss/layout/error.scss";
+
+// Navigation
+//@import "~startbootstrap-sb-admin/src/scss/navigation/nav.scss";
+//@import "~startbootstrap-sb-admin/src/scss/navigation/topnav.scss";
+//@import "~startbootstrap-sb-admin/src/scss/navigation/sidenav/sidenav.scss";
+//@import "~startbootstrap-sb-admin/src/scss/navigation/sidenav/sidenav-dark.scss";
+//@import "~startbootstrap-sb-admin/src/scss/navigation/sidenav/sidenav-light.scss";
+
+$fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
+@import "~@fortawesome/fontawesome-free/scss/fontawesome";
+@import "~@fortawesome/fontawesome-free/scss/solid";
+@import "~@fortawesome/fontawesome-free/scss/brands";

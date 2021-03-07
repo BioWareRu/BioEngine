@@ -1,0 +1,39 @@
+﻿@typeparam TItem
+@inherits BaseListPage<TItem, Guid>
+
+<StickyHeader Title="@GetTitle()">
+    <Button Type="@ButtonType.Primary" OnClick="ToFormPage">
+        Добавить
+    </Button>
+</StickyHeader>
+<div class="site-layout-background" style="padding-top: 24px;">
+    <Table @ref="            table"
+            TItem="TItem"
+            DataSource="@Items"
+            Total="Count"
+            OnChange="@OnChange"
+            @bind-PageIndex="_pageIndex"
+            @bind-PageSize="_pageSize">
+        <Column Title="Заголовок" @bind-Field="@context.Title" Sortable>
+            <a href="@GetUrl(context)">@context.Title</a>
+        </Column>
+        <Column Title="Тип" @bind-Field="@context.Type" Sortable>
+            @context.Type
+        </Column>
+        <Column Title="Дата" @bind-Field="@context.DateAdded" Format="dd.MM.yyyy hh:mm:ss" Sortable Sort="descend"/>
+        <Column Title="Сайты" @bind-Field="@context.Sites" Sortable>
+            @foreach (var site in context.Sites)
+            {
+                <Tag Color="blue">@site.Title</Tag>            }
+        </Column>
+        <ActionColumn>
+            <Space>
+                <SpaceItem>
+                    <Button Danger>
+                        <i class="fas fa-trash" title="Удалить"></i>
+                    </Button>
+                </SpaceItem>
+            </Space>
+        </ActionColumn>
+    </Table>
+</div>

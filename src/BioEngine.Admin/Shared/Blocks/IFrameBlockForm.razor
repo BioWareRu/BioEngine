@@ -1,0 +1,20 @@
+﻿@using BioEngine.Core.Data.Entities.Blocks
+<FormItem Label="Ссылка">
+    <Input @bind-Value="@Block.Data.Src"/>
+</FormItem>
+@if (!string.IsNullOrEmpty(Block.Data.Src))
+{
+    <div style="text-align: center">
+        <iframe frameborder="0"
+                allowfullscreen=""
+                width="560" height="315"
+                src="@Block.Data.Src">
+        </iframe>
+    </div>
+}
+
+@code
+{
+    [Parameter]
+    public IframeBlock Block { get; set; }
+}

@@ -1,0 +1,51 @@
+﻿@using BioEngine.Admin.Extensions
+@using BioEngine.Core
+@using BioEngine.Core.Extensions
+@using Sitko.Core.Storage
+@inherits Input<Sitko.Core.Storage.StorageItem>
+@inject IStorage<BRCStorageConfig> Storage
+@inject ModalService ModalService
+
+<div class="storageItems">
+    @if (CurrentValue != null)
+    {
+        <div class="item">
+            @if (CurrentValue.IsImage())
+            {
+                <img src="@(Storage.PublicUri(CurrentValue).ToString())" alt="@CurrentValue.FileName"/>
+            }
+            else
+            {
+                <div><a href="@(Storage.PublicUri(CurrentValue).ToString())" target="_blank">@CurrentValue.FileName</a></div>
+                <div>@CurrentValue.HumanSize</div>
+            }
+            <span class="caption">
+                <p>@CurrentValue.FileName</p>
+                <a href="#" @onclick="@ResetValue" @onclick:preventDefault><i class="fas fa-trash"></i> Удалить</a>
+            </span>
+        </div>
+    }
+    else
+    {
+        <Button Size="large" OnClick="@ShowStorageDialogAsync">Выбрать файл</Button>
+    }
+</div>
+
+@code
+{
+    private void ResetValue()
+    {
+        CurrentValue = null;
+    }
+
+    private Task ShowStorageDialogAsync()
+    {
+        return ModalService.SelectStorageItemsAsync(items =>
+        {
+            if (items.Length > 0)
+            {
+                CurrentValue = items.First();
+            }
+        });
+    }
+}

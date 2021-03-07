@@ -1,0 +1,8 @@
+﻿@page "/Pages/{pageId:guid}"
+<PageForm EntityId="PageId"></PageForm>
+
+@code
+{
+    [Parameter]
+    public Guid PageId { get; set; }
+}

@@ -1,0 +1,8 @@
+﻿@page "/Tags/{tagId:guid}"
+<TagForm EntityId="TagId"></TagForm>
+
+@code
+{
+    [Parameter]
+    public Guid TagId { get; set; }
+}
