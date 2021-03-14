@@ -15,7 +15,7 @@
 @inject NavigationManager NavigationManager
 
 @{
-    var title = $"{CurrentPath} / Файлы / BRC Admin";
+    var title = $"{(CurrentPath == "/" ? "Начало" : CurrentPath)} / Файлы / BRC Admin";
 }
 <Microsoft.AspNetCore.Components.Web.Extensions.Head.Title value="@title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
 
