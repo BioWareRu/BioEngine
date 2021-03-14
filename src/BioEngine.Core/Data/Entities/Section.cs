@@ -20,11 +20,25 @@ namespace BioEngine.Core.Data.Entities
         public List<ContentBlock> Blocks { get; set; } = new();
         public List<Post> Posts { get; set; } = new();
         public List<Site> Sites { get; set; } = new();
+
+        public abstract void SetData(object data);
     }
 
     public abstract class Section<T> : Section where T : SectionData, new()
     {
         [Column(TypeName = "jsonb")] public virtual T Data { get; set; } = new();
+
+        public override void SetData(object data)
+        {
+            if (data is T typedData)
+            {
+                Data = typedData;
+            }
+            else
+            {
+                throw new ArgumentException($"Wrong data type {data.GetType()} for entity {this}", nameof(data));
+            }
+        }
     }
 
     public abstract record SectionData

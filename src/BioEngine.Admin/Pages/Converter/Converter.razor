@@ -1,0 +1,68 @@
+﻿@page "/Converter"
+@using Microsoft.Extensions.DependencyInjection
+@using BioEngine.Admin.Old
+@inherits BasePage
+@{
+    var title = "Конвертер / BRC Admin";
+}
+<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title value="@title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
+<StickyHeader Title="Конвертер"></StickyHeader>
+@if (IsInitialized)
+{
+    <div class="site-layout-background" style="padding-top: 24px;">
+        <h3>Сайты</h3>
+        <Button Danger OnClick="ConvertSitesAsync">Конвертировать</Button>
+    </div>
+
+    <div class="site-layout-background" style="padding-top: 24px;">
+        <h3>Разделы</h3>
+        <Button Danger OnClick="ConvertSectionsAsync">Конвертировать</Button>
+    </div>
+    <div class="site-layout-background" style="padding-top: 24px;">
+        <h3>Теги</h3>
+        <Button Danger OnClick="ConvertTagsAsync">Конвертировать</Button>
+    </div>
+    <div class="site-layout-background" style="padding-top: 24px;">
+        <h3>Посты</h3>
+        <Button Danger OnClick="ConvertPostsAsync">Конвертировать</Button>
+    </div>
+}
+
+@code {
+    private BrcConverter _converter;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _converter = ScopedServices.GetRequiredService<BrcConverter>();
+        await base.OnInitializedAsync();
+    }
+
+    private async Task ConvertSitesAsync()
+    {
+        StartLoading();
+        await _converter.ConvertSitesAsync();
+        StopLoading();
+    }
+
+    private async Task ConvertSectionsAsync()
+    {
+        StartLoading();
+        await _converter.ConvertSectionsAsync();
+        StopLoading();
+    }
+
+    private async Task ConvertTagsAsync()
+    {
+        StartLoading();
+        await _converter.ConvertTagsAsync();
+        StopLoading();
+    }
+
+    private async Task ConvertPostsAsync()
+    {
+        StartLoading();
+        await _converter.ConvertPostsAsync();
+        StopLoading();
+    }
+
+}
