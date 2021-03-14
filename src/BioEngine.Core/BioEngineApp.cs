@@ -66,7 +66,7 @@ namespace BioEngine.Core
                 .AddModule<EFRepositoriesModule<BioEngineApp>, EFRepositoriesModuleConfig>(
                     (configuration, environment, moduleConfig) =>
                     {
-                        moduleConfig.EnableThreadSafeOperations = true;
+                        moduleConfig.EnableThreadSafeOperations = false;
                     });
         }
 
