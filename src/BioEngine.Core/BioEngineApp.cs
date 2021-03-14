@@ -112,6 +112,7 @@ namespace BioEngine.Core
                     moduleConfig.Host = configuration["BE_IMGPROXY_HOST"];
                     moduleConfig.Key = configuration["BE_IMGPROXY_KEY"];
                     moduleConfig.Salt = configuration["BE_IMGPROXY_SALT"];
+                    moduleConfig.EncodeUrls = true;
                 });
         }
     }
