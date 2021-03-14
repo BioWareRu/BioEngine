@@ -39,18 +39,18 @@ namespace BioEngine.Admin.Extensions
             var parts = new List<(string path, string name)> {("/", "Начало")};
             if (!string.IsNullOrEmpty(path) && path != "/")
             {
-                string[] directories = path.Split(Path.DirectorySeparatorChar);
+                string[] directories = path.Split('/');
 
                 string previousEntry = string.Empty;
                 foreach (string dir in directories)
                 {
-                    string newEntry = previousEntry + Path.DirectorySeparatorChar + dir;
+                    string newEntry = previousEntry + '/' + dir;
                     if (!string.IsNullOrEmpty(newEntry))
                     {
-                        if (!newEntry.Equals(Convert.ToString(Path.DirectorySeparatorChar),
+                        if (!newEntry.Equals(Convert.ToString('/'),
                             StringComparison.OrdinalIgnoreCase))
                         {
-                            parts.Add((newEntry.Trim(Path.DirectorySeparatorChar),
+                            parts.Add((newEntry.Trim('/'),
                                 dir.Replace("/", "")));
                             previousEntry = newEntry;
                         }

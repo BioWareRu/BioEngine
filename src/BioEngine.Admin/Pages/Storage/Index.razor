@@ -1,5 +1,11 @@
 @page "/Storage"
+@page "/Storage/{*storagePath}"
 <PageHeader Title="Файловый менеджер"></PageHeader>
 <div class="site-layout-background" style="padding-top: 24px;">
-    <StorageExplorer Prefix="storage"></StorageExplorer>
+    <StorageExplorer Prefix="storage" CurrentPath="@StoragePath" UseNavigation="true"></StorageExplorer>
 </div>
+
+@code {
+    [Parameter]
+    public string StoragePath { get; set; }
+}

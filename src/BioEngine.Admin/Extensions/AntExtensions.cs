@@ -13,7 +13,7 @@ namespace BioEngine.Admin.Extensions
         public static IOrderedQueryable<TItem> ThenSort<TItem>(this ITableSortModel sortModel,
             IOrderedQueryable<TItem> source)
         {
-            if (sortModel.Sort == SortDirection.None.Name)
+            if (sortModel.Sort is null)
             {
                 return source;
             }
@@ -26,7 +26,7 @@ namespace BioEngine.Admin.Extensions
         }
 
         public static IOrderedQueryable<TItem> ThenSortByField<TItem, TField>(ITableSortModel sortModel,
-            IOrderedQueryable<TItem> source, MethodInfo propertyInfo)
+            IOrderedQueryable<TItem> source, PropertyInfo propertyInfo)
         {
             var sourceExpression = Expression.Parameter(typeof(TItem));
             var propertyExpression =

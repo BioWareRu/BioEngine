@@ -2,6 +2,7 @@
 @using Sitko.Core.Storage.ImgProxy
 @using System.IO
 @using System.Linq.Expressions
+@using System.Runtime.Intrinsics
 @using AntDesign.TableModels
 @using BioEngine.Admin.Extensions
 @using BioEngine.Core
@@ -11,6 +12,7 @@
 @inject IImgProxyUrlGenerator<BRCStorageConfig> ImgProxyUrlGenerator
 @inject ModalService ModalService
 @inject IJSRuntime JsRuntime
+@inject NavigationManager NavigationManager
 
 @{
     var title = $"{CurrentPath} / Файлы / BRC Admin";
@@ -27,7 +29,15 @@
         else
         {
             <AntDesign.BreadcrumbItem>
-                <a href="#" @onclick="@(() => LoadDataAsync(part.path))" @onclick:preventDefault>@part.name</a>
+                @if (UseNavigation)
+                {
+                    <a href="@GetUrlPath("/Storage", part.path)">@part.name</a>
+                }
+                else
+                {
+                    <a href="#" @onclick="@(() => LoadDataAsync(part.path))" @onclick:preventDefault>@part.name</a>
+                }
+
             </AntDesign.BreadcrumbItem>
         }
     }
@@ -57,14 +67,7 @@
                 var isEnabled = _selectedRows.Any();
                 if (isEnabled)
                 {
-                    if (IsMultiple)
-                    {
-                        text = $"Выбрать файлы ({_selectedRows.Count()})";
-                    }
-                    else
-                    {
-                        text = "Выбрать файл";
-                    }
+                    text = IsMultiple ? $"Выбрать файлы ({_selectedRows.Count()})" : "Выбрать файл";
                 }
                 <AntDesign.Button Type="@ButtonType.Primary" Disabled="!isEnabled" OnClick="@SelectItemsAsync">@text</AntDesign.Button>
             }
@@ -109,20 +112,27 @@
                 }
             }
         </Column>
-        <Column Title="Название" @bind-Field="@context.Name" Sortable>
+        <Column Title="Название" @bind-Field="@context.Name" Sortable SorterCompare="(a, b) => 0">
             @if (context.Type == StorageNodeType.Directory)
             {
-                <a href="#" @onclick="@(() => NavigateAsync(context.Name))" @onclick:preventDefault>@context.Name</a>
+                if (UseNavigation)
+                {
+                    <a href="@GetUrlPath(null, context.Name)">@context.Name</a>
+                }
+                else
+                {
+                    <a href="#" @onclick="@(() => NavigateAsync(context.Name))" @onclick:preventDefault>@context.Name</a>
+                }
             }
             else
             {
                 <a target="_blank" href="@Storage.PublicUri(context.StorageItem!).ToString()">@context.Name</a>
             }
         </Column>
-        <Column Title="Размер" @bind-Field="@context.Size" Sortable>
+        <Column Title="Размер" @bind-Field="@context.Size" Sortable SorterCompare="(a, b) => 0">
             @context.HumanSize
         </Column>
-        <Column Title="Дата" @bind-Field="@context.LastModified" Format="dd.MM.yyyy HH:mm:ss" Sortable DefaultSortOrder="SortDirection.Descending"/>
+        <Column Title="Дата" @bind-Field="@context.LastModified" Format="dd.MM.yyyy HH:mm:ss" Sortable SorterCompare="(a, b) => 0" DefaultSortOrder="SortDirection.Descending"/>
     </Table>
 </Spin>
 
@@ -133,7 +143,6 @@
     protected int _pageSize = 20;
     protected int Count;
     public IEnumerable<StorageNode> Items { get; set; } = new StorageNode[0];
-    public string CurrentPath { get; set; }
     private IEnumerable<StorageNode> _selectedRows = new StorageNode[0];
     private (string path, string name)[] Parts => StorageUploadExtensions.GetPathParts(CurrentPath);
 
@@ -141,32 +150,33 @@
     public string Prefix { get; set; }
 
     [Parameter]
+    public string CurrentPath { get; set; }
+
+    [Parameter]
+    public bool UseNavigation { get; set; }
+
+    [Parameter]
     public bool SelectMode { get; set; }
 
     [Parameter]
     public bool IsMultiple { get; set; }
 
-    private async Task LoadDataAsync(string path)
+    protected override async Task OnParametersSetAsync()
     {
-        _loading = true;
-        CurrentPath = path;
-        await LoadData();
-        _loading = false;
-        StateHasChanged();
+        await base.OnParametersSetAsync();
+        await LoadDataAsync(string.IsNullOrEmpty(CurrentPath) ? "/" : CurrentPath);
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    private async Task LoadDataAsync(string path)
     {
-        await base.OnAfterRenderAsync(firstRender);
-        if (!firstRender)
-        {
-            await LoadDataAsync("/");
-        }
+        CurrentPath = path;
+        await LoadData();
     }
 
     private Task NavigateAsync(string path)
     {
-        return LoadDataAsync(Path.Combine(CurrentPath, path));
+        var currentPath = Path.Combine(CurrentPath, path);
+        return LoadDataAsync(currentPath);
     }
 
     async Task UploadFileAsync(InputFileChangeEventArgs args)
@@ -188,7 +198,7 @@
         {
             path = path.Substring(1);
         }
-        return Path.Combine(Prefix, path);
+        return GetUrlPath(Prefix, path);
     }
 
     private Task OpenFilesDialogAsync()
@@ -212,7 +222,14 @@
         {
             if (!string.IsNullOrEmpty(result))
             {
-                await NavigateAsync(result);
+                if (UseNavigation)
+                {
+                    NavigationManager.NavigateTo(GetUrlPath(null, result));
+                }
+                else
+                {
+                    await NavigateAsync(result);
+                }
             }
         };
     }
@@ -250,7 +267,7 @@
         await LoadData(queryModel.PageSize * (queryModel.PageIndex - 1), queryModel.PageSize, queryModel.SortModel);
     }
 
-    protected async Task LoadData(int skip = 0, int take = 20, IList<ITableSortModel> sortModel = null)
+    private async Task LoadData(int skip = 0, int take = 20, IList<ITableSortModel> sortModel = null)
     {
         _loading = true;
         _items = await Storage.GetDirectoryContentsAsync(GetStoragePath(CurrentPath));
@@ -260,15 +277,16 @@
 
         if (sortModel != null)
         {
-            foreach (var sort in sortModel.Where(s => s.Sort != SortDirection.None.Name))
+            foreach (var sort in sortModel.Where(s => s.Sort is not null))
             {
                 query = sort.ThenSort(query);
             }
         }
 
-        Items = query.Take(take).Skip(skip).ToList();
+        Items = query.Skip(skip).Take(take).ToList();
 
         _loading = false;
+        StateHasChanged();
     }
 
     private async Task RefreshMetadataAsync()
@@ -276,6 +294,20 @@
         _loading = true;
         await Storage.RefreshDirectoryContentsAsync(GetStoragePath(CurrentPath));
         await LoadData();
+    }
+
+    private string GetUrlPath(string? baseUrl, string path)
+    {
+        if (baseUrl is null)
+        {
+            var uri = new Uri(NavigationManager.Uri);
+            baseUrl = uri.AbsolutePath;
+        }
+        if (path == "/")
+        {
+            return baseUrl;
+        }
+        return Path.Combine(baseUrl, path).Replace("\\", "/").Replace("//", "/");
     }
 
 }
