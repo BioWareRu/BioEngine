@@ -95,7 +95,7 @@ namespace BioEngine.Core
                 moduleConfig.SecretKey = configuration["BE_STORAGE_S3_SECRET_KEY"];
                 moduleConfig.AccessKey = configuration["BE_STORAGE_S3_ACCESS_KEY"];
                 moduleConfig.Region = RegionEndpoint.GetBySystemName(configuration["BE_STORAGE_S3_REGION"]);
-                moduleConfig.BucketPath = "storage";
+                moduleConfig.Prefix = configuration["BE_STORAGE_S3_PREFIX"];
 
                 moduleConfig
                     .UseMetadata<PostgresStorageMetadataProvider<BRCStorageConfig>,
@@ -125,7 +125,6 @@ namespace BioEngine.Core
         public string AccessKey { get; set; } = string.Empty;
         public string SecretKey { get; set; } = String.Empty;
         public RegionEndpoint Region { get; set; }
-        public string BucketPath { get; set; }
         public override string Name { get; set; }
     }
 }
