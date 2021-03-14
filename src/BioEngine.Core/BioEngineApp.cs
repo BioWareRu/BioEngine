@@ -44,6 +44,7 @@ namespace BioEngine.Core
             base.ConfigureLogging(loggerConfiguration, logLevelSwitcher);
             ConfigureLogLevel("Microsoft.AspNetCore", LogEventLevel.Warning);
             ConfigureLogLevel("Sitko.Core.Search.ElasticSearch.ElasticSearcher", LogEventLevel.Warning);
+            ConfigureLogLevel("Microsoft.EntityFrameworkCore", LogEventLevel.Warning);
         }
 
         public BioEngineApp AddPostgresDb(bool enablePooling = true, Assembly? migrationsAssembly = null)
