@@ -2,10 +2,12 @@
 @using BioEngine.Core
 @using BioEngine.Core.Data.Entities.Blocks
 @inject IStorage<BRCStorageConfig> Storage
+@inject IImgProxyUrlGenerator<BRCStorageConfig> ImgProxyUrlGenerator
 @inject ModalService ModalService
 @inherits BaseBlockForm
 @using BioEngine.Admin.Extensions
 @using BioEngine.Core.Extensions
+@using Sitko.Core.Storage.ImgProxy
 
 <FormItem>
     <CKEEditor @bind-Value="Block.Data.Text"></CKEEditor>
@@ -27,7 +29,7 @@
             @if (Block.Data.Picture is not null)
             {
                 <a href="@(Storage.PublicUri(Block.Data.Picture).ToString())" target="_blank">
-                    <img src="@(Storage.PublicUri(Block.Data.Picture).ToString())" alt="@Block.Data.Picture.FileName" style="max-width: 50px"/>
+                    <img src="@(ImgProxyUrlGenerator.Resize(Block.Data.Picture, 50, 50, "fit"))" alt="@Block.Data.Picture.FileName" style="max-width: 50px"/>
                 </a>
                 <br/>
                 <a href="#" @onclick="@DeletePicture" @onclick:preventDefault><i class="fas fa-trash"></i> Удалить</a>

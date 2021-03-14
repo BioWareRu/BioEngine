@@ -2,8 +2,10 @@
 @using BioEngine.Core
 @using BioEngine.Core.Extensions
 @using Sitko.Core.Storage
+@using Sitko.Core.Storage.ImgProxy
 @inherits Input<Sitko.Core.Storage.StorageItem>
 @inject IStorage<BRCStorageConfig> Storage
+@inject IImgProxyUrlGenerator<BRCStorageConfig> ImgProxyUrlGenerator
 @inject ModalService ModalService
 
 <div class="storageItems">
@@ -12,11 +14,13 @@
         <div class="item">
             @if (CurrentValue.IsImage())
             {
-                <img src="@(Storage.PublicUri(CurrentValue).ToString())" alt="@CurrentValue.FileName"/>
+                <img src="@(ImgProxyUrlGenerator.Resize(CurrentValue, 200, 200, "fit"))" alt="@CurrentValue.FileName"/>
             }
             else
             {
-                <div><a href="@(Storage.PublicUri(CurrentValue).ToString())" target="_blank">@CurrentValue.FileName</a></div>
+                <div>
+                    <a href="@(Storage.PublicUri(CurrentValue).ToString())" target="_blank">@CurrentValue.FileName</a>
+                </div>
                 <div>@CurrentValue.HumanSize</div>
             }
             <span class="caption">

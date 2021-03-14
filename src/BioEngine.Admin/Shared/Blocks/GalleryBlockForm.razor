@@ -3,7 +3,9 @@
 @using BioEngine.Core.Data.Entities.Blocks
 @using BioEngine.Admin.Extensions
 @using BioEngine.Core.Extensions
+@using Sitko.Core.Storage.ImgProxy
 @inject IStorage<BRCStorageConfig> Storage
+@inject IImgProxyUrlGenerator<BRCStorageConfig> ImgProxyUrlGenerator
 @inject ModalService ModalService
 @inherits BaseBlockForm
 <div class="storageItems">
@@ -13,7 +15,7 @@
         @foreach (var picture in Block.Data.Pictures)
         {
             <div class="item">
-                <img src="@(Storage.PublicUri(picture).ToString())" alt="@picture.FileName"/>
+                <img src="@(ImgProxyUrlGenerator.Resize(picture, 200, 200, "fit"))" alt="@picture.FileName"/>
                 <span class="caption">
                     <p>@picture.FileName</p>
                     <a href="#" @onclick="@(() => DeleteItem(picture))" @onclick:preventDefault><i class="fas fa-trash"></i> Удалить</a>
@@ -26,7 +28,8 @@
     }
     else
     {
-        <Button Size="large" OnClick="@ShowStorageDialogAsync">Выбрать картинки</Button>    }
+        <Button Size="large" OnClick="@ShowStorageDialogAsync">Выбрать картинки</Button>
+    }
 </div>
 <ValidationMessage For="@(() => Block.Data.Pictures)"></ValidationMessage>
 
