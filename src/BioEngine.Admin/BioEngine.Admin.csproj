@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="SonicGD.FluentValidation.Blazor" Version="5.0.0-fix" />
-    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="9.5.1" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="9.5.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -21,11 +21,6 @@
     <PackageReference Include="NickBuhro.Translit" Version="1.4.5" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.3" />
     <PackageReference Include="Slugify.Core" Version="3.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="wwwroot\cke\ckeditor.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\cke\ckeditor.js.map" />
   </ItemGroup>
 
 </Project>
