@@ -1,4 +1,8 @@
 ﻿@page "/Sections/Developers/{developerId:guid}"
+@{
+    var title = "Изменение разработчика / BRC Admin";
+}
+<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title value="@title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
 <DeveloperForm EntityId="DeveloperId"></DeveloperForm>
 
 @code

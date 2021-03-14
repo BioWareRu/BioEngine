@@ -1,4 +1,8 @@
 ﻿@page "/Tags/{tagId:guid}"
+@{
+    var title = "Изменение тэга / BRC Admin";
+}
+<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title value="@title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
 <TagForm EntityId="TagId"></TagForm>
 
 @code

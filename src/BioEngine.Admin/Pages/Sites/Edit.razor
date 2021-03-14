@@ -1,4 +1,8 @@
 ﻿@page "/Sites/{siteId:guid}"
+@{
+    var title = "Изменение сайта / BRC Admin";
+}
+<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title value="@title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
 <SiteForm EntityId="SiteId"></SiteForm>
 
 @code

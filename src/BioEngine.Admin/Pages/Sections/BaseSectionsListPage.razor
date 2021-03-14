@@ -1,6 +1,9 @@
 ﻿@typeparam TItem
 @inherits BaseListPage<TItem, Guid>
-
+@{
+    var title = $"{GetTitle()} / BRC Admin";
+}
+<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title value="@title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
 <StickyHeader Title="@GetTitle()">
     <Button Type="@ButtonType.Primary" OnClick="ToFormPage">
         Добавить
@@ -20,11 +23,12 @@
         <Column Title="Тип" @bind-Field="@context.Type" Sortable>
             @context.Type
         </Column>
-        <Column Title="Дата" @bind-Field="@context.DateAdded" Format="dd.MM.yyyy hh:mm:ss" Sortable Sort="descend"/>
+        <Column Title="Дата" @bind-Field="@context.DateAdded" Format="dd.MM.yyyy hh:mm:ss" Sortable DefaultSortOrder="SortDirection.Descending"/>
         <Column Title="Сайты" @bind-Field="@context.Sites" Sortable>
             @foreach (var site in context.Sites)
             {
-                <Tag Color="blue">@site.Title</Tag>            }
+                <Tag Color="blue">@site.Title</Tag>
+            }
         </Column>
         <ActionColumn>
             <Space>

@@ -1,4 +1,8 @@
 ﻿@page "/Pages/{pageId:guid}"
+@{
+    var title = "Изменение страницы / BRC Admin";
+}
+<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title value="@title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
 <PageForm EntityId="PageId"></PageForm>
 
 @code

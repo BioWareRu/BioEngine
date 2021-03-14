@@ -1,4 +1,8 @@
 ﻿@page "/Sections/Games/{gameId:guid}"
+@{
+    var title = "Редактирование игры / BRC Admin";
+}
+<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title value="@title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
 <GameForm EntityId="GameId"></GameForm>
 
 @code

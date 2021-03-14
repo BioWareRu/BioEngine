@@ -1,6 +1,10 @@
 ﻿@page "/Sites"
 @using BioEngine.Core.Data.Entities
 @inherits BaseListPage<Site, Guid>
+@{
+    var title = "Сайты / BRC Admin";
+}
+<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title value="@title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
 <StickyHeader Title="@GetTitle()">
     <Button Type="@ButtonType.Primary" OnClick="ToFormPage">
         Добавить
@@ -14,7 +18,7 @@
             OnChange="@OnChange"
             @bind-PageIndex="_pageIndex"
             @bind-PageSize="_pageSize">
-        <Column Title="Название" @bind-Field="@context.Title" Sortable>
+        <Column Title="Название" @bind-Field="@context.Title" Sortable DefaultSortOrder="SortDirection.Ascending">
             @{
                 var url = $"/Sites/{context.Id}";
             }

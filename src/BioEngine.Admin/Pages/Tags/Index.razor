@@ -1,5 +1,9 @@
 ﻿@page "/Tags"
 @inherits BaseListPage<BioEngine.Core.Data.Entities.Tag, Guid>
+@{
+    var title = "Тэги / BRC Admin";
+}
+<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title value="@title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
 <StickyHeader Title="@GetTitle()">
     <Button Type="@ButtonType.Primary" OnClick="ToFormPage">
         Добавить
@@ -19,7 +23,7 @@
             }
             <a href="@url">@context.Title</a>
         </Column>
-        <Column Title="Дата" @bind-Field="@context.DateAdded" Format="dd.MM.yyyy hh:mm:ss" Sortable Sort="descend"/>
+        <Column Title="Дата" @bind-Field="@context.DateAdded" Format="dd.MM.yyyy hh:mm:ss" Sortable DefaultSortOrder="SortDirection.Descending"/>
 
         <ActionColumn>
             <Space>

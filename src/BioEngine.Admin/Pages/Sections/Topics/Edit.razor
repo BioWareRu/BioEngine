@@ -1,4 +1,8 @@
 ﻿@page "/Sections/Topics/{topicId:guid}"
+@{
+    var title = "Изменение темы / BRC Admin";
+}
+<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title value="@title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
 <TopicForm EntityId="TopicId"></TopicForm>
 
 @code
