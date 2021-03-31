@@ -7,7 +7,7 @@
   <ItemGroup>
     <PackageReference Include="Sitko.Core.App.Web" Version="6.14.0" />
     <PackageReference Include="Sitko.Core.Db.Postgres" Version="6.14.0" />
-    <PackageReference Include="Sitko.Core.ElasticStack" Version="6.14.0" />
+    <PackageReference Include="Sitko.Core.ElasticStack" Version="7.0.0" />
     <PackageReference Include="Sitko.Core.Storage.S3" Version="6.14.0" />
     <PackageReference Include="Sitko.Core.Storage.Metadata.Postgres" Version="6.14.0" />
     <PackageReference Include="Sitko.Core.Storage.ImgProxy" Version="6.14.0" />
