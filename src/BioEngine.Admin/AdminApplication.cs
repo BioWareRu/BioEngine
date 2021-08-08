@@ -36,6 +36,7 @@ namespace BioEngine.Admin
                     moduleConfig.AddBlock<AntYoutubeBlockDescriptor, YoutubeBlock>();
                     moduleConfig.AddBlock<BioEngineGalleryBlockDescriptor, GalleryBlock>();
                     moduleConfig.AddBlock<BioEngineFilesBlockDescriptor, FilesBlock>();
+                    moduleConfig.AddBlock<BioEngineDividerBlockDescriptor, DividerBlock>();
                 });
             ConfigureServices((_, _, services) =>
             {
