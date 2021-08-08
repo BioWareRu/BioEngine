@@ -23,12 +23,20 @@ namespace BioEngine.Core.Data.Repositories
         {
             await base.AfterLoadAsync(entities, cancellationToken);
 
-            var userIds = entities.Select(e => e.AuthorId).Distinct().ToArray();
-            var users = await userDataProvider.GetDataAsync(userIds);
-
-            foreach (var entity in entities)
+            var userIds = entities.Where(e => !string.IsNullOrEmpty(e.AuthorId)).Select(e => e.AuthorId).Distinct()
+                .ToArray();
+            if (userIds.Length > 0)
             {
-                entity.Author = users.First(d => d.Id.Equals(entity.AuthorId, StringComparison.Ordinal));
+                var users = await userDataProvider.GetDataAsync(userIds);
+
+                foreach (var entity in entities)
+                {
+                    var user = users.FirstOrDefault(d => d.Id.Equals(entity.AuthorId, StringComparison.Ordinal));
+                    if (user is not null)
+                    {
+                        entity.Author = user;
+                    }
+                }
             }
         }
 
