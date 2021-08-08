@@ -1,75 +1,76 @@
 ﻿@page "/Posts"
+@using Microsoft.AspNetCore.Components
 @using BioEngine.Core.Data.Entities
-@inherits BaseListPage<Post, Guid>
-@{
-    var title = "Посты / BRC Admin";
-}
-<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title value="@title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
-<StickyHeader Title="@GetTitle()">
-    <Button Type="@ButtonType.Primary" OnClick="ToFormPage">
-        Добавить
-    </Button>
-</StickyHeader>
-<div class="site-layout-background" style="padding-top: 24px;">
-    <Table @ref="table"
-            TItem="Post"
-            DataSource="@Items"
-            Total="Count"
-            OnChange="@OnChange"
-            @bind-PageIndex="_pageIndex"
-            @bind-PageSize="_pageSize">
-        <Column Title="Заголовок" @bind-Field="@context.Title" Sortable>
-            @{
-                var url = $"/Posts/{context.Id}";
-            }
-            <a href="@url">@context.Title</a>
-        </Column>
-        <Column Title="Дата" @bind-Field="@context.DateAdded" Format="dd.MM.yyyy hh:mm:ss" Sortable DefaultSortOrder="SortDirection.Descending"/>
-        <Column Title="Сайты" @bind-Field="@context.Sites" Sortable>
-            @foreach (var site in context.Sites)
-            {
-                <Tag Color="blue">@site.Title</Tag>            }
-        </Column>
-        <Column Title="Разделы" @bind-Field="@context.Sections" Sortable>
-            @foreach (var postSection in context.Sections)
-            {
-                <Tag Color="cyan">@postSection.Title</Tag>            }
-        </Column>
-        <Column Title="Теги" @bind-Field="@context.Tags" Sortable>
-            @foreach (var tag in context.Tags)
-            {
-                <Tag Color="green">@tag.Title</Tag>            }
-        </Column>
-        <Column Title="Автор" @bind-Field="@context.AuthorId" Sortable>
-            <a target="_blank" href="@context.Author.ProfileUrl">
-                <Avatar Src="@context.Author.PhotoUrl" Alt="@context.Author.Name"/> @context.Author.Name
-            </a>
-        </Column>
-        <ActionColumn>
-            <Space>
-                <SpaceItem>
-                    <Button>
-                        <i class="fas fa-copy" title="Сохранить как шаблон"></i>
-                    </Button>
-                </SpaceItem>
-                <SpaceItem>
-                    <Button Danger>
-                        <i class="fas fa-trash" title="Удалить"></i>
-                    </Button>
-                </SpaceItem>
-            </Space>
-        </ActionColumn>
-    </Table>
-</div>
-
-@code {
-    protected override string GetCreatePageUrl()
-    {
-        return "/Posts/Add";
-    }
-
-    protected override string GetTitle()
-    {
-        return "Посты";
-    }
-}
+@inherits BaseListPage
+<Toolbelt.Blazor.HeadElement.Title>@PageTitle</Toolbelt.Blazor.HeadElement.Title>
+<PageContainer Title="@Title">
+    <Breadcrumb>
+        <Breadcrumb>
+            <BreadcrumbItem>
+                <a href="/">BRCGames</a>
+            </BreadcrumbItem>
+            <BreadcrumbItem>@Title</BreadcrumbItem>
+        </Breadcrumb>
+    </Breadcrumb>
+    <Extra>
+        <Button Type="@ButtonType.Primary" OnClick="ToFormPage">
+            Добавить
+        </Button>
+    </Extra>
+    <ChildContent>
+        <AntRepositoryList TItem="BioEngine.Core.Data.Entities.Post" TEntityPk="Guid" ConfigureQuery="ConfigureQueryAsync" @ref="ListTable">
+            <ChildContent>
+                <Column Title="Заголовок" @bind-Field="@context.Title" Sortable Filterable>
+                    @{
+                        var url = $"/Posts/{context.Id}";
+                    }
+                    <a href="@url">@context.Title</a>
+                </Column>
+                <Column Title="Дата" @bind-Field="@context.DateAdded" Format="dd.MM.yyyy hh:mm:ss" Sortable DefaultSortOrder="SortDirection.Descending"/>
+                <Column Title="Сайты" TData="Site">
+                    @foreach (var site in context.Sites)
+                    {
+                        <a href="@GetSiteFilterUrl(site)">
+                            <Tag Color="blue">@site.Title</Tag>
+                        </a>
+                    }
+                </Column>
+                <Column Title="Разделы" TData="Section">
+                    @foreach (var postSection in context.Sections)
+                    {
+                        <a href="@GetSectionFilterUrl(postSection)">
+                            <Tag Color="cyan">@postSection.Title</Tag>
+                        </a>
+                    }
+                </Column>
+                <Column Title="Теги" @bind-Field="@context.Tags">
+                    @foreach (var tag in context.Tags)
+                    {
+                        <a href="@GetTagFilterUrl(tag)">
+                            <Tag Color="green">@tag.Title</Tag>
+                        </a>
+                    }
+                </Column>
+                <Column Title="Автор" @bind-Field="@context.AuthorId" Sortable Filters="@authorsFilter">
+                    <a target="_blank" href="@context.Author.ProfileUrl">
+                        <Avatar Src="@context.Author.PhotoUrl" Alt="@context.Author.Name"/> @context.Author.Name
+                    </a>
+                </Column>
+                <ActionColumn>
+                    <Space>
+                        <SpaceItem>
+                            <Button>
+                                <i class="fas fa-copy" title="Сохранить как шаблон"></i>
+                            </Button>
+                        </SpaceItem>
+                        <SpaceItem>
+                            <Button Danger>
+                                <i class="fas fa-trash" title="Удалить"></i>
+                            </Button>
+                        </SpaceItem>
+                    </Space>
+                </ActionColumn>
+            </ChildContent>
+        </AntRepositoryList>
+    </ChildContent>
+</PageContainer>

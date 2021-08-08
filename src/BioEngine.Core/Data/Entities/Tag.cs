@@ -8,15 +8,12 @@ namespace BioEngine.Core.Data.Entities
     public class Tag : BaseEntity
     {
         public string Title { get; set; } = string.Empty;
-        
+
         public List<Post> Posts { get; set; }
     }
 
     public class TagValidator : AbstractValidator<Tag>
     {
-        public TagValidator()
-        {
-            RuleFor(x => x.Title).NotEmpty();
-        }
+        public TagValidator() => RuleFor(x => x.Title).NotEmpty().WithMessage("Укажите заголовок");
     }
 }

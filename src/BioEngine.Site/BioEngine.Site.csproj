@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UserSecretsId>bioengine</UserSecretsId>
+  </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\BioEngine.Core\BioEngine.Core.csproj" />
+    </ItemGroup>
+
+</Project>

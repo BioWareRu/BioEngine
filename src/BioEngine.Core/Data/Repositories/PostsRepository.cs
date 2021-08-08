@@ -10,15 +10,13 @@ namespace BioEngine.Core.Data.Repositories
 {
     public class PostsRepository : ContentItemRepository<Post>
     {
-        private readonly IUserDataProvider _userDataProvider;
+        private readonly IUserDataProvider userDataProvider;
 
 
         public PostsRepository(EFRepositoryContext<Post, Guid, BioDbContext> repositoryContext,
-            SectionsRepository sectionsRepository, IUserDataProvider userDataProvider) : base(
-            repositoryContext, sectionsRepository)
-        {
-            _userDataProvider = userDataProvider;
-        }
+            SectionsRepository sectionsRepository,
+            IUserDataProvider userDataProvider) : base(repositoryContext, sectionsRepository) =>
+            this.userDataProvider = userDataProvider;
 
         protected override async Task AfterLoadAsync(Post[] entities,
             CancellationToken cancellationToken = default)
@@ -26,15 +24,14 @@ namespace BioEngine.Core.Data.Repositories
             await base.AfterLoadAsync(entities, cancellationToken);
 
             var userIds = entities.Select(e => e.AuthorId).Distinct().ToArray();
-            var users = await _userDataProvider.GetDataAsync(userIds);
+            var users = await userDataProvider.GetDataAsync(userIds);
 
             foreach (var entity in entities)
             {
-                entity.Author = users.FirstOrDefault(d => d.Id.Equals(entity.AuthorId));
+                entity.Author = users.First(d => d.Id.Equals(entity.AuthorId, StringComparison.Ordinal));
             }
         }
 
-       
 
         // protected override async Task<bool> AfterSaveAsync(IEnumerable<RepositoryRecord<Post, Guid>> items,
         //     CancellationToken cancellationToken = default)

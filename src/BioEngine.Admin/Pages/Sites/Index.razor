@@ -1,53 +1,49 @@
 ﻿@page "/Sites"
-@using BioEngine.Core.Data.Entities
-@inherits BaseListPage<Site, Guid>
-@{
-    var title = "Сайты / BRC Admin";
-}
-<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title value="@title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
-<StickyHeader Title="@GetTitle()">
-    <Button Type="@ButtonType.Primary" OnClick="ToFormPage">
-        Добавить
-    </Button>
-</StickyHeader>
-<div class="site-layout-background" style="padding-top: 24px;">
-    <Table @ref="            table"
-            TItem="Site"
-            DataSource="@Items"
-            Total="Count"
-            OnChange="@OnChange"
-            @bind-PageIndex="_pageIndex"
-            @bind-PageSize="_pageSize">
-        <Column Title="Название" @bind-Field="@context.Title" Sortable DefaultSortOrder="SortDirection.Ascending">
-            @{
-                var url = $"/Sites/{context.Id}";
-            }
-            <a href="@url">@context.Title</a>
-        </Column>
-        <Column Title="Адрес" @bind-Field="@context.Url" Sortable>
-            <a href="@context.Url" target="_blank">@context.Url</a>
-        </Column>
+@inherits BaseListPage
+<Toolbelt.Blazor.HeadElement.Title>@PageTitle</Toolbelt.Blazor.HeadElement.Title>
+<PageContainer Title="@Title">
+    <Breadcrumb>
+        <Breadcrumb>
+            <BreadcrumbItem>
+                <a href="/">BRCGames</a>
+            </BreadcrumbItem>
+            <BreadcrumbItem>@Title</BreadcrumbItem>
+        </Breadcrumb>
+    </Breadcrumb>
+    <Extra>
+        <Button Type="@ButtonType.Primary" OnClick="ToFormPage">
+            Добавить
+        </Button>
+    </Extra>
+    <ChildContent>
+        <AntRepositoryList TItem="BioEngine.Core.Data.Entities.Site" TEntityPk="Guid">
+            <Column Title="Название" @bind-Field="@context.Title" Sortable DefaultSortOrder="SortDirection.Ascending">
+                @{
+                    var url = $"/Sites/{context.Id}";
+                }
+                <a href="@url">@context.Title</a>
+            </Column>
+            <Column Title="Адрес" @bind-Field="@context.Url" Sortable>
+                <a href="@context.Url" target="_blank">@context.Url</a>
+            </Column>
 
-        <ActionColumn>
-            <Space>
-                <SpaceItem>
-                    <Button Danger>
-                        <i class="fas fa-trash" title="Удалить"></i>
-                    </Button>
-                </SpaceItem>
-            </Space>
-        </ActionColumn>
-    </Table>
-</div>
+            <ActionColumn>
+                <Space>
+                    <SpaceItem>
+                        <Button Danger>
+                            <i class="fas fa-trash" title="Удалить"></i>
+                        </Button>
+                    </SpaceItem>
+                </Space>
+            </ActionColumn>
+        </AntRepositoryList>
+    </ChildContent>
+</PageContainer>
 
 @code {
-    protected override string GetCreatePageUrl()
-    {
-        return "/Sites/Add";
-    }
 
-    protected override string GetTitle()
-    {
-        return "Сайты";
-    }
+    protected override string CreatePageUrl => "/Sites/Add";
+
+    protected override string Title => "Сайты";
+
 }

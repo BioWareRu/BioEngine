@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using BioEngine.Core.Data.Entities.Abstractions;
-using BioEngine.Core.Data.Entities.Blocks;
+using FluentValidation;
+using Sitko.Blockly;
 using Sitko.Core.Storage;
 
 namespace BioEngine.Core.Data.Entities
@@ -53,5 +54,22 @@ namespace BioEngine.Core.Data.Entities
         Developer,
         Game,
         Topic
+    }
+
+    public abstract class BaseSectionValidator<TSection, TSectionData> : AbstractValidator<TSection>
+        where TSection : Section<TSectionData>, new()
+        where TSectionData : SectionData, new()
+    {
+        protected BaseSectionValidator()
+        {
+            RuleFor(e => e.Title).NotEmpty().WithMessage("Укажите заголовок").MaximumLength(1024).MinimumLength(5)
+                .WithMessage("Заголовок должен быть от 5 до 1024 символов.");
+            RuleFor(e => e.Url).NotEmpty().WithMessage("Укажите адрес");
+            RuleFor(e => e.Sites)
+                .NotEmpty()
+                .WithMessage("Укажите сайты");
+            // .OverridePropertyName(nameof(DeveloperFormModel.DummySiteId)); TODO: Show in form
+            RuleFor(e => e.Blocks).NotEmpty();
+        }
     }
 }

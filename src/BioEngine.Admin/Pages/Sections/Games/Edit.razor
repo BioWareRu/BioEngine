@@ -1,12 +1,86 @@
-﻿@page "/Sections/Games/{gameId:guid}"
-@{
-    var title = "Редактирование игры / BRC Admin";
-}
-<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title value="@title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
-<GameForm EntityId="GameId"></GameForm>
-
-@code
-{
-    [Parameter]
-    public Guid GameId { get; set; }
-}
+﻿@page "/Sections/Games/Add"
+@page "/Sections/Games/{EntityId:guid}"
+@using BioEngine.Core.Data.Entities
+@using Microsoft.AspNetCore.Components
+@using BioEngine.Admin.Extensions
+@inherits BaseFormPage<Game, GameForm>
+<GameForm Layout="@FormLayout.Vertical" EntityId="EntityId" @ref="Form">
+    <Toolbelt.Blazor.HeadElement.Title>@PageTitle</Toolbelt.Blazor.HeadElement.Title>
+    <PageContainer Title="@Title">
+        <Breadcrumb>
+            <Breadcrumb>
+                <BreadcrumbItem>
+                    <a href="/">BRCGames</a>
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                                    <a href="/Games">Игры</a>
+                                </BreadcrumbItem>
+            </Breadcrumb>
+        </Breadcrumb>
+        <Extra>
+            <AntDesign.Button Type="@ButtonType.Primary" Disabled="!context.CanSave()" OnClick="context.Save">
+                Сохранить
+            </AntDesign.Button>
+            @if (!context.Entity.IsPublished)
+            {
+                <AntDesign.Button Type="@ButtonType.Dashed" Danger Disabled="!context.CanPublish()" OnClick="context.PublishAsync">
+                    Опубликовать
+                </AntDesign.Button>
+            }
+            else
+            {
+                <AntDesign.Button Type="@ButtonType.Dashed" Danger Disabled="!context.CanUnPublish()" OnClick="context.UnPublishAsync">
+                    Спрятать
+                </AntDesign.Button>
+            }
+        </Extra>
+        <ChildContent>
+            <Row Gutter="24">
+                <AntDesign.Col Span="12">
+                    <FormItem Label="Заголовок">
+                        <Input @bind-Value="@context.Entity.Title" OnkeyUp="context.TitleChanged"/>
+                    </FormItem>
+                </AntDesign.Col>
+                <AntDesign.Col Span="12">
+                    <FormItem Label="Адрес">
+                        <Input @bind-Value="@context.Entity.Url"/>
+                    </FormItem>
+                </AntDesign.Col>
+            </Row>
+            <Row Gutter="24">
+                <AntDesign.Col Span="12">
+                    <FormItem Label="Сайты">
+                        <Select Mode="multiple"
+                                DataSource="@context.SitesList"
+                                @bind-Value="@context.DummySiteId"
+                                @bind-Values="@context.SiteIds"
+                                LabelName="@nameof(Site.Title)"
+                                ValueName="@nameof(Site.Id)"
+                                Placeholder="Укажите сайты"
+                                DefaultActiveFirstItem="false"
+                                TItemValue="Guid"
+                                TItem="Site"
+                                EnableSearch
+                                AllowClear>
+                        </Select>
+                    </FormItem>
+                </AntDesign.Col>
+                <AntDesign.Col Span="12">
+                    <FormItem Label="Хештег">
+                        <Input @bind-Value="@context.Entity.Data.Hashtag"/>
+                    </FormItem>
+                </AntDesign.Col>
+            </Row>
+            <Row Gutter="24">
+                <AntDesign.Col Span="12">
+                    <FormItem Label="Картинка в шапку">
+                        <AntStorageImageInput @bind-Value="@context.Entity.Data.HeaderPicture" Storage="@context.Storage" UploadPath="/games" GenerateMetadata="@StorageUploadExtensions.GenerateMetadataAsync"></AntStorageImageInput>
+                    </FormItem>
+                </AntDesign.Col>
+                <AntDesign.Col Span="12">
+                </AntDesign.Col>
+            </Row>
+            <AntBlocklyForm TEntity="Game" TForm="GameForm" @bind-Value="context.Entity.Blocks" Form="context" Options="context.BlocksOptions"></AntBlocklyForm>
+        </ChildContent>
+    </PageContainer>
+</GameForm>

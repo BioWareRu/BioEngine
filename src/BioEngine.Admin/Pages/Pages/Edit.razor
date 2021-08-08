@@ -1,12 +1,48 @@
-﻿@page "/Pages/{pageId:guid}"
-@{
-    var title = "Изменение страницы / BRC Admin";
-}
-<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title value="@title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
-<PageForm EntityId="PageId"></PageForm>
+﻿@page "/Pages/{EntityId:guid}"
+@page "/Pages/Add"
+@using BioEngine.Core.Data.Entities
+@inherits BaseFormPage<Page, PageForm>
 
-@code
-{
-    [Parameter]
-    public Guid PageId { get; set; }
-}
+<PageForm Layout="@FormLayout.Vertical" EntityId="EntityId" @ref="Form">
+    <Toolbelt.Blazor.HeadElement.Title>@PageTitle</Toolbelt.Blazor.HeadElement.Title>
+    <PageContainer Title="@Title">
+        <Breadcrumb>
+            <Breadcrumb>
+                <BreadcrumbItem>
+                    <a href="/">BRCGames</a>
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                    <a href="/Pages">Страницы</a>
+                </BreadcrumbItem>
+            </Breadcrumb>
+        </Breadcrumb>
+        <Extra>
+            <AntDesign.Button Type="@ButtonType.Primary" Disabled="!context.CanSave()" OnClick="context.Save">
+                Сохранить
+            </AntDesign.Button>
+        </Extra>
+        <ChildContent>
+            <FormItem Label="Заголовок">
+                <AntDesign.Input @bind-Value="@context.Entity.Title"/>
+            </FormItem>
+            <FormItem Label="Адрес">
+                <AntDesign.Input @bind-Value="@context.Entity.Url"/>
+            </FormItem>
+            <FormItem Label="Сайты">
+                <AntDesign.Select Mode="multiple"
+                                  DataSource="@context.SitesList"
+                                  @bind-Value="@context.DummySiteId"
+                                  @bind-Values="@context.SiteIds"
+                                  LabelName="@nameof(Site.Title)"
+                                  ValueName="@nameof(Site.Id)"
+                                  Placeholder="Укажите сайты"
+                                  DefaultActiveFirstItem="false"
+                                  TItemValue="Guid"
+                                  TItem="Site"
+                                  EnableSearch
+                                  AllowClear/>
+            </FormItem>
+            <AntBlocklyForm TEntity="Page" TForm="PageForm" @bind-Value="context.Entity.Blocks" Form="context" Options="context.BlocksOptions"></AntBlocklyForm>
+        </ChildContent>
+    </PageContainer>
+</PageForm>

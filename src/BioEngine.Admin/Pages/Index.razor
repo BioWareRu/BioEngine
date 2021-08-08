@@ -1,5 +1,19 @@
 @page "/"
-<PageHeader Title="Dashboard"></PageHeader>
-<div class="site-layout-background" style="padding-top: 24px;">
-    Здесь будет дашборд
-</div>
+@inherits BasePage
+<Toolbelt.Blazor.HeadElement.Title>@PageTitle</Toolbelt.Blazor.HeadElement.Title>
+<PageContainer Title="@Title">
+    <Breadcrumb>
+        <Breadcrumb>
+            <BreadcrumbItem>
+                <a href="/">BRCGames</a>
+            </BreadcrumbItem>
+            <BreadcrumbItem>@Title</BreadcrumbItem>
+        </Breadcrumb>
+    </Breadcrumb>
+    <ChildContent>
+        Здесь будет дашборд
+    </ChildContent>
+</PageContainer>
+@code {
+    protected override string Title => "Dashboard";
+}

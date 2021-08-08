@@ -8,14 +8,14 @@ using Microsoft.Extensions.Logging;
 
 namespace BioEngine.Core.IPB.Users
 {
-    public class IPBUserDataProvider : IUserDataProvider
+    public class IPBUserDataProvider<TIpbModuleOptions> : IUserDataProvider where TIpbModuleOptions : IPBModuleOptions
     {
-        private readonly IPBApiClientFactory _clientFactory;
+        private readonly IPBApiClientFactory<TIpbModuleOptions> _clientFactory;
         private readonly IMemoryCache _memoryCache;
-        private readonly ILogger<IPBUserDataProvider> _logger;
+        private readonly ILogger<IPBUserDataProvider<TIpbModuleOptions>> _logger;
 
-        public IPBUserDataProvider(IPBApiClientFactory clientFactory, IMemoryCache memoryCache,
-            ILogger<IPBUserDataProvider> logger)
+        public IPBUserDataProvider(IPBApiClientFactory<TIpbModuleOptions> clientFactory, IMemoryCache memoryCache,
+            ILogger<IPBUserDataProvider<TIpbModuleOptions>> logger)
         {
             _clientFactory = clientFactory;
             _memoryCache = memoryCache;

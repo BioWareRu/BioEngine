@@ -13,7 +13,8 @@ namespace BioEngine.Admin.Helpers
             {
                 var helper = GetSlugHelper();
 
-                if (string.IsNullOrEmpty(currentSlug) && string.IsNullOrEmpty(oldText))
+                if ((string.IsNullOrEmpty(currentSlug) && string.IsNullOrEmpty(oldText)) ||
+                    string.IsNullOrEmpty(oldText))
                 {
                     slug = helper.GenerateSlug(Transliteration.CyrillicToLatin(text));
                 }

@@ -8,66 +8,68 @@ using System.Threading.Tasks;
 using BioEngine.Core.Users;
 using Flurl.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace BioEngine.Core.IPB.Api
 {
-    public class IPBApiClientFactory
+    public class IPBApiClientFactory<TOptions> where TOptions : IPBModuleOptions
     {
-        private readonly IPBModuleConfig _options;
+        private TOptions Options => _optionsMonitor.CurrentValue;
+        private readonly IOptionsMonitor<TOptions> _optionsMonitor;
         private readonly ILoggerFactory _loggerFactory;
         private readonly IHttpClientFactory _httpClientFactory;
 
-        public IPBApiClientFactory(IPBModuleConfig options, ILoggerFactory loggerFactory,
+        public IPBApiClientFactory(IOptionsMonitor<TOptions> optionsMonitor, ILoggerFactory loggerFactory,
             IHttpClientFactory httpClientFactory)
         {
-            _options = options;
+            _optionsMonitor = optionsMonitor;
             _loggerFactory = loggerFactory;
             _httpClientFactory = httpClientFactory;
         }
 
         public IPBApiClient GetClient(string token)
         {
-            return new IPBApiClient(_options, token, null, _loggerFactory.CreateLogger<IPBApiClient>(),
+            return new IPBApiClient(Options, token, null, _loggerFactory.CreateLogger<IPBApiClient>(),
                 _httpClientFactory);
         }
 
         public IPBApiClient GetReadOnlyClient()
         {
-            if (string.IsNullOrEmpty(_options.ApiReadonlyKey))
+            if (string.IsNullOrEmpty(Options.ApiReadonlyKey))
             {
                 throw new Exception("Api readonly key don't configured");
             }
 
-            return new IPBApiClient(_options, null, _options.ApiReadonlyKey,
+            return new IPBApiClient(Options, null, Options.ApiReadonlyKey,
                 _loggerFactory.CreateLogger<IPBApiClient>(), _httpClientFactory);
         }
 
         public IPBApiClient GetPublishClient()
         {
-            if (string.IsNullOrEmpty(_options.ApiPublishKey))
+            if (string.IsNullOrEmpty(Options.ApiPublishKey))
             {
                 throw new Exception("Api publish key don't configured");
             }
 
-            return new IPBApiClient(_options, null, _options.ApiPublishKey, _loggerFactory.CreateLogger<IPBApiClient>(),
+            return new IPBApiClient(Options, null, Options.ApiPublishKey, _loggerFactory.CreateLogger<IPBApiClient>(),
                 _httpClientFactory);
         }
     }
 
     public class IPBApiClient
     {
-        private readonly IPBModuleConfig _config;
+        private readonly IPBModuleOptions _options;
         private readonly string? _token;
         private readonly string? _apiKey;
         private readonly ILogger<IPBApiClient> _logger;
         private readonly FlurlClient _flurlClient;
 
-        public IPBApiClient(IPBModuleConfig config, string? token, string? apiKey, ILogger<IPBApiClient> logger,
+        public IPBApiClient(IPBModuleOptions options, string? token, string? apiKey, ILogger<IPBApiClient> logger,
             IHttpClientFactory httpClientFactory)
         {
-            _config = config;
+            _options = options;
             _token = token;
             _apiKey = apiKey;
             _logger = logger;
@@ -81,7 +83,7 @@ namespace BioEngine.Core.IPB.Api
 
         private IFlurlRequest GetRequest(string url)
         {
-            var requestUrl = new FlurlRequest($"{_config.ApiUrl}/{url}").WithClient(_flurlClient);
+            var requestUrl = new FlurlRequest($"{_options.ApiUrl}/{url}").WithClient(_flurlClient);
             if (!string.IsNullOrEmpty(_token))
             {
                 requestUrl.WithOAuthBearerToken(_token);

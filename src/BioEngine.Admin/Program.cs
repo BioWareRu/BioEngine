@@ -21,13 +21,13 @@ namespace BioEngine.Admin
                     options.Limits.MaxRequestBodySize = 1 * 1024 * 1024 * 1024; // 1 gb
                 });
             });
-            await application.RunAsync<Startup>();
+            await application.RunAsync();
         }
 
         // need for migrations
         public static IHostBuilder CreateHostBuilder(string[] args) =>
-            CreateApplication(args).CreateBasicHostBuilder<Startup>();
+            CreateApplication(args).GetHostBuilder();
 
-        public static AdminApplication CreateApplication(string[] args) => new AdminApplication(args);
+        public static AdminApplication CreateApplication(string[] args) => new(args);
     }
 }

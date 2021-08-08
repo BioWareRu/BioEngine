@@ -1,5 +1,5 @@
 @using System.ComponentModel.DataAnnotations
-@inherits ConfirmTemplate<string, string>
+@inherits FeedbackComponent<string, string>
 
 <div>
     <Text>Новая папка</Text>
@@ -8,12 +8,37 @@
 
 @code {
 
-    [Required]
-    public string FolderName { get; set; }
+    private string? Config { get; set; }
 
-    public override async Task OkAsync(ModalClosingEventArgs args)
+    [Required]
+    private string FolderName { get; set; } = string.Empty;
+
+    protected override void OnInitialized()
     {
-        await OnOkAsync(FolderName);
-        await base.OkAsync(args);
+        Config = this.Options;
+        base.OnInitialized();
     }
+
+
+    public override async Task OnFeedbackOkAsync(ModalClosingEventArgs args)
+    {
+        if (FeedbackRef is ConfirmRef confirmRef)
+        {
+            confirmRef.Config.OkButtonProps.Loading = true;
+            await confirmRef.UpdateConfigAsync();
+        }
+        else if (FeedbackRef is ModalRef modalRef)
+        {
+            modalRef.Config.ConfirmLoading = true;
+            await modalRef.UpdateConfigAsync();
+        }
+
+        if (FolderName == Config)
+            args.Cancel = true;
+        else
+            await OkCancelRefWithResult!.OnOk(FolderName);
+
+        await base.OnFeedbackOkAsync(args);
+    }
+
 }

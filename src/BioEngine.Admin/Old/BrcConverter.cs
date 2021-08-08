@@ -2,67 +2,78 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AntDesign.Core.Helpers.MemberPath;
 using BioEngine.Admin.Old.Entities;
 using BioEngine.Core;
 using BioEngine.Core.Data;
 using BioEngine.Core.Data.Entities;
-using BioEngine.Core.Data.Entities.Blocks;
 using BioEngine.Core.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Sitko.Blockly;
+using Sitko.Blockly.Blocks;
+using Sitko.Core.App.Collections;
 using Sitko.Core.Storage;
 
 namespace BioEngine.Admin.Old
 {
     public class BrcConverter
     {
-        private readonly OldBrcContext _oldBrcContext;
-        private readonly BioDbContext _bioDbContext;
-        private readonly IStorage<BRCStorageConfig> _storage;
-        private readonly ILogger<BrcConverter> _logger;
+        private readonly OldBrcContext oldBrcContext;
+        private readonly IServiceScopeFactory serviceScopeFactory;
+        private readonly IStorage<BRCStorageConfig> storage;
+        private readonly ILogger<BrcConverter> logger;
 
-        public BrcConverter(OldBrcContext oldBrcContext, BioDbContext bioDbContext, IStorage<BRCStorageConfig> storage,
+        public BrcConverter(OldBrcContext oldBrcContext, IServiceScopeFactory serviceScopeFactory,
+            IStorage<BRCStorageConfig> storage,
             ILogger<BrcConverter> logger)
         {
-            _oldBrcContext = oldBrcContext;
-            _bioDbContext = bioDbContext;
-            _storage = storage;
-            _logger = logger;
+            this.oldBrcContext = oldBrcContext;
+            this.serviceScopeFactory = serviceScopeFactory;
+            this.storage = storage;
+            this.logger = logger;
         }
 
-        public async Task ConvertSitesAsync()
+        public async Task ConvertSitesAsync(Func<int, int, string, Task> trackProgress)
         {
-            var oldSites = await _oldBrcContext.Sites.ToListAsync();
+            var oldSites = await oldBrcContext.Sites.ToListAsync();
+            var processed = 0;
             foreach (var oldSite in oldSites)
             {
-                _logger.LogInformation("Converting site {Site}", oldSite.Title);
-                var site = await _bioDbContext.Sites.FirstOrDefaultAsync(s => s.Id == oldSite.Id);
+                logger.LogInformation("Converting site {Site}", oldSite.Title);
+                using var scope = serviceScopeFactory.CreateScope();
+                var bioDbContext = scope.ServiceProvider.GetRequiredService<BioDbContext>();
+                var site = await bioDbContext.Sites.FirstOrDefaultAsync(s => s.Id == oldSite.Id);
                 if (site is null)
                 {
-                    site = new Site {Id = oldSite.Id};
-                    await _bioDbContext.Sites.AddAsync(site);
+                    site = new Site { Id = oldSite.Id };
+                    await bioDbContext.Sites.AddAsync(site);
                 }
 
                 site.Title = oldSite.Title;
                 site.Url = oldSite.Url;
                 site.DateAdded = oldSite.DateAdded;
                 site.DateUpdated = oldSite.DateUpdated;
-                _logger.LogInformation("Site converting done");
+                await trackProgress(oldSites.Count, ++processed, site.Title);
+                await bioDbContext.SaveChangesAsync();
+                logger.LogInformation("Site converting done");
             }
 
-            await _bioDbContext.SaveChangesAsync();
-            _logger.LogInformation("All sites converting done");
+            logger.LogInformation("All sites converting done");
         }
 
-        public async Task ConvertSectionsAsync()
+        public async Task ConvertSectionsAsync(Func<int, int, string, Task> trackProgress)
         {
-            var sites = await _bioDbContext.Sites.ToListAsync();
-            var oldSections = await _oldBrcContext.Sections.ToListAsync();
+            var oldSections = await oldBrcContext.Sections.ToListAsync();
+            var processed = 0;
             foreach (var oldSection in oldSections)
             {
-                _logger.LogInformation("Converting section {Title}", oldSection.Title);
-                var section = await _bioDbContext.Sections.Where(s => s.Id == oldSection.Id).Include(s => s.Sites)
+                logger.LogInformation("Converting section {Title}", oldSection.Title);
+                using var scope = serviceScopeFactory.CreateScope();
+                var bioDbContext = scope.ServiceProvider.GetRequiredService<BioDbContext>();
+                var section = await bioDbContext.Sections.Where(s => s.Id == oldSection.Id).Include(s => s.Sites)
                     .FirstOrDefaultAsync();
                 SectionData sectionData;
                 Section newSection;
@@ -75,9 +86,12 @@ namespace BioEngine.Admin.Old
                 switch (oldSection.Type)
                 {
                     case "gamesection":
-                        var gameData = new GameData {Hashtag = oldSection.Data.Hashtag, HeaderPicture = headerPicture};
+                        var gameData = new GameData
+                        {
+                            Hashtag = oldSection.Data.Hashtag, HeaderPicture = headerPicture
+                        };
                         sectionData = gameData;
-                        newSection = new Game {Id = oldSection.Id, Data = gameData};
+                        newSection = new Game { Id = oldSection.Id, Data = gameData };
 
                         break;
                     case "developersection":
@@ -86,7 +100,7 @@ namespace BioEngine.Admin.Old
                             Hashtag = oldSection.Data.Hashtag, HeaderPicture = headerPicture
                         };
                         sectionData = developerData;
-                        newSection = new Developer() {Id = oldSection.Id, Data = developerData};
+                        newSection = new Developer() { Id = oldSection.Id, Data = developerData };
                         break;
                     case "topicsection":
                         var topicData = new TopicData
@@ -94,17 +108,17 @@ namespace BioEngine.Admin.Old
                             Hashtag = oldSection.Data.Hashtag, HeaderPicture = headerPicture
                         };
                         sectionData = topicData;
-                        newSection = new Topic() {Id = oldSection.Id, Data = topicData};
+                        newSection = new Topic() { Id = oldSection.Id, Data = topicData };
                         break;
                     default:
-                        _logger.LogError("Unknown section type: {Type}", oldSection.Type);
+                        logger.LogError("Unknown section type: {Type}", oldSection.Type);
                         continue;
                 }
 
                 if (section is null)
                 {
                     section = newSection;
-                    await _bioDbContext.Sections.AddAsync(newSection);
+                    await bioDbContext.Sections.AddAsync(newSection);
                 }
 
                 section.Title = oldSection.Title;
@@ -115,95 +129,126 @@ namespace BioEngine.Admin.Old
                 section.IsPublished = oldSection.IsPublished;
                 section.ParentId = oldSection.ParentId;
                 section.Sites.Clear();
-                section.Sites.AddRange(sites.Where(s => oldSection.SiteIds.Contains(s.Id)));
-                var blocks = await _oldBrcContext.ContentBlocks.Where(b => b.ContentId == oldSection.Id).ToListAsync();
-                var newBlocks = new List<ContentBlock>();
-                foreach (var oldContentBlock in blocks)
+                section.Sites.AddRange(await bioDbContext.Sites.Where(s => oldSection.SiteIds.Contains(s.Id))
+                    .ToListAsync());
+                var blocks = await oldBrcContext.ContentBlocks.Where(b => b.ContentId == oldSection.Id).ToListAsync();
+                var newBlocks = new OrderedCollection<ContentBlock>();
+                foreach (var oldContentBlock in blocks.OrderBy(b => b.Position))
                 {
-                    newBlocks.Add(await ConvertBlockAsync(oldContentBlock));
+                    var block = await ConvertBlockAsync(oldContentBlock);
+                    if (block is not null)
+                    {
+                        newBlocks.AddItem(block);
+                    }
                 }
 
-                section.Blocks = newBlocks;
+                section.Blocks = newBlocks.ToList();
                 section.SetData(sectionData);
-                _logger.LogInformation("Converting section {Title} done", oldSection.Title);
+                await trackProgress(oldSections.Count, ++processed, section.Title);
+                await bioDbContext.SaveChangesAsync();
+                logger.LogInformation("Converting section {Title} done", oldSection.Title);
             }
 
-            await _bioDbContext.SaveChangesAsync();
-            _logger.LogInformation("Converting all sections done");
+            logger.LogInformation("Converting all sections done");
         }
 
-        public async Task ConvertTagsAsync()
+        public async Task ConvertTagsAsync(Func<int, int, string, Task> trackProgress)
         {
-            var oldTags = await _oldBrcContext.Tags.ToListAsync();
+            var oldTags = await oldBrcContext.Tags.ToListAsync();
+            var processed = 0;
             foreach (var oldTag in oldTags)
             {
-                _logger.LogInformation("Converting tag {Title}", oldTag.Title);
-                var tag = await _bioDbContext.Tags.Where(s => s.Id == oldTag.Id).FirstOrDefaultAsync();
+                logger.LogInformation("Converting tag {Title}", oldTag.Title);
+                using var scope = serviceScopeFactory.CreateScope();
+                var bioDbContext = scope.ServiceProvider.GetRequiredService<BioDbContext>();
+                var tag = await bioDbContext.Tags.Where(s => s.Id == oldTag.Id).FirstOrDefaultAsync();
                 if (tag is null)
                 {
-                    tag = new Tag {Id = oldTag.Id};
-                    await _bioDbContext.Tags.AddAsync(tag);
+                    tag = new Tag { Id = oldTag.Id };
+                    await bioDbContext.Tags.AddAsync(tag);
                 }
 
                 tag.Title = oldTag.Title;
                 tag.DateAdded = oldTag.DateAdded;
                 tag.DateUpdated = oldTag.DateUpdated;
-                _logger.LogInformation("Converting tag {Title} done", oldTag.Title);
+                await trackProgress(oldTags.Count, ++processed, tag.Title);
+                await bioDbContext.SaveChangesAsync();
+                logger.LogInformation("Converting tag {Title} done", oldTag.Title);
             }
 
-            await _bioDbContext.SaveChangesAsync();
-            _logger.LogInformation("Converting all tags done");
+            logger.LogInformation("Converting all tags done");
         }
 
-        public async Task ConvertPostsAsync()
+        public async Task ConvertPostsAsync(Func<int, int, string, Task> trackProgress)
         {
-            var sites = await _bioDbContext.Sites.ToListAsync();
-            var sections = await _bioDbContext.Sections.ToListAsync();
-            var tags = await _bioDbContext.Tags.ToListAsync();
-            var oldPosts = await _oldBrcContext.Posts.ToListAsync();
+            var oldPosts = await oldBrcContext.Posts.ToListAsync();
+            var processed = 0;
             foreach (var oldPost in oldPosts)
             {
-                _logger.LogInformation("Converting post {Title}", oldPost.Title);
-                var post = await _bioDbContext.Posts.Where(s => s.Id == oldPost.Id)
-                    .Include(s => s.Sites)
-                    .Include(s => s.Sections)
-                    .Include(s => s.Tags)
-                    .FirstOrDefaultAsync();
-                if (post is null)
-                {
-                    post = new Post {Id = oldPost.Id};
-                    await _bioDbContext.Posts.AddAsync(post);
-                }
-
-                post.Title = oldPost.Title;
-                post.Url = oldPost.Url;
-                post.DateAdded = oldPost.DateAdded;
-                post.DateUpdated = oldPost.DateUpdated;
-                post.DatePublished = oldPost.DatePublished;
-                post.IsPublished = oldPost.IsPublished;
-                post.AuthorId = oldPost.AuthorId;
-
-                post.Sites.Clear();
-                post.Sites.AddRange(sites.Where(s => oldPost.SiteIds.Contains(s.Id)));
-                post.Sections.Clear();
-                post.Sections.AddRange(sections.Where(s => oldPost.SectionIds.Contains(s.Id)));
-                post.Tags.Clear();
-                post.Tags.AddRange(tags.Where(s => oldPost.TagIds.Contains(s.Id)));
-
-                var blocks = await _oldBrcContext.ContentBlocks.Where(b => b.ContentId == oldPost.Id).ToListAsync();
-                var newBlocks = new List<ContentBlock>();
-                foreach (var oldContentBlock in blocks)
-                {
-                    newBlocks.Add(await ConvertBlockAsync(oldContentBlock));
-                }
-
-                post.Blocks = newBlocks;
-                _logger.LogInformation("Converting post {Title} done", oldPost.Title);
-                await _bioDbContext.SaveChangesAsync();
+                await ConvertPost(oldPost);
+                await trackProgress(oldPosts.Count, ++processed, oldPost.Title);
             }
 
-            
-            _logger.LogInformation("Converting all posts done");
+            logger.LogInformation("Converting all posts done");
+        }
+
+        public async Task ConvertPostAsync(Guid postId)
+        {
+            var oldPost = await oldBrcContext.Posts.FirstOrDefaultAsync(p => p.Id == postId);
+            if (oldPost is not null)
+            {
+                await ConvertPost(oldPost);
+            }
+
+            logger.LogInformation("Converting post done");
+        }
+
+        private async Task ConvertPost(OldPost oldPost)
+        {
+            using var scope = serviceScopeFactory.CreateScope();
+            var bioDbContext = scope.ServiceProvider.GetRequiredService<BioDbContext>();
+            logger.LogInformation("Converting post {Title}", oldPost.Title);
+            var post = await bioDbContext.Posts.Where(s => s.Id == oldPost.Id)
+                .Include(s => s.Sites)
+                .Include(s => s.Sections)
+                .Include(s => s.Tags)
+                .FirstOrDefaultAsync();
+            if (post is null)
+            {
+                post = new Post { Id = oldPost.Id };
+                await bioDbContext.Posts.AddAsync(post);
+            }
+
+            post.Title = oldPost.Title;
+            post.Url = oldPost.Url;
+            post.DateAdded = oldPost.DateAdded;
+            post.DateUpdated = oldPost.DateUpdated;
+            post.DatePublished = oldPost.DatePublished;
+            post.IsPublished = oldPost.IsPublished;
+            post.AuthorId = oldPost.AuthorId;
+
+            post.Sites.Clear();
+            post.Sites.AddRange(await bioDbContext.Sites.Where(s => oldPost.SiteIds.Contains(s.Id)).ToListAsync());
+            post.Sections.Clear();
+            post.Sections.AddRange(await bioDbContext.Sections.Where(s => oldPost.SectionIds.Contains(s.Id))
+                .ToListAsync());
+            post.Tags.Clear();
+            post.Tags.AddRange(await bioDbContext.Tags.Where(s => oldPost.TagIds.Contains(s.Id)).ToListAsync());
+
+            var blocks = await oldBrcContext.ContentBlocks.Where(b => b.ContentId == oldPost.Id).ToListAsync();
+            var newBlocks = new OrderedCollection<ContentBlock>();
+            foreach (var oldContentBlock in blocks.OrderBy(b => b.Position))
+            {
+                var block = await ConvertBlockAsync(oldContentBlock);
+                if (block is not null)
+                {
+                    newBlocks.AddItem(block);
+                }
+            }
+
+            post.Blocks = newBlocks.ToList();
+            logger.LogInformation("Converting post {Title} done", oldPost.Title);
+            await bioDbContext.SaveChangesAsync();
         }
 
         private async Task<StorageItem?> ConvertStorageItemAsync(OldStorageItem? oldStorageItem)
@@ -221,7 +266,7 @@ namespace BioEngine.Admin.Old
                 FileSize = oldStorageItem.FileSize,
                 LastModified = oldStorageItem.DateUpdated
             };
-            var metadata = new StorageItemMetadata {Type = StorageItemType.File};
+            var metadata = new StorageItemMetadata { Type = StorageItemType.File };
             if (oldStorageItem.Type == OldStorageItemType.Picture && oldStorageItem.PictureInfo is not null)
             {
                 metadata.Type = StorageItemType.Image;
@@ -232,101 +277,98 @@ namespace BioEngine.Admin.Old
                 };
             }
 
-            return await _storage.UpdateMetaDataAsync(storageItem, oldStorageItem.FileName, metadata);
+            return await storage.UpdateMetaDataAsync(storageItem, oldStorageItem.FileName, metadata);
         }
 
-        private async Task<ContentBlock> ConvertBlockAsync(OldContentBlock oldContentBlock)
+        private async Task<ContentBlock?> ConvertBlockAsync(OldContentBlock oldContentBlock)
         {
             ContentBlock block;
             switch (oldContentBlock.Type)
             {
                 case "quoteblock":
-                    var oldQuoteData = JsonConvert.DeserializeObject<OldQuoteBlockData>(oldContentBlock.Data);
+                    var oldQuoteData = JsonConvert.DeserializeObject<OldQuoteBlockData>(oldContentBlock.Data)!;
                     block = new QuoteBlock
                     {
-                        Data = new QuoteBlockData
-                        {
-                            Author = oldQuoteData.Author,
-                            Link = oldQuoteData.Link,
-                            Picture = await ConvertStorageItemAsync(oldQuoteData.Picture),
-                            Text = oldQuoteData.Text
-                        }
+                        Author = oldQuoteData.Author,
+                        Link = oldQuoteData.Link,
+                        Picture = await ConvertStorageItemAsync(oldQuoteData.Picture),
+                        Text = oldQuoteData.Text
                     };
                     break;
                 case "cutblock":
-                    var oldCutData = JsonConvert.DeserializeObject<OldCutBlockData>(oldContentBlock.Data);
-                    block = new CutBlock {Data = new CutBlockData {ButtonText = oldCutData.ButtonText}};
+                    var oldCutData = JsonConvert.DeserializeObject<OldCutBlockData>(oldContentBlock.Data)!;
+                    block = new CutBlock { ButtonText = oldCutData.ButtonText };
                     break;
                 case "twitchblock":
-                    var oldTwitchData = JsonConvert.DeserializeObject<OldTwitchBlockData>(oldContentBlock.Data);
+                    var oldTwitchData = JsonConvert.DeserializeObject<OldTwitchBlockData>(oldContentBlock.Data)!;
                     block = new TwitchBlock
                     {
-                        Data = new TwitchBlockData
-                        {
-                            ChannelId = oldTwitchData.ChannelId,
-                            CollectionId = oldTwitchData.CollectionId,
-                            VideoId = oldTwitchData.VideoId
-                        }
+                        ChannelId = oldTwitchData.ChannelId,
+                        CollectionId = oldTwitchData.CollectionId,
+                        VideoId = oldTwitchData.VideoId
                     };
                     break;
                 case "twitterblock":
-                    var oldTwitterData = JsonConvert.DeserializeObject<OldTwitterBlockData>(oldContentBlock.Data);
+                    var oldTwitterData = JsonConvert.DeserializeObject<OldTwitterBlockData>(oldContentBlock.Data)!;
                     block = new TwitterBlock
                     {
-                        Data = new TwitterBlockData
-                        {
-                            TweetAuthor = oldTwitterData.TweetAuthor, TweetId = oldTwitterData.TweetId,
-                        }
+                        TweetAuthor = oldTwitterData.TweetAuthor, TweetId = oldTwitterData.TweetId
                     };
                     break;
                 case "pictureblock":
-                    var oldPictureData = JsonConvert.DeserializeObject<OldPictureBlockData>(oldContentBlock.Data);
-                    block = new PictureBlock
+                    var oldPictureData = JsonConvert.DeserializeObject<OldPictureBlockData>(oldContentBlock.Data)!;
+                    var picture = await ConvertStorageItemAsync(oldPictureData.Picture!);
+                    if (picture is null)
                     {
-                        Data = new PictureBlockData
-                        {
-                            Url = oldPictureData.Url,
-                            Picture = await ConvertStorageItemAsync(oldPictureData.Picture)
-                        }
+                        logger.LogError("Can't download item {FilePath}", oldPictureData.Picture?.FilePath);
+                        return null;
+                    }
+
+                    block = new GalleryBlock
+                    {
+                        Pictures = new ValueCollection<StorageItem>(
+                            new List<StorageItem> { picture })
                     };
                     break;
                 case "galleryblock":
-                    var oldGalleryData = JsonConvert.DeserializeObject<OldGalleryBlockData>(oldContentBlock.Data);
+                    var oldGalleryData = JsonConvert.DeserializeObject<OldGalleryBlockData>(oldContentBlock.Data)!;
                     var newItems = new ValueCollection<StorageItem>();
                     foreach (var oldStorageItem in oldGalleryData.Pictures)
                     {
-                        newItems.Add(await ConvertStorageItemAsync(oldStorageItem));
+                        var galleryItem = await ConvertStorageItemAsync(oldStorageItem);
+                        if (galleryItem is not null)
+                        {
+                            newItems.Add(galleryItem);
+                        }
                     }
 
-                    block = new GalleryBlock {Data = new GalleryBlockData {Pictures = newItems}};
+                    block = new GalleryBlock { Pictures = newItems };
                     break;
                 case "textblock":
-                    var oldTextData = JsonConvert.DeserializeObject<OldTextBlockData>(oldContentBlock.Data);
-                    block = new TextBlock {Data = new TextBlockData {Text = oldTextData.Text}};
+                    var oldTextData = JsonConvert.DeserializeObject<OldTextBlockData>(oldContentBlock.Data)!;
+                    block = new TextBlock { Text = oldTextData.Text };
                     break;
                 case "fileblock":
-                    var oldFileData = JsonConvert.DeserializeObject<OldFileBlockData>(oldContentBlock.Data);
-                    block = new FileBlock
+                    var oldFileData = JsonConvert.DeserializeObject<OldFileBlockData>(oldContentBlock.Data)!;
+                    var item = await ConvertStorageItemAsync(oldFileData.File);
+                    if (item is null)
                     {
-                        Data = new FileBlockData {File = await ConvertStorageItemAsync(oldFileData.File)}
-                    };
+                        logger.LogError("Can't download item {FilePath}", oldFileData.File?.FilePath);
+                        return null;
+                    }
+
+                    block = new FilesBlock { Files = new ValueCollection<StorageItem>(new List<StorageItem> { item }) };
                     break;
                 case "youtubeblock":
-                    var oldYoutubeData = JsonConvert.DeserializeObject<OldYoutubeBlockData>(oldContentBlock.Data);
-                    block = new YoutubeBlock {Data = new YoutubeBlockData {YoutubeId = oldYoutubeData.YoutubeId}};
+                    var oldYoutubeData = JsonConvert.DeserializeObject<OldYoutubeBlockData>(oldContentBlock.Data)!;
+                    block = new YoutubeBlock { YoutubeId = oldYoutubeData.YoutubeId };
                     break;
                 case "iframeblock":
-                    var oldIframeData = JsonConvert.DeserializeObject<OldIframeBlockData>(oldContentBlock.Data);
-                    block = new IframeBlock
-                    {
-                        Data = new IframeBlockData
-                        {
-                            Height = oldIframeData.Height, Width = oldIframeData.Width, Src = oldIframeData.Src
-                        }
-                    };
+                    var oldIframeData = JsonConvert.DeserializeObject<OldIframeBlockData>(oldContentBlock.Data)!;
+                    block = new IframeBlock { Src = oldIframeData.Src };
                     break;
                 default:
-                    throw new Exception($"Unknown block type {oldContentBlock.Type}");
+                    throw new InvalidPathException($"Unknown block type {oldContentBlock.Type}");
             }
 
             block.Position = oldContentBlock.Position;

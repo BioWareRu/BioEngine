@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using BioEngine.Core.Data.Entities;
 using FluentValidation.Results;
+using Microsoft.Extensions.Options;
 using Sitko.Core.Repository;
 using Sitko.Core.Repository.EntityFrameworkCore;
 
@@ -10,8 +11,7 @@ namespace BioEngine.Core.Data.Repositories
 {
     public class TagsRepository : EFRepository<Tag, Guid, BioDbContext>
     {
-        public TagsRepository(EFRepositoryContext<Tag, Guid, BioDbContext> repositoryContext) : base(
-            repositoryContext)
+        public TagsRepository(EFRepositoryContext<Tag, Guid, BioDbContext> repositoryContext) : base( repositoryContext)
         {
         }
 

@@ -8,17 +8,7 @@
 @using BioEngine.Core
 @using BioEngine.Core.Extensions
 @using JetBrains.Annotations
-@inject IStorage<BRCStorageConfig> Storage
-@inject IImgProxyUrlGenerator<BRCStorageConfig> ImgProxyUrlGenerator
-@inject ModalService ModalService
-@inject IJSRuntime JsRuntime
-@inject NavigationManager NavigationManager
-
-@{
-    var title = $"{(CurrentPath == "/" ? "Начало" : CurrentPath)} / Файлы / BRC Admin";
-}
-<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title value="@title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
-
+@inherits BaseAntListComponent<StorageNode>
 <AntDesign.Breadcrumb>
     @foreach (var part in Parts)
     {
@@ -44,43 +34,42 @@
 
 </AntDesign.Breadcrumb>
 <Divider/>
-<Spin Spinning="@_loading">
+<Spin Spinning="@IsLoading">
     <Row Gutter="24">
         <AntDesign.Col Span="8">
-            <div class="ant-upload ant-upload-select">
-                <InputFile style="display: none;" id="customFile" OnChange="UploadFileAsync" multiple/>
-                <span class="ant-upload">
-                    <Button Icon="upload" OnClick="OpenFilesDialogAsync">
-                        <span>Загрузить файлы</span>
-                    </Button>
+            <EditForm Model="_storageItems">
+                <AntStorageItemsInput
+                    TValue="List<StorageItem>"
+                    Storage="@Storage"
+                    ButtonText=""
+                    MaxAllowedFiles="10"
+                    @bind-Value="_storageItems"
+                    UploadPath="@GetStoragePath(CurrentPath)"
+                    MaxFileSize="@(2 * 1024 * 1024)"
+                    GenerateMetadata="@StorageUploadExtensions.GenerateMetadataAsync"
+                    OnChange="UploadFilesAsync">
+                    <Button Icon="upload"></Button>
+                </AntStorageItemsInput>
+                <span title="Создать папку">
+                    <Button OnClick="ShowFolderDialogAsync" Icon="folder-add"></Button>
                 </span>
-            </div>
-        </AntDesign.Col>
-        <AntDesign.Col Span="8">
-            <Button OnClick="ShowFolderDialogAsync">Создать папку</Button>
-            <Button Danger OnClick="RefreshMetadataAsync">Обновить метаданные</Button>
-        </AntDesign.Col>
-        <AntDesign.Col Span="8">
-            @if (SelectMode)
-            {
-                var text = "Выберите файлы";
-                var isEnabled = _selectedRows.Any();
-                if (isEnabled)
-                {
-                    text = IsMultiple ? $"Выбрать файлы ({_selectedRows.Count()})" : "Выбрать файл";
-                }
-                <AntDesign.Button Type="@ButtonType.Primary" Disabled="!isEnabled" OnClick="@SelectItemsAsync">@text</AntDesign.Button>
-            }
+                <span title="Обновить метаданные">
+                    <Button Danger OnClick="RefreshMetadataAsync" Icon="redo"></Button>
+                </span>
+            </EditForm>
+
         </AntDesign.Col>
     </Row>
     <Divider/>
     <Table TItem="StorageNode"
+           @ref="Table"
            DataSource="@Items"
-           Total="Count"
-           OnChange="@OnChange"
-           @bind-PageIndex="_pageIndex"
-           @bind-PageSize="_pageSize"
-           @bind-SelectedRows="_selectedRows">
+           RemoteDataSource="true"
+           Total="@Count"
+           OnChange="@(async model => await OnChangeAsync(model))"
+           @bind-PageIndex="@PageIndex"
+           @bind-PageSize="@PageSize"
+           @bind-SelectedRows="@_selectedRows">
         @if (SelectMode)
         {
             <Selection Type="@(IsMultiple ? "checkbox" : "radio")" Disabled="@(context.Type == StorageNodeType.Directory)"/>
@@ -105,7 +94,7 @@
                             var title = $"{metadata.ImageMetadata!.Width}x{metadata.ImageMetadata.Height}";
                             var url = ImgProxyUrlGenerator.Resize(item, 100, 100, "fit");
                             <a href="@Storage.PublicUri(item).ToString()" target="_blank">
-                                <img alt="@title" style="max-width: 80%;" title="@title" src="@url"/>
+                                <Avatar Shape="square" Src="@url" Alt="@title"></Avatar>
                             </a>
                             break;
                     }
@@ -133,181 +122,18 @@
             @context.HumanSize
         </Column>
         <Column Title="Дата" @bind-Field="@context.LastModified" Format="dd.MM.yyyy HH:mm:ss" Sortable SorterCompare="(a, b) => 0" DefaultSortOrder="SortDirection.Descending"/>
+        <AntListInitializer TEntity="StorageNode" Table="Table" AntListComponent="this"></AntListInitializer>
     </Table>
+    @if (SelectMode)
+    {
+        var text = "Выберите файлы";
+        var isEnabled = _selectedRows.Any();
+        if (isEnabled)
+        {
+            text = IsMultiple ? $"Выбрать файлы ({_selectedRows.Count()})" : "Выбрать файл";
+        }
+        <div class="ant-modal-footer">
+            <AntDesign.Button Type="@ButtonType.Primary" Disabled="!isEnabled" OnClick="@SelectItemsAsync">@text</AntDesign.Button>
+        </div>
+    }
 </Spin>
-
-@code {
-    private bool _loading = true;
-    private IEnumerable<StorageNode> _items;
-    protected int _pageIndex = 1;
-    protected int _pageSize = 20;
-    protected int Count;
-    public IEnumerable<StorageNode> Items { get; set; } = new StorageNode[0];
-    private IEnumerable<StorageNode> _selectedRows = new StorageNode[0];
-    private (string path, string name)[] Parts => StorageUploadExtensions.GetPathParts(CurrentPath);
-
-    [Parameter]
-    public string Prefix { get; set; }
-
-    [Parameter]
-    public string CurrentPath { get; set; }
-
-    [Parameter]
-    public bool UseNavigation { get; set; }
-
-    [Parameter]
-    public bool SelectMode { get; set; }
-
-    [Parameter]
-    public bool IsMultiple { get; set; }
-
-    protected override async Task OnParametersSetAsync()
-    {
-        await base.OnParametersSetAsync();
-        await LoadDataAsync(string.IsNullOrEmpty(CurrentPath) ? "/" : CurrentPath);
-    }
-
-    private async Task LoadDataAsync(string path)
-    {
-        CurrentPath = path;
-        await LoadData();
-    }
-
-    private Task NavigateAsync(string path)
-    {
-        var currentPath = Path.Combine(CurrentPath, path);
-        return LoadDataAsync(currentPath);
-    }
-
-    async Task UploadFileAsync(InputFileChangeEventArgs args)
-    {
-        _loading = true;
-        foreach (var file in args.GetMultipleFiles())
-        {
-            await using var stream = new MemoryStream();
-            await file.OpenReadStream(file.Size).CopyToAsync(stream);
-            var path = GetStoragePath(CurrentPath);
-            await Storage.ProcessAndUploadFileAsync(stream, file.Name, path);
-        }
-        await LoadDataAsync(CurrentPath);
-    }
-
-    private string GetStoragePath(string path)
-    {
-        if (path.StartsWith("/"))
-        {
-            path = path.Substring(1);
-        }
-        return GetUrlPath(Prefix, path);
-    }
-
-    private Task OpenFilesDialogAsync()
-    {
-        var arg = new {id = "customFile"};
-        return JsRuntime.InvokeVoidAsync(
-            "FileUpload.open",
-            arg).AsTask();
-    }
-
-    private async Task ShowFolderDialogAsync()
-    {
-        var options = new ConfirmOptions()
-        {
-            Title = "Новая папка"
-        };
-
-        var confirmRef = await ModalService.CreateConfirmAsync<FolderCreationDialog, string, string>(options, "");
-
-        confirmRef.OnOk = async result =>
-        {
-            if (!string.IsNullOrEmpty(result))
-            {
-                if (UseNavigation)
-                {
-                    NavigationManager.NavigateTo(GetUrlPath(null, result));
-                }
-                else
-                {
-                    await NavigateAsync(result);
-                }
-            }
-        };
-    }
-
-    [Parameter]
-    public EventCallback<StorageItem[]> OnItemsSelect { get; set; }
-
-    private Task SelectItemsAsync()
-    {
-        return OnItemsSelect.InvokeAsync(_selectedRows.Select(r => r.StorageItem!).ToArray());
-    }
-
-    private bool CanSelectItem(StorageNode item)
-    {
-        if (IsMultiple)
-        {
-            return true;
-        }
-
-        if (!_selectedRows.Any())
-        {
-            return true;
-        }
-
-        if (_selectedRows.Contains(item))
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    private async Task OnChange(QueryModel<StorageNode> queryModel)
-    {
-        await LoadData(queryModel.PageSize * (queryModel.PageIndex - 1), queryModel.PageSize, queryModel.SortModel);
-    }
-
-    private async Task LoadData(int skip = 0, int take = 20, IList<ITableSortModel> sortModel = null)
-    {
-        _loading = true;
-        _items = await Storage.GetDirectoryContentsAsync(GetStoragePath(CurrentPath));
-        Count = _items.Count();
-
-        var query = _items.AsQueryable().OrderByDescending(n => n.Type == StorageNodeType.Directory);
-
-        if (sortModel != null)
-        {
-            foreach (var sort in sortModel.Where(s => s.Sort is not null))
-            {
-                query = sort.ThenSort(query);
-            }
-        }
-
-        Items = query.Skip(skip).Take(take).ToList();
-
-        _loading = false;
-        StateHasChanged();
-    }
-
-    private async Task RefreshMetadataAsync()
-    {
-        _loading = true;
-        await Storage.RefreshDirectoryContentsAsync(GetStoragePath(CurrentPath));
-        await LoadData();
-    }
-
-    private string GetUrlPath(string? baseUrl, string path)
-    {
-        if (baseUrl is null)
-        {
-            var uri = new Uri(NavigationManager.Uri);
-            baseUrl = uri.AbsolutePath;
-        }
-        if (path == "/")
-        {
-            return baseUrl;
-        }
-        return Path.Combine(baseUrl, path).Replace("\\", "/").Replace("//", "/");
-    }
-
-}

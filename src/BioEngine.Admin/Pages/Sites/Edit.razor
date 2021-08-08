@@ -1,12 +1,31 @@
-﻿@page "/Sites/{siteId:guid}"
-@{
-    var title = "Изменение сайта / BRC Admin";
-}
-<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title value="@title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
-<SiteForm EntityId="SiteId"></SiteForm>
-
-@code
-{
-    [Parameter]
-    public Guid SiteId { get; set; }
-}
+﻿@page "/Sites/Add"
+@page "/Sites/{EntityId:guid}"
+@inherits BaseFormPage<BioEngine.Core.Data.Entities.Site, SiteForm>
+<SiteForm Layout="@FormLayout.Vertical" EntityId="EntityId" @ref="Form">
+    <Toolbelt.Blazor.HeadElement.Title>@PageTitle</Toolbelt.Blazor.HeadElement.Title>
+    <PageContainer Title="@Title">
+        <Breadcrumb>
+            <Breadcrumb>
+                <BreadcrumbItem>
+                    <a href="/">BRCGames</a>
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                    <a href="/Sites">Сайты</a>
+                </BreadcrumbItem>
+            </Breadcrumb>
+        </Breadcrumb>
+        <Extra>
+            <AntDesign.Button Type="@ButtonType.Primary" Disabled="!context.CanSave()" OnClick="context.Save">
+                Сохранить
+            </AntDesign.Button>
+        </Extra>
+        <ChildContent>
+            <FormItem Label="Заголовок">
+                <Input @bind-Value="@context.Entity.Title"/>
+            </FormItem>
+            <FormItem Label="Адрес">
+                <Input @bind-Value="@context.Entity.Url"/>
+            </FormItem>
+        </ChildContent>
+    </PageContainer>
+</SiteForm>

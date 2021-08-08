@@ -1,0 +1,39 @@
+﻿@page "/"
+@using BioEngine.Core.Users
+@inject ICurrentUserProvider CurrentUserProvider
+@inject NavigationManager NavMgr
+@if (CurrentUser is null)
+{
+    <Button OnClick="Login">Login</Button>
+}
+else
+{
+    <h1>Hello, @CurrentUser.Name</h1>
+    <Button OnClick="Logout">Logout</Button>
+}
+
+@code
+{
+}
+
+@code {
+
+    private void Login()
+    {
+        NavMgr.NavigateTo("/signin/IPB", true);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        CurrentUser = await CurrentUserProvider.GetCurrentUserAsync();
+    }
+
+    public User? CurrentUser { get; set; }
+
+    private void Logout()
+    {
+        NavMgr.NavigateTo("/signout", true);
+    }
+
+}

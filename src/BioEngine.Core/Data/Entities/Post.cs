@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using BioEngine.Core.Data.Entities.Abstractions;
-using BioEngine.Core.Data.Entities.Blocks;
 using BioEngine.Core.Users;
 using FluentValidation;
+using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
+using Sitko.Blockly;
 
 namespace BioEngine.Core.Data.Entities
 {
@@ -25,5 +26,36 @@ namespace BioEngine.Core.Data.Entities
         public List<Tag> Tags { get; set; } = new();
 
         public List<ContentBlock> Blocks { get; set; } = new();
+    }
+
+    [UsedImplicitly]
+    public class PostValidator : AbstractValidator<Post>
+    {
+        public PostValidator(BioDbContext dbContext)
+        {
+            RuleFor(e => e.Title).NotEmpty().WithMessage("Укажите заголовок").MaximumLength(1024).MinimumLength(5)
+                .WithMessage("Заголовок должен быть от 5 до 1024 символов.");
+            RuleFor(e => e.Url).NotEmpty().WithMessage("Укажите адрес");
+            RuleFor(e => e.Sections)
+                .NotEmpty()
+                .WithMessage("Укажите разделы");
+            // .OverridePropertyName(nameof(PostFormModel.DummySectionId)); TODO: Show in form
+
+            RuleFor(e => e.Url).CustomAsync(async (url, context, cancellationToken) =>
+            {
+                if (context.InstanceToValidate is not null && !string.IsNullOrEmpty(url))
+                {
+                    var count = await dbContext.Set<Post>()
+                        .Where(p => p.Url == url && p.Id != context.InstanceToValidate.Id)
+                        .CountAsync(cancellationToken);
+                    if (count > 0)
+                    {
+                        context.AddFailure(
+                            $"Url {url} already taken");
+                    }
+                }
+            });
+            RuleFor(e => e.Blocks).NotEmpty();
+        }
     }
 }

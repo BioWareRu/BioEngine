@@ -1,7 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using BioEngine.Core.Data.Entities.Blocks;
 
 namespace BioEngine.Core.Data.Entities
 {

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BioEngine.Core.Data.Entities.Abstractions;
 using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Sitko.Core.Repository.EntityFrameworkCore;
 
 namespace BioEngine.Core.Data.Repositories
@@ -16,8 +17,8 @@ namespace BioEngine.Core.Data.Repositories
         protected readonly SectionsRepository SectionsRepository;
 
 
-        protected SectionEntityRepository(EFRepositoryContext<TEntity, Guid, BioDbContext> repositoryContext,
-            SectionsRepository sectionsRepository) : base(repositoryContext)
+        protected SectionEntityRepository(EFRepositoryContext<TEntity, Guid, BioDbContext> repositoryContext, SectionsRepository sectionsRepository) :
+            base(repositoryContext)
         {
             SectionsRepository = sectionsRepository;
         }

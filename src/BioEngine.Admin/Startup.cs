@@ -1,6 +1,7 @@
+using AntDesign.ProLayout;
+using BioEngine.Core;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -8,7 +9,7 @@ using Sitko.Core.App.Web;
 
 namespace BioEngine.Admin
 {
-    public class Startup : BaseStartup<Core.BioEngineApp>
+    public class Startup : BioEngineStartup
     {
         public Startup(IConfiguration configuration, IHostEnvironment environment) : base(configuration, environment)
         {
@@ -21,27 +22,22 @@ namespace BioEngine.Admin
             {
                 options.Conventions.AuthorizeFolder("/");
             });
-            services.AddServerSideBlazor().AddCircuitOptions(options =>
+            services.Configure<ProSettings>(settings =>
             {
-                options.DetailedErrors = Environment.IsDevelopment();
+                settings.NavTheme = "dark";
+                settings.Title = "BRCGames";
+                settings.FixedHeader = true;
             });
-            services.AddAntDesign();
             services.AddValidatorsFromAssemblyContaining<Program>();
-            services.AddValidatorsFromAssemblyContaining<Core.BioEngineApp>();
+            services.AddValidatorsFromAssemblyContaining<BioEngineApp<Startup>>();
         }
 
         protected override void ConfigureAfterRoutingMiddleware(IApplicationBuilder app)
         {
             base.ConfigureAfterRoutingMiddleware(app);
+            app.ConfigureLocalization("ru-RU");
             app.UseAuthentication();
             app.UseAuthorization();
-        }
-
-        protected override void ConfigureEndpoints(IApplicationBuilder app, IEndpointRouteBuilder endpoints)
-        {
-            base.ConfigureEndpoints(app, endpoints);
-            endpoints.MapBlazorHub();
-            endpoints.MapFallbackToPage("/_Host");
         }
     }
 }

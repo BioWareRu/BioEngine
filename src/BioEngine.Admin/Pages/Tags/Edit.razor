@@ -1,12 +1,28 @@
-﻿@page "/Tags/{tagId:guid}"
-@{
-    var title = "Изменение тэга / BRC Admin";
-}
-<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title value="@title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
-<TagForm EntityId="TagId"></TagForm>
-
-@code
-{
-    [Parameter]
-    public Guid TagId { get; set; }
-}
+﻿@page "/Tags/{EntityId:guid}"
+@page "/Tags/Add"
+@inherits BaseFormPage<BioEngine.Core.Data.Entities.Tag, TagForm>
+<TagForm Layout="@FormLayout.Vertical" EntityId="EntityId" @ref="Form">
+    <Toolbelt.Blazor.HeadElement.Title>@PageTitle</Toolbelt.Blazor.HeadElement.Title>
+    <PageContainer Title="@Title">
+        <Breadcrumb>
+            <Breadcrumb>
+                <BreadcrumbItem>
+                    <a href="/">BRCGames</a>
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                    <a href="/Tags">Тэги</a>
+                </BreadcrumbItem>
+            </Breadcrumb>
+        </Breadcrumb>
+        <Extra>
+            <AntDesign.Button Type="@ButtonType.Primary" Disabled="!context.CanSave()" OnClick="context.Save">
+                Сохранить
+            </AntDesign.Button>
+        </Extra>
+        <ChildContent>
+            <FormItem Label="Тег">
+                <Input @bind-Value="@context.Entity.Title"/>
+            </FormItem>
+        </ChildContent>
+    </PageContainer>
+</TagForm>

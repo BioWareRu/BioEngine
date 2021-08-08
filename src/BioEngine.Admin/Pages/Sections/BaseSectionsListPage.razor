@@ -1,43 +1,52 @@
 ﻿@typeparam TItem
-@inherits BaseListPage<TItem, Guid>
-@{
-    var title = $"{GetTitle()} / BRC Admin";
-}
-<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title value="@title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
-<StickyHeader Title="@GetTitle()">
-    <Button Type="@ButtonType.Primary" OnClick="ToFormPage">
-        Добавить
-    </Button>
-</StickyHeader>
-<div class="site-layout-background" style="padding-top: 24px;">
-    <Table @ref="            table"
-            TItem="TItem"
-            DataSource="@Items"
-            Total="Count"
-            OnChange="@OnChange"
-            @bind-PageIndex="_pageIndex"
-            @bind-PageSize="_pageSize">
-        <Column Title="Заголовок" @bind-Field="@context.Title" Sortable>
-            <a href="@GetUrl(context)">@context.Title</a>
-        </Column>
-        <Column Title="Тип" @bind-Field="@context.Type" Sortable>
-            @context.Type
-        </Column>
-        <Column Title="Дата" @bind-Field="@context.DateAdded" Format="dd.MM.yyyy hh:mm:ss" Sortable DefaultSortOrder="SortDirection.Descending"/>
-        <Column Title="Сайты" @bind-Field="@context.Sites" Sortable>
-            @foreach (var site in context.Sites)
-            {
-                <Tag Color="blue">@site.Title</Tag>
-            }
-        </Column>
-        <ActionColumn>
-            <Space>
-                <SpaceItem>
-                    <Button Danger>
-                        <i class="fas fa-trash" title="Удалить"></i>
-                    </Button>
-                </SpaceItem>
-            </Space>
-        </ActionColumn>
-    </Table>
-</div>
+@typeparam TData
+@using ImgProxy
+@using Microsoft.AspNetCore.Components
+@using ResizeOption = BioEngine.Admin.Pages.Sections.Topics.ResizeOption
+@inherits BaseListPage
+<Toolbelt.Blazor.HeadElement.Title>@PageTitle</Toolbelt.Blazor.HeadElement.Title>
+<PageContainer Title="@Title">
+    <Breadcrumb>
+        <Breadcrumb>
+            <BreadcrumbItem>
+                <a href="/">BRCGames</a>
+            </BreadcrumbItem>
+            <BreadcrumbItem>@Title</BreadcrumbItem>
+        </Breadcrumb>
+    </Breadcrumb>
+    <Extra>
+        <Button Type="@ButtonType.Primary" OnClick="ToFormPage">
+            Добавить
+        </Button>
+    </Extra>
+    <ChildContent>
+        <AntRepositoryList TItem="TItem" TEntityPk="Guid">
+            <Column TData="string" Style="text-align: center">
+                @if (context.Data.HeaderPicture is not null)
+                {
+                    var url = ImgProxyUrlGenerator.Build(context.Data.HeaderPicture, proxyBuilder => proxyBuilder.WithOptions(new ResizeOption("fill", 0, 32), new GravityOption("ce")));
+                    <Avatar Size="32" Shape="square" Src="@url" Alt="@context.Title"></Avatar>
+                }
+            </Column>
+            <Column Title="Заголовок" @bind-Field="@context.Title" Sortable Filterable>
+                <a href="@GetUrl(context)">@context.Title</a>
+            </Column>
+            <Column Title="Дата" @bind-Field="@context.DateAdded" Format="dd.MM.yyyy hh:mm:ss" Sortable DefaultSortOrder="SortDirection.Descending"/>
+            <Column Title="Сайты" @bind-Field="@context.Sites" Sortable>
+                @foreach (var site in context.Sites)
+                {
+                    <Tag Color="blue">@site.Title</Tag>
+                }
+            </Column>
+            <ActionColumn>
+                <Space>
+                    <SpaceItem>
+                        <Button Danger>
+                            <i class="fas fa-trash" title="Удалить"></i>
+                        </Button>
+                    </SpaceItem>
+                </Space>
+            </ActionColumn>
+        </AntRepositoryList>
+    </ChildContent>
+</PageContainer>

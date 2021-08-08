@@ -1,0 +1,23 @@
+﻿@using Sitko.Core.App.Collections
+@using Sitko.Core.Storage
+@inherits Sitko.Blockly.Blazor.Forms.Blocks.GalleryBlockForm<AntDesignBlocklyFormOptions>
+@if (FormOptions.Storage is not null)
+{
+    <AntBlockFormItem BlockForm="this">
+        <AntStorageImagesInput
+            TValue="ValueCollection<StorageItem>"
+            Storage="FormOptions.Storage"
+            ContentTypes="@FormOptions.ImagesOptions.AllowedTypes"
+            UploadPath="@FormOptions.ImagesOptions.UploadPath"
+            MaxFileSize="@FormOptions.ImagesOptions.MaxFileSize"
+            MaxFiles="@FormOptions.ImagesOptions.MaxAllowedFiles"
+            GenerateMetadata="FormOptions.ImagesOptions.GenerateMetadata"
+            UploadText="Добавить"
+            @bind-Value="Block.Pictures" CustomUpload="SelectImagesAsync">
+        </AntStorageImagesInput>
+    </AntBlockFormItem>
+}
+else
+{
+    <AntBlockFormErrorComponent Error="@LocalizationProvider["Storage is not configured in form options"]"></AntBlockFormErrorComponent>
+}

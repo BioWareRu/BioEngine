@@ -1,0 +1,89 @@
+﻿@page "/Posts/Add"
+@page "/Posts/{EntityId:guid}"
+@using BioEngine.Core.Data.Entities
+@using Tag = BioEngine.Core.Data.Entities.Tag
+@inherits BaseFormPage<Post, PostForm>
+
+<PostForm Layout="@FormLayout.Vertical" EntityId="EntityId" @ref="Form">
+    <Toolbelt.Blazor.HeadElement.Title>@PageTitle</Toolbelt.Blazor.HeadElement.Title>
+    <PageContainer Title="@Title">
+        <Breadcrumb>
+            <Breadcrumb>
+                <BreadcrumbItem>
+                    <a href="/">BRCGames</a>
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                    <a href="/Posts">Посты</a>
+                </BreadcrumbItem>
+            </Breadcrumb>
+        </Breadcrumb>
+        <Extra>
+            <AntDesign.Button Type="@ButtonType.Primary" Disabled="!context.CanSave()" OnClick="context.Save">
+                Сохранить
+            </AntDesign.Button>
+            @if (!context.Entity.IsPublished)
+            {
+                <AntDesign.Button Type="@ButtonType.Dashed" Danger Disabled="!context.CanPublish()" OnClick="context.PublishAsync">
+                    Опубликовать
+                </AntDesign.Button>
+            }
+            else
+            {
+                <AntDesign.Button Type="@ButtonType.Dashed" Danger Disabled="!context.CanUnPublish()" OnClick="context.UnPublishAsync">
+                    Спрятать
+                </AntDesign.Button>
+            }
+        </Extra>
+        <ChildContent>
+            <Row Gutter="24">
+                <AntDesign.Col Span="12">
+                    <FormItem Label="Заголовок">
+                        <AntDesign.Input @bind-Value="@context.Entity.Title" OnkeyUp="context.TitleChanged"/>
+                    </FormItem>
+                </AntDesign.Col>
+                <AntDesign.Col Span="12">
+                    <FormItem Label="Адрес">
+                        <AntDesign.Input @bind-Value="@context.Entity.Url"/>
+                    </FormItem>
+                </AntDesign.Col>
+            </Row>
+            <Row Gutter="24">
+                <AntDesign.Col Span="12">
+                    <FormItem Label="Разделы">
+                        <AntDesign.Select Mode="multiple"
+                                          DataSource="@context.SectionsList"
+                                          @bind-Value="@context.DummySectionId"
+                                          @bind-Values="@context.SectionIds"
+                                          LabelName="@nameof(Section.Title)"
+                                          ValueName="@nameof(Section.Id)"
+                                          Placeholder="Укажите разделы"
+                                          DefaultActiveFirstItem="false"
+                                          TItemValue="Guid"
+                                          TItem="Section"
+                                          EnableSearch
+                                          AllowClear>
+                        </AntDesign.Select>
+                    </FormItem>
+                </AntDesign.Col>
+                <AntDesign.Col Span="12">
+                    <FormItem Label="Теги">
+                        <AntDesign.Select Mode="multiple"
+                                          DataSource="@context.TagsList"
+                                          @bind-Value="@context.DummyTagId"
+                                          @bind-Values="@context.TagIds"
+                                          LabelName="@nameof(Tag.Title)"
+                                          ValueName="@nameof(Tag.Id)"
+                                          Placeholder="Укажите теги"
+                                          DefaultActiveFirstItem="false"
+                                          TItemValue="Guid"
+                                          TItem="Tag"
+                                          EnableSearch
+                                          AllowClear>
+                        </AntDesign.Select>
+                    </FormItem>
+                </AntDesign.Col>
+            </Row>
+            <AntBlocklyForm TEntity="Post" TForm="PostForm" @bind-Value="context.Entity.Blocks" Form="context" Options="context.BlocksOptions"></AntBlocklyForm>
+        </ChildContent>
+    </PageContainer>
+</PostForm>

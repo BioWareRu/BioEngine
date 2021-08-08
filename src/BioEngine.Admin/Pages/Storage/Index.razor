@@ -1,11 +1,25 @@
 @page "/Storage"
 @page "/Storage/{*storagePath}"
-<PageHeader Title="Файловый менеджер"></PageHeader>
-<div class="site-layout-background" style="padding-top: 24px;">
-    <StorageExplorer Prefix="storage" CurrentPath="@StoragePath" UseNavigation="true"></StorageExplorer>
-</div>
+@inherits BasePage
+<Toolbelt.Blazor.HeadElement.Title>@PageTitle</Toolbelt.Blazor.HeadElement.Title>
+<PageContainer Title="@Title">
+    <Breadcrumb>
+        <Breadcrumb>
+            <BreadcrumbItem>
+                <a href="/">BRCGames</a>
+            </BreadcrumbItem>
+            <BreadcrumbItem>@Title</BreadcrumbItem>
+        </Breadcrumb>
+    </Breadcrumb>
+    <ChildContent>
+        <StorageExplorer Prefix="storage" CurrentPath="@StoragePath" UseNavigation="true"></StorageExplorer>
+    </ChildContent>
+</PageContainer>
 
 @code {
+
     [Parameter]
     public string StoragePath { get; set; }
+
+    protected override string Title => "Файловый менеджер";
 }

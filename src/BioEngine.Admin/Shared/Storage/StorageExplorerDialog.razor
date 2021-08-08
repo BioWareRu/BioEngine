@@ -1,14 +1,39 @@
 @using Sitko.Core.Storage
-@inherits ModalTemplate<BioEngine.Admin.Extensions.StorageExplorerDialogOptions>
+@inherits FeedbackComponent<BioEngine.Admin.Extensions.StorageExplorerDialogOptions, StorageItem[]>
 
 @code {
+    private StorageItem[] _items = Array.Empty<StorageItem>();
 
-    private Task SelectItemsAsync(StorageItem[] items)
+    public override async Task OnFeedbackOkAsync(ModalClosingEventArgs args)
     {
-        Options.Items = items;
-        return ModalRef.CloseAsync();
+        if (FeedbackRef is ConfirmRef confirmRef)
+        {
+            confirmRef.Config.OkButtonProps.Loading = true;
+            await confirmRef.UpdateConfigAsync();
+        }
+        else if (FeedbackRef is ModalRef modalRef)
+        {
+            modalRef.Config.ConfirmLoading = true;
+            await modalRef.UpdateConfigAsync();
+        }
+
+        if (!_items.Any())
+            args.Cancel = true;
+        else
+            await OkCancelRefWithResult!.OnOk(_items);
+
+        await base.OnFeedbackOkAsync(args);
     }
-    
+
+    private async Task SelectItemsAsync(StorageItem[] items)
+    {
+        _items = items;
+        var args = new ModalClosingEventArgs(new MouseEventArgs(), false);
+        await OnFeedbackOkAsync(args);
+        await CloseFeedbackAsync();
+    }
+
+
 }
 
 <StorageExplorer Prefix="@Options.Prefix" SelectMode="true" IsMultiple="Options.IsMultiple" OnItemsSelect="@SelectItemsAsync"></StorageExplorer>

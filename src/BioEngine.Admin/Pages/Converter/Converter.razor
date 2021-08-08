@@ -2,67 +2,117 @@
 @using Microsoft.Extensions.DependencyInjection
 @using BioEngine.Admin.Old
 @inherits BasePage
-@{
-    var title = "Конвертер / BRC Admin";
-}
-<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title value="@title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
-<StickyHeader Title="Конвертер"></StickyHeader>
-@if (IsInitialized)
-{
-    <div class="site-layout-background" style="padding-top: 24px;">
-        <h3>Сайты</h3>
-        <Button Danger OnClick="ConvertSitesAsync">Конвертировать</Button>
-    </div>
+<Toolbelt.Blazor.HeadElement.Title>@PageTitle</Toolbelt.Blazor.HeadElement.Title>
+<PageContainer Title="@Title">
+    <Breadcrumb>
+        <Breadcrumb>
+            <BreadcrumbItem>
+                <a href="/">BRCGames</a>
+            </BreadcrumbItem>
+            <BreadcrumbItem>@Title</BreadcrumbItem>
+        </Breadcrumb>
+    </Breadcrumb>
+    <ChildContent>
+        <Card Title="Сайты">
+            <Button Disabled="IsLoading" Danger OnClick="ConvertSitesAsync">Конвертировать</Button>
+        </Card>
 
-    <div class="site-layout-background" style="padding-top: 24px;">
-        <h3>Разделы</h3>
-        <Button Danger OnClick="ConvertSectionsAsync">Конвертировать</Button>
-    </div>
-    <div class="site-layout-background" style="padding-top: 24px;">
-        <h3>Теги</h3>
-        <Button Danger OnClick="ConvertTagsAsync">Конвертировать</Button>
-    </div>
-    <div class="site-layout-background" style="padding-top: 24px;">
-        <h3>Посты</h3>
-        <Button Danger OnClick="ConvertPostsAsync">Конвертировать</Button>
-    </div>
-}
+        <Card Title="Разделы">
+            <Button Disabled="IsLoading" Danger OnClick="ConvertSectionsAsync">Конвертировать</Button>
+        </Card>
+        <Card Title="Теги">
+            <Button Disabled="IsLoading" Danger OnClick="ConvertTagsAsync">Конвертировать</Button>
+        </Card>
+        <Card Title="Посты">
+            <Button Disabled="IsLoading" Danger OnClick="ConvertPostsAsync">Конвертировать</Button>
+        </Card>
+        <Card Title="Пост">
+            <Input @bind-Value="_postId"></Input>
+            <Button Disabled="@(IsLoading || _postId is null)" Danger OnClick="() => ConvertPostAsync(_postId!.Value)">Конвертировать</Button>
+        </Card>
+        @if (_inProcess)
+        {
+            <Card Title="Прогресс">
+                <Progress Type="ProgressType.Circle" Percent="GetPercent()" Format="_format1"/>
+                <p>Последний элемент: @_lastItemTitle</p>
+            </Card>
+        }
+    </ChildContent>
+</PageContainer>
+
 
 @code {
-    private BrcConverter _converter;
+    private bool _inProcess = false;
+    private int _total;
+    private int _processed;
+    private string? _lastItemTitle;
+    private Guid? _postId;
 
-    protected override async Task OnInitializedAsync()
-    {
-        _converter = ScopedServices.GetRequiredService<BrcConverter>();
-        await base.OnInitializedAsync();
-    }
+    private Func<double, string> _format1 => _ => $"{_processed} / {_total}";
 
     private async Task ConvertSitesAsync()
     {
-        StartLoading();
-        await _converter.ConvertSitesAsync();
-        StopLoading();
+        await StartLoadingAsync();
+        _inProcess = true;
+        using var scope = CreateServicesScope();
+        var converter = scope.ServiceProvider.GetRequiredService<BrcConverter>();
+        await converter.ConvertSitesAsync(TrackProgressAsync);
+        _inProcess = false;
+        await StopLoadingAsync();
+    }
+
+    private Task TrackProgressAsync(int total, int processed, string title)
+    {
+        _total = total;
+        _processed = processed;
+        _lastItemTitle = title;
+        return NotifyStateChangeAsync();
     }
 
     private async Task ConvertSectionsAsync()
     {
-        StartLoading();
-        await _converter.ConvertSectionsAsync();
-        StopLoading();
+        await StartLoadingAsync();
+        _inProcess = true;
+        using var scope = CreateServicesScope();
+        var converter = scope.ServiceProvider.GetRequiredService<BrcConverter>();
+        await converter.ConvertSectionsAsync(TrackProgressAsync);
+        _inProcess = false;
+        await StopLoadingAsync();
     }
 
     private async Task ConvertTagsAsync()
     {
-        StartLoading();
-        await _converter.ConvertTagsAsync();
-        StopLoading();
+        await StartLoadingAsync();
+        _inProcess = true;
+        using var scope = CreateServicesScope();
+        var converter = scope.ServiceProvider.GetRequiredService<BrcConverter>();
+        await converter.ConvertTagsAsync(TrackProgressAsync);
+        _inProcess = false;
+        await StopLoadingAsync();
     }
 
     private async Task ConvertPostsAsync()
     {
-        StartLoading();
-        await _converter.ConvertPostsAsync();
-        StopLoading();
+        await StartLoadingAsync();
+        _inProcess = true;
+        using var scope = CreateServicesScope();
+        var converter = scope.ServiceProvider.GetRequiredService<BrcConverter>();
+        await converter.ConvertPostsAsync(TrackProgressAsync);
+        _inProcess = false;
+        await StopLoadingAsync();
     }
 
+    private async Task ConvertPostAsync(Guid id)
+    {
+        await StartLoadingAsync();
+        _inProcess = true;
+        using var scope = CreateServicesScope();
+        var converter = scope.ServiceProvider.GetRequiredService<BrcConverter>();
+        await converter.ConvertPostAsync(id);
+        _inProcess = false;
+        await StopLoadingAsync();
+    }
+
+    private double GetPercent() => _total > 0 ? _processed * 100d / _total : 0;
+    protected override string Title => "Конвертер";
 }

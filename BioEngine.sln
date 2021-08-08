@@ -16,6 +16,7 @@ ProjectSection(SolutionItems) = preProject
 	LICENSE = LICENSE
 	README.md = README.md
 	docker-compose.yml = docker-compose.yml
+	global.json = global.json
 EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{B9D9FA15-5475-403B-B068-7ADE19C93E85}"

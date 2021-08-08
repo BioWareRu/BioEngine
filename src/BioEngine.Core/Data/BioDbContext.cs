@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using BioEngine.Core.Data.Entities;
-using BioEngine.Core.Data.Entities.Blocks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Newtonsoft.Json;
+using Sitko.Blockly.EntityFrameworkCore;
 using Sitko.Core.Db.Postgres;
 
 namespace BioEngine.Core.Data
@@ -35,19 +35,14 @@ namespace BioEngine.Core.Data
                 .HasValue<Game>(SectionType.Game)
                 .HasValue<Topic>(SectionType.Topic);
 
-            modelBuilder.RegisterJsonEnumerableConversion<Section, ContentBlock, List<ContentBlock>>(
-                section => section.Blocks,
-                "Blocks");
+            modelBuilder.RegisterBlocklyConversion<Section>(section => section.Blocks, nameof(Section.Blocks));
             modelBuilder.RegisterJsonConversion<Developer, DeveloperData>(developer => developer.Data, "Data");
             modelBuilder.RegisterJsonConversion<Game, GameData>(game => game.Data, "Data");
             modelBuilder.RegisterJsonConversion<Topic, TopicData>(topic => topic.Data, "Data");
 
 
-            modelBuilder.RegisterJsonEnumerableConversion<Post, ContentBlock, List<ContentBlock>>(post => post.Blocks,
-                "Blocks");
-
-            modelBuilder.RegisterJsonEnumerableConversion<Page, ContentBlock, List<ContentBlock>>(page => page.Blocks,
-                "Blocks");
+            modelBuilder.RegisterBlocklyConversion<Post>(post => post.Blocks, "Blocks");
+            modelBuilder.RegisterBlocklyConversion<Page>(page => page.Blocks, "Blocks");
 
             modelBuilder
                 .Entity<Post>()

@@ -4,7 +4,7 @@ namespace BioEngine.Core.Users
 {
     public interface ICurrentUserProvider
     {
-        User? CurrentUser { get; }
+        Task<User?> GetCurrentUserAsync();
         Task<string?> GetAccessTokenAsync();
     }
 }
