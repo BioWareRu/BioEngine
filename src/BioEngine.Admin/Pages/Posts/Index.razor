@@ -1,7 +1,8 @@
 ﻿@page "/Posts"
 @using Microsoft.AspNetCore.Components
 @using BioEngine.Core.Data.Entities
-@inherits BaseListPage
+@using BioEngine.Admin.Helpers
+@inherits BaseListPage<Post, Guid, BioEngine.Core.Data.Repositories.PostsRepository>
 <Toolbelt.Blazor.HeadElement.Title>@PageTitle</Toolbelt.Blazor.HeadElement.Title>
 <PageContainer Title="@Title">
     <Breadcrumb>
@@ -9,7 +10,6 @@
             <BreadcrumbItem>
                 <a href="/">BRCGames</a>
             </BreadcrumbItem>
-            <BreadcrumbItem>@Title</BreadcrumbItem>
         </Breadcrumb>
     </Breadcrumb>
     <Extra>
@@ -18,7 +18,7 @@
         </Button>
     </Extra>
     <ChildContent>
-        <AntRepositoryList TItem="BioEngine.Core.Data.Entities.Post" TEntityPk="Guid" ConfigureQuery="ConfigureQueryAsync" @ref="ListTable">
+        <PostsList ConfigureQuery="ConfigureQueryAsync" @ref="List">
             <ChildContent>
                 <Column Title="Заголовок" @bind-Field="@context.Title" Sortable Filterable>
                     @{
@@ -51,26 +51,32 @@
                         </a>
                     }
                 </Column>
-                <Column Title="Автор" @bind-Field="@context.AuthorId" Sortable Filters="@authorsFilter">
+                <Column Title="Автор" @bind-Field="@context.AuthorId" Sortable Filters="@authorsFilter" Width="200">
                     <a target="_blank" href="@context.Author.ProfileUrl">
-                        <Avatar Src="@context.Author.PhotoUrl" Alt="@context.Author.Name"/> @context.Author.Name
+                        <Avatar Src="@context.Author.PhotoUrl" Alt="@context.Author.Name"/>&nbsp;<span class="name anticon">@context.Author.Name</span>
                     </a>
                 </Column>
                 <ActionColumn>
                     <Space>
                         <SpaceItem>
-                            <Button>
-                                <i class="fas fa-copy" title="Сохранить как шаблон"></i>
+                            <Button Icon="@FontAwesomeHelper.IconClass("copy")">
+                                @* <i class="fas fa-copy" title="Сохранить как шаблон"></i> *@
                             </Button>
                         </SpaceItem>
                         <SpaceItem>
-                            <Button Danger>
-                                <i class="fas fa-trash" title="Удалить"></i>
-                            </Button>
+                     <Popconfirm Title="Удалить пост?"
+                                        OnConfirm="@(() => List.DeleteAsync(context))"
+                                        OkText="Да"
+                                        Icon="@FontAwesomeHelper.IconClass("trash")"
+                                        CancelText="Нет">
+                                <span title="Удалить">
+                                    <Button Danger Icon="@FontAwesomeHelper.IconClass("trash")"></Button>
+                                </span>
+                            </Popconfirm>
                         </SpaceItem>
                     </Space>
                 </ActionColumn>
             </ChildContent>
-        </AntRepositoryList>
+        </PostsList>
     </ChildContent>
 </PageContainer>

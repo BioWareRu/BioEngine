@@ -2,12 +2,12 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AntDesign;
+using BioEngine.Admin.Shared;
 using BioEngine.Core.Data;
 using BioEngine.Core.Data.Entities;
+using BioEngine.Core.Data.Repositories;
 using BioEngine.Core.Users;
 using Flurl;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Sitko.Core.Blazor.AntDesignComponents.Components;
@@ -18,19 +18,16 @@ namespace BioEngine.Admin.Pages.Posts
 {
     public partial class Index
     {
+        private TableFilter<string>[] authorsFilter = Array.Empty<TableFilter<string>>();
+        private Guid filterSectionId;
+        private Guid filterSiteId;
+        private Guid filterTagId;
         protected override string CreatePageUrl => "/Posts/Add";
         protected override string Title => "Посты";
-        private TableFilter<string>[] authorsFilter = Array.Empty<TableFilter<string>>();
-
-        private Guid? siteId;
-        private Guid? sectionId;
-        private Guid? tagId;
-        public AntRepositoryList<Post, Guid>? ListTable { get; set; }
 
         protected override async Task InitializeAsync()
         {
             await base.InitializeAsync();
-            NavigationManager.LocationChanged += HandleLocationChanged;
             SetFilterParameters();
             using var scope = CreateServicesScope();
             var authorIds = await scope.ServiceProvider.GetRequiredService<BioDbContext>().Posts.Select(a => a.AuthorId)
@@ -41,46 +38,35 @@ namespace BioEngine.Admin.Pages.Posts
                 .Select(x => new TableFilter<string> { Text = x.Name, Value = x.Id }).ToArray();
         }
 
-        private void HandleLocationChanged(object? sender, LocationChangedEventArgs e)
+        protected override async Task OnLocationChangeAsync(string location, bool isNavigationIntercepted)
         {
+            await base.OnLocationChangeAsync(location, isNavigationIntercepted);
             SetFilterParameters();
-            ListTable?.RefreshAsync();
+            await List.RefreshAsync();
         }
 
         private void SetFilterParameters()
         {
-            Url url = new Uri(NavigationManager.Uri);
-            siteId = GetParamValue(url, nameof(siteId));
-            sectionId = GetParamValue(url, nameof(sectionId));
-            tagId = GetParamValue(url, nameof(tagId));
-        }
-
-        private static Guid? GetParamValue(Url url, string paramName)
-        {
-            if (url.QueryParams.TryGetFirst(paramName, out var paramString) &&
-                Guid.TryParse(paramString.ToString(), out var paramValue))
-            {
-                return paramValue;
-            }
-
-            return null;
+            filterSiteId = GetQueryString<Guid>(nameof(filterSiteId));
+            filterSectionId = GetQueryString<Guid>(nameof(filterSectionId));
+            filterTagId = GetQueryString<Guid>(nameof(filterTagId));
         }
 
         private Task ConfigureQueryAsync(IRepositoryQuery<Post> query)
         {
-            if (siteId is not null)
+            if (filterSiteId != default)
             {
-                query.Where(p => p.Sites.Any(site => site.Id == siteId));
+                query.Where(p => p.Sites.Any(site => site.Id == filterSiteId));
             }
 
-            if (sectionId is not null)
+            if (filterSectionId != default)
             {
-                query.Where(p => p.Sections.Any(section => section.Id == sectionId));
+                query.Where(p => p.Sections.Any(section => section.Id == filterSectionId));
             }
 
-            if (tagId is not null)
+            if (filterTagId != default)
             {
-                query.Where(p => p.Tags.Any(tag => tag.Id == tagId));
+                query.Where(p => p.Tags.Any(tag => tag.Id == filterTagId));
             }
 
             return Task.CompletedTask;
@@ -91,26 +77,31 @@ namespace BioEngine.Admin.Pages.Posts
             Url url = new Uri(NavigationManager.Uri);
             if (siteId is not null)
             {
-                url = url.SetQueryParam(nameof(this.siteId), siteId);
+                url = url.SetQueryParam(nameof(this.filterSiteId), siteId);
             }
 
             if (sectionId is not null)
             {
-                url = url.SetQueryParam(nameof(this.sectionId), sectionId);
+                url = url.SetQueryParam(nameof(this.filterSectionId), sectionId);
             }
 
             if (tagId is not null)
             {
-                url = url.SetQueryParam(nameof(this.tagId), tagId);
+                url = url.SetQueryParam(nameof(this.filterTagId), tagId);
             }
 
             return url.ToString();
         }
 
-        private string GetSiteFilterUrl(Site site) => GetFilterUrl(site.Id, sectionId, tagId);
+        private string GetSiteFilterUrl(Site site) => GetFilterUrl(site.Id, filterSectionId, filterTagId);
 
-        private string GetSectionFilterUrl(Section section) => GetFilterUrl(siteId, section.Id, tagId);
+        private string GetSectionFilterUrl(Section section) => GetFilterUrl(filterSiteId, section.Id, filterTagId);
 
-        private string GetTagFilterUrl(Tag tag) => GetFilterUrl(siteId, sectionId, tag.Id);
+        private string GetTagFilterUrl(Tag tag) => GetFilterUrl(filterSiteId, filterSectionId, tag.Id);
+    }
+
+    public class PostsList : BaseBioEngineList<Post, Guid, PostsRepository>
+    {
+        public override Task DeleteAsync(Post entity) => throw new NotImplementedException();
     }
 }

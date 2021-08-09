@@ -1,5 +1,6 @@
 ﻿@page "/Pages"
-@inherits BaseListPage
+@using BioEngine.Admin.Helpers
+@inherits BaseListPage<BioEngine.Core.Data.Entities.Page, Guid, BioEngine.Core.Data.Repositories.PagesRepository>
 <Toolbelt.Blazor.HeadElement.Title>@PageTitle</Toolbelt.Blazor.HeadElement.Title>
 <PageContainer Title="@Title">
     <Breadcrumb>
@@ -7,7 +8,6 @@
             <BreadcrumbItem>
                 <a href="/">BRCGames</a>
             </BreadcrumbItem>
-            <BreadcrumbItem>@Title</BreadcrumbItem>
         </Breadcrumb>
     </Breadcrumb>
     <Extra>
@@ -16,7 +16,7 @@
         </Button>
     </Extra>
     <ChildContent>
-        <AntRepositoryList TItem="BioEngine.Core.Data.Entities.Page" TEntityPk="Guid">
+        <PagesList @ref="List">
             <Column Title="Название" @bind-Field="@context.Title" Sortable Filterable>
                 @{
                     var url = $"/Pages/{context.Id}";
@@ -31,13 +31,19 @@
             <ActionColumn>
                 <Space>
                     <SpaceItem>
-                        <Button Danger>
-                            <i class="fas fa-trash" title="Удалить"></i>
-                        </Button>
+                        <Popconfirm Title="Удалить страницу?"
+                                    OnConfirm="@(() => List.DeleteAsync(context))"
+                                    OkText="Да"
+                                    Icon="@FontAwesomeHelper.IconClass("trash")"
+                                    CancelText="Нет">
+                            <span title="Удалить">
+                                <Button Danger Icon="@FontAwesomeHelper.IconClass("trash")"></Button>
+                            </span>
+                        </Popconfirm>
                     </SpaceItem>
                 </Space>
             </ActionColumn>
-        </AntRepositoryList>
+        </PagesList>
 
     </ChildContent>
 </PageContainer>

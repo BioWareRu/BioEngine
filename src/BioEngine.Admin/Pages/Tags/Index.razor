@@ -1,5 +1,7 @@
 ﻿@page "/Tags"
-@inherits BaseListPage
+@using Microsoft.AspNetCore.Components
+@using BioEngine.Admin.Helpers
+@inherits BaseListPage<BioEngine.Core.Data.Entities.Tag, Guid, BioEngine.Core.Data.Repositories.TagsRepository>
 <Toolbelt.Blazor.HeadElement.Title>@PageTitle</Toolbelt.Blazor.HeadElement.Title>
 <PageContainer Title="@Title">
     <Breadcrumb>
@@ -7,7 +9,6 @@
             <BreadcrumbItem>
                 <a href="/">BRCGames</a>
             </BreadcrumbItem>
-            <BreadcrumbItem>@Title</BreadcrumbItem>
         </Breadcrumb>
     </Breadcrumb>
     <Extra>
@@ -16,25 +17,33 @@
         </Button>
     </Extra>
     <ChildContent>
-        <AntRepositoryList TItem="BioEngine.Core.Data.Entities.Tag" TEntityPk="Guid">
-            <Column Title="Название" @bind-Field="@context.Title" Sortable>
-                @{
-                    var url = $"/Tags/{context.Id}";
-                }
-                <a href="@url">@context.Title</a>
-            </Column>
-            <Column Title="Дата" @bind-Field="@context.DateAdded" Format="dd.MM.yyyy hh:mm:ss" Sortable DefaultSortOrder="SortDirection.Descending"/>
+        <TagsList @ref="List">
+            <ChildContent>
+                <Column Title="Название" @bind-Field="@context.Title" Sortable>
+                    @{
+                        var url = $"/Tags/{context.Id}";
+                    }
+                    <a href="@url">@context.Title</a>
+                </Column>
+                <Column Title="Дата" @bind-Field="@context.DateAdded" Format="dd.MM.yyyy hh:mm:ss" Sortable DefaultSortOrder="SortDirection.Descending"/>
 
-            <ActionColumn>
-                <Space>
-                    <SpaceItem>
-                        <Button Danger>
-                            <i class="fas fa-trash" title="Удалить"></i>
-                        </Button>
-                    </SpaceItem>
-                </Space>
-            </ActionColumn>
-        </AntRepositoryList>
+                <ActionColumn>
+                    <Space>
+                        <SpaceItem>
+                            <Popconfirm Title="Удалить тэг?"
+                                        OnConfirm="@(() => List.DeleteAsync(context))"
+                                        OkText="Да"
+                                        Icon="@FontAwesomeHelper.IconClass("trash")"
+                                        CancelText="Нет">
+                                <span title="Удалить">
+                                    <Button Danger Icon="@FontAwesomeHelper.IconClass("trash")"></Button>
+                                </span>
+                            </Popconfirm>
+                        </SpaceItem>
+                    </Space>
+                </ActionColumn>
+            </ChildContent>
+        </TagsList>
     </ChildContent>
 </PageContainer>
 

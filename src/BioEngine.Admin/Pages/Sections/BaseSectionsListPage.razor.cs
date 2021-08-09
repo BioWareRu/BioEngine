@@ -1,15 +1,29 @@
 ﻿using System;
+using BioEngine.Admin.Shared;
 using BioEngine.Core;
 using BioEngine.Core.Data.Entities;
-using Microsoft.AspNetCore.Components;
+using ImgProxy;
+using Sitko.Core.Repository;
 using Sitko.Core.Storage.ImgProxy;
+using ResizeOption = Sitko.Core.Storage.ImgProxy.ResizeOption;
 
 namespace BioEngine.Admin.Pages.Sections
 {
-    public abstract partial class BaseSectionsListPage<TItem, TData>
-        where TItem : Section<TData>, new() where TData : SectionData, new()
+    public abstract partial class BaseSectionsListPage<TItem, TData, TRepository>
+        where TItem : Section<TData>, new()
+        where TData : SectionData, new()
+        where TRepository : IExternalRepository<TItem, Guid>
     {
         protected abstract string GetUrl(TItem item);
-        [Inject] private IImgProxyUrlGenerator<BRCStorageConfig> ImgProxyUrlGenerator { get; set; }
+
+        private string GetSectionImageUrl(TItem section) => section.Data.HeaderPicture is not null
+            ? GetRequiredService<IImgProxyUrlGenerator<BRCStorageConfig>>().Build(section.Data.HeaderPicture,
+                proxyBuilder => proxyBuilder.WithOptions(new ResizeOption("fill", 0, 32), new GravityOption("ce")))
+            : "";
+    }
+
+    public class SectionsList<TItem, TRepository> : BaseBioEngineList<TItem, Guid, TRepository>
+        where TItem : Section, IEntity<Guid>, new() where TRepository : IExternalRepository<TItem, Guid>
+    {
     }
 }

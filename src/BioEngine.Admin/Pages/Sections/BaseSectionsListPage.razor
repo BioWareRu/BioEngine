@@ -1,9 +1,9 @@
 ﻿@typeparam TItem
 @typeparam TData
-@using ImgProxy
+@typeparam TRepository
 @using Microsoft.AspNetCore.Components
-@using ResizeOption = BioEngine.Admin.Pages.Sections.Topics.ResizeOption
-@inherits BaseListPage
+@using BioEngine.Admin.Helpers
+@inherits BaseListPage<TItem, Guid, TRepository>
 <Toolbelt.Blazor.HeadElement.Title>@PageTitle</Toolbelt.Blazor.HeadElement.Title>
 <PageContainer Title="@Title">
     <Breadcrumb>
@@ -11,7 +11,6 @@
             <BreadcrumbItem>
                 <a href="/">BRCGames</a>
             </BreadcrumbItem>
-            <BreadcrumbItem>@Title</BreadcrumbItem>
         </Breadcrumb>
     </Breadcrumb>
     <Extra>
@@ -20,13 +19,9 @@
         </Button>
     </Extra>
     <ChildContent>
-        <AntRepositoryList TItem="TItem" TEntityPk="Guid">
+        <SectionsList TItem="TItem" TRepository="TRepository" @ref="List">
             <Column TData="string" Style="text-align: center">
-                @if (context.Data.HeaderPicture is not null)
-                {
-                    var url = ImgProxyUrlGenerator.Build(context.Data.HeaderPicture, proxyBuilder => proxyBuilder.WithOptions(new ResizeOption("fill", 0, 32), new GravityOption("ce")));
-                    <Avatar Size="32" Shape="square" Src="@url" Alt="@context.Title"></Avatar>
-                }
+                <Avatar Size="32" Shape="square" Src="@GetSectionImageUrl(context)" Alt="@context.Title"></Avatar>
             </Column>
             <Column Title="Заголовок" @bind-Field="@context.Title" Sortable Filterable>
                 <a href="@GetUrl(context)">@context.Title</a>
@@ -41,12 +36,18 @@
             <ActionColumn>
                 <Space>
                     <SpaceItem>
-                        <Button Danger>
-                            <i class="fas fa-trash" title="Удалить"></i>
-                        </Button>
+                        <Popconfirm Title="Удалить раздел?"
+                                    OnConfirm="@(() => List.DeleteAsync(context))"
+                                    OkText="Да"
+                                    Icon="@FontAwesomeHelper.IconClass("trash")"
+                                    CancelText="Нет">
+                            <span title="Удалить">
+                                <Button Danger Icon="@FontAwesomeHelper.IconClass("trash")"></Button>
+                            </span>
+                        </Popconfirm>
                     </SpaceItem>
                 </Space>
             </ActionColumn>
-        </AntRepositoryList>
+        </SectionsList>
     </ChildContent>
 </PageContainer>
