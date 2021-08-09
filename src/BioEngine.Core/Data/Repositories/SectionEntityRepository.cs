@@ -67,7 +67,7 @@ namespace BioEngine.Core.Data.Repositories
             return base
                 .AddIncludes(query)
                 .Include(p => p.Sections).ThenInclude(s => s.Sites)
-                .Include(p => p.Tags);
+                .Include(p => p.Tags).AsSplitQuery();
         }
     }
 }
