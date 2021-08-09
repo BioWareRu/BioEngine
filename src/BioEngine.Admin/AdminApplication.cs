@@ -30,7 +30,6 @@ namespace BioEngine.Admin
                     moduleConfig.AddBlock<AntCutBlockDescriptor, CutBlock>();
                     moduleConfig.AddBlock<AntIframeBlockDescriptor, IframeBlock>();
                     moduleConfig.AddBlock<AntQuoteBlockDescriptor, QuoteBlock>();
-                    moduleConfig.AddBlock<AntTextBlockDescriptor, TextBlock>();
                     moduleConfig.AddBlock<AntTwitchBlockDescriptor, TwitchBlock>();
                     moduleConfig.AddBlock<AntTwitterBlockDescriptor, TwitterBlock>();
                     moduleConfig.AddBlock<AntYoutubeBlockDescriptor, YoutubeBlock>();
