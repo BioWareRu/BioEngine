@@ -7,13 +7,16 @@
             <BreadcrumbItem>
                 <a href="/">BRCGames</a>
             </BreadcrumbItem>
-            <BreadcrumbItem>@Title</BreadcrumbItem>
         </Breadcrumb>
     </Breadcrumb>
     <ChildContent>
-        Здесь будет дашборд
+        <Result Status="success"
+                Title="Здесь будет Dashboard"
+                SubTitle="Рано или поздно">
+        </Result>
     </ChildContent>
 </PageContainer>
+
 @code {
     protected override string Title => "Dashboard";
 }
