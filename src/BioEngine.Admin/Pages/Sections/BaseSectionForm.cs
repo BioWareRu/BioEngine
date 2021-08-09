@@ -66,7 +66,11 @@ namespace BioEngine.Admin.Pages.Sections
         public IEnumerable<Guid> SiteIds
         {
             get => Entity.Sites.Select(s => s.Id);
-            set => Entity.Sites = SitesList.Where(s => value.Contains(s.Id)).ToList();
+            set
+            {
+                Entity.Sites = SitesList.Where(s => value.Contains(s.Id)).ToList();
+                NotifyChange(FieldIdentifier.Create(() => Entity.Sites));
+            }
         }
 
         public void TitleChanged(KeyboardEventArgs args)

@@ -7,6 +7,7 @@ using BioEngine.Core;
 using BioEngine.Core.Data.Entities;
 using BioEngine.Core.Data.Repositories;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.DependencyInjection;
 using Sitko.Blockly.AntDesignComponents.Forms;
 using Sitko.Blockly.Blazor.Forms;
@@ -31,7 +32,11 @@ namespace BioEngine.Admin.Pages.Pages
         public IEnumerable<Guid> SiteIds
         {
             get => Entity.Sites.Select(s => s.Id);
-            set => Entity.Sites = SitesList.Where(s => value.Contains(s.Id)).ToList();
+            set
+            {
+                Entity.Sites = SitesList.Where(s => value.Contains(s.Id)).ToList();
+                NotifyChange(FieldIdentifier.Create(() => Entity.Sites));
+            }
         }
 
         public AntDesignBlocklyFormOptions BlocksOptions { get; private set; } = null!;

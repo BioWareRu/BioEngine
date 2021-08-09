@@ -10,6 +10,7 @@ using BioEngine.Core.Data.Entities;
 using BioEngine.Core.Data.Repositories;
 using BioEngine.Core.Users;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Sitko.Blockly.AntDesignComponents.Forms;
@@ -37,13 +38,21 @@ namespace BioEngine.Admin.Pages.Posts
         public IEnumerable<Guid> SectionIds
         {
             get => Entity.Sections.Select(s => s.Id);
-            set => Entity.Sections = SectionsList.Where(s => value.Contains(s.Id)).ToList();
+            set
+            {
+                Entity.Sections = SectionsList.Where(s => value.Contains(s.Id)).ToList();
+                NotifyChange(FieldIdentifier.Create(() => Entity.Sections));
+            }
         }
 
         public IEnumerable<Guid> TagIds
         {
             get => Entity.Tags.Select(s => s.Id);
-            set => Entity.Tags = TagsList.Where(s => value.Contains(s.Id)).ToList();
+            set
+            {
+                Entity.Tags = TagsList.Where(s => value.Contains(s.Id)).ToList();
+                NotifyChange(FieldIdentifier.Create(() => Entity.Tags));
+            }
         }
 
         public void TitleChanged(KeyboardEventArgs args)
