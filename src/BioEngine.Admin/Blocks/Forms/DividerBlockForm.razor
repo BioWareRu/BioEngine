@@ -1,2 +1,5 @@
 ﻿@inherits Sitko.Blockly.Blazor.Forms.BlockForm<DividerBlock, AntDesignBlocklyFormOptions>
-<Divider />
+<FormItem Label="Текст на разделителе">
+    <Input @bind-Value="@Block.Text" Placeholder="Опциональный текст"/>
+</FormItem>
+<Divider Text="@Block.Text"/>

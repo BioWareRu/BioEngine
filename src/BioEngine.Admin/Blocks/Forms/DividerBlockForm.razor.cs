@@ -4,6 +4,6 @@ namespace BioEngine.Admin.Blocks.Forms
 {
     public partial class DividerBlockForm
     {
-        protected override FieldIdentifier CreateFieldIdentifier() => FieldIdentifier.Create(() => Block.Id);
+        protected override FieldIdentifier CreateFieldIdentifier() => FieldIdentifier.Create(() => Block.Text);
     }
 }
