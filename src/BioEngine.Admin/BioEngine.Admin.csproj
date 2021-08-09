@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <Nullable>enable</Nullable>
-    <UserSecretsId>bioengine</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,9 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Sitko.Core.Blazor.FluentValidation" Version="8.0.0-preview.52" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.8">
-      <PrivateAssets>all</PrivateAssets>    
+      <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="NickBuhro.Translit" Version="1.4.5" />
