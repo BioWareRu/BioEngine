@@ -1,3 +1,7 @@
+$fa-font-path: "webfonts";
+@import '~@fortawesome/fontawesome-free/scss/fontawesome';
+@import "~@fortawesome/fontawesome-free/scss/solid";
+
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap");
 :root {
   --font-family-sans: -apple-system, "BlinkMacSystemFont", "Roboto", "Segoe UI", "Helvetica Neue", Arial, "Noto Sans",
@@ -29,4 +33,15 @@ body {
 
 .ant-table-cell .ant-tag {
   margin: .1em .2em .1em 0;
+}
+
+.ant-menu-item .fas, .ant-menu-submenu-title .fas {
+  min-width: 14px;
+  margin-right: 10px;
+  font-size: 14px;
+  transition: font-size .15s cubic-bezier(.215, .61, .355, 1), margin .3s cubic-bezier(.645, .045, .355, 1), color .3s cubic-bezier(.645, .045, .355, 1);
+}
+
+.anticon.fas::before {
+  display: block;
 }

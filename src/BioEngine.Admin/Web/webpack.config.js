@@ -2,6 +2,31 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssoWebpackPlugin = require('csso-webpack-plugin').default;
 
+// Require fontawesome-subset
+const fontawesomeSubset = require('fontawesome-subset');
+
+// Create or append a task to be ran with your configuration
+fontawesomeSubset([
+  'tachometer-alt',
+  'folder',
+  'copyright',
+  'edit',
+  'list',
+  'plus',
+  'th',
+  'users',
+  'gamepad',
+  'comments',
+  'file',
+  'globe',
+  'tags',
+  'database',
+  'trash',
+  'copy',
+  'upload',
+  'folder-plus',
+  'sync'], 'src/webfonts');
+
 module.exports = {
   entry: {
     index: path.resolve(__dirname, 'src', 'index.js'),
@@ -47,7 +72,7 @@ module.exports = {
       },
       {
         test: /\.(svg|eot|woff|woff2|ttf)$/,
-        type: 'asset/inline'
+        type: 'asset/resource'
       }
     ]
   }
