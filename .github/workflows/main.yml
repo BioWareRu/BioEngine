@@ -33,7 +33,7 @@ jobs:
           npm ci
           npm run prod
       - name: Publish admin
-        run: dotnet publish apps/${{ env.ADMIN_PROJECT }}/${{ env.ADMIN_PROJECT }}.csproj -o /app/ -c Release
+        run: dotnet publish src/${{ env.ADMIN_PROJECT }}/${{ env.ADMIN_PROJECT }}.csproj -o /app/ -c Release
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       - name: Build admin image
