@@ -8,7 +8,9 @@ using Serilog.Events;
 using Sitko.Core.App;
 using Sitko.Core.App.Logging;
 using Sitko.Core.Blazor.AntDesignComponents;
+using Sitko.Core.Configuration.Vault;
 using Sitko.Core.Db.Postgres;
+using Sitko.Core.ElasticStack;
 using Sitko.Core.Repository.EntityFrameworkCore;
 using Sitko.Core.Storage.ImgProxy;
 using Sitko.Core.Storage.Metadata.Postgres;
@@ -28,7 +30,8 @@ namespace BioEngine.Core
             .RequireClaim(ClaimTypes.Role, Roles.SiteTeamRoleName)
             .Build();
 
-        protected BioEngineApp(string[] args) : base(args) => this.AddJsonLocalization();
+        protected BioEngineApp(string[] args) : base(args) =>
+            this.AddJsonLocalization().AddVaultConfiguration().AddElasticStack();
 
         protected override void ConfigureLogging(ApplicationContext applicationContext,
             LoggerConfiguration loggerConfiguration,
@@ -61,5 +64,6 @@ namespace BioEngine.Core
     }
 
     public class BRCStorageConfig : S3StorageOptions
-    {}
+    {
+    }
 }

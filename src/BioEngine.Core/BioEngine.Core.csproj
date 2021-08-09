@@ -8,6 +8,7 @@
     <PackageReference Include="AntDesign.ProLayout" Version="0.1.4" />
     <PackageReference Include="Sitko.Core.App.Blazor" Version="8.0.0-preview.53" />
     <PackageReference Include="Sitko.Core.Blazor.AntDesign" Version="8.0.0-preview.53" />
+    <PackageReference Include="Sitko.Core.Configuration.Vault" Version="8.0.0-preview.53" />
     <PackageReference Include="Sitko.Core.Db.Postgres" Version="8.0.0-preview.53" />
     <PackageReference Include="Sitko.Core.ElasticStack" Version="8.0.0-preview.53" />
     <PackageReference Include="Sitko.Core.Storage.S3" Version="8.0.0-preview.53" />
