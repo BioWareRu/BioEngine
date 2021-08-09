@@ -35,7 +35,7 @@ namespace BioEngine.Admin
         protected override void ConfigureAfterRoutingMiddleware(IApplicationBuilder app)
         {
             base.ConfigureAfterRoutingMiddleware(app);
-            app.ConfigureLocalization("ru-RU");
+            app.ConfigureLocalization("ru");
             app.UseAuthentication();
             app.UseAuthorization();
         }
