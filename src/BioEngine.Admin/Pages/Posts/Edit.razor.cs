@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Sitko.Blockly.AntDesignComponents.Forms;
 using Sitko.Blockly.Blazor.Forms;
+using Sitko.Core.Repository;
 using Sitko.Core.Storage;
 
 namespace BioEngine.Admin.Pages.Posts
@@ -41,6 +42,7 @@ namespace BioEngine.Admin.Pages.Posts
             set
             {
                 Entity.Sections = SectionsList.Where(s => value.Contains(s.Id)).ToList();
+                Entity.Sites = Entity.Sections.SelectMany(s => s.Sites).Distinct().ToList();
                 NotifyChange(FieldIdentifier.Create(() => Entity.Sections));
             }
         }
@@ -113,6 +115,12 @@ namespace BioEngine.Admin.Pages.Posts
         {
             await base.OnCreatedAsync(entity);
             NavigationManager.NavigateTo($"/Posts/{entity.Id}");
+        }
+
+        protected override async Task ConfigureQueryAsync(IRepositoryQuery<Post> query)
+        {
+            await base.ConfigureQueryAsync(query);
+            query.Include(p => p.Sites).Include(p => p.Sections).Include(p => p.Tags);
         }
     }
 }

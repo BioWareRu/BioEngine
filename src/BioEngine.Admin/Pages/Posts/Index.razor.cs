@@ -69,6 +69,7 @@ namespace BioEngine.Admin.Pages.Posts
                 query.Where(p => p.Tags.Any(tag => tag.Id == filterTagId));
             }
 
+            query.Include(p => p.Sites).Include(p => p.Sections).Include(p => p.Tags);
             return Task.CompletedTask;
         }
 

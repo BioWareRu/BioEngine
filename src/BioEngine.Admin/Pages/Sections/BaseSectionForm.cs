@@ -88,5 +88,11 @@ namespace BioEngine.Admin.Pages.Sections
 
             NotifyChange(new FieldIdentifier(this, nameof(Entity.Url)));
         }
+
+        protected override async Task ConfigureQueryAsync(IRepositoryQuery<TSection> query)
+        {
+            await base.ConfigureQueryAsync(query);
+            query.Include(s => s.Sites);
+        }
     }
 }

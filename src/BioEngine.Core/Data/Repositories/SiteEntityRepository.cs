@@ -39,9 +39,9 @@ namespace BioEngine.Core.Data.Repositories
 
         protected override async Task<bool> BeforeSaveAsync(TEntity item,
             (bool isValid, IList<ValidationFailure> errors) validationResult, bool isNew,
-            PropertyChange[]? changes = null, CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default)
         {
-            if (await base.BeforeSaveAsync(item, validationResult, isNew, changes, cancellationToken))
+            if (await base.BeforeSaveAsync(item, validationResult, isNew, cancellationToken))
             {
                 item.DateUpdated = DateTimeOffset.UtcNow;
                 return true;
@@ -49,8 +49,5 @@ namespace BioEngine.Core.Data.Repositories
 
             return false;
         }
-
-        protected override IQueryable<TEntity> AddIncludes(IQueryable<TEntity> query) =>
-            base.AddIncludes(query).Include(e => e.Sites);
     }
 }

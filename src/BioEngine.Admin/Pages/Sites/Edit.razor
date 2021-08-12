@@ -2,7 +2,7 @@
 @page "/Sites/{EntityId:guid}"
 @inherits BaseFormPage<BioEngine.Core.Data.Entities.Site, SiteForm>
 <SiteForm Layout="@FormLayout.Vertical" EntityId="EntityId" @ref="Form">
-    <Toolbelt.Blazor.HeadElement.Title>@PageTitle</Toolbelt.Blazor.HeadElement.Title>
+    <PageTitle>@PageTitle</PageTitle>
     <PageContainer Title="@Title">
         <Breadcrumb>
             <Breadcrumb>

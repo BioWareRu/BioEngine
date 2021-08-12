@@ -12,10 +12,5 @@ namespace BioEngine.Core.Data.Repositories
         protected SectionRepository(EFRepositoryContext<TEntity, Guid, BioDbContext> repositoryContext) : base(repositoryContext)
         {
         }
-
-        protected override IQueryable<TEntity> AddIncludes(IQueryable<TEntity> query)
-        {
-            return base.AddIncludes(query).Include(s => s.Sites);
-        }
     }
 }

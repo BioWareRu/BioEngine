@@ -3,10 +3,6 @@ using System.Security.Claims;
 using BioEngine.Core.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Hosting;
-using Serilog;
-using Serilog.Events;
-using Sitko.Core.App;
-using Sitko.Core.App.Logging;
 using Sitko.Core.Blazor.AntDesignComponents;
 using Sitko.Core.Configuration.Vault;
 using Sitko.Core.Db.Postgres;
@@ -32,16 +28,6 @@ namespace BioEngine.Core
 
         protected BioEngineApp(string[] args) : base(args) =>
             this.AddJsonLocalization().AddVaultConfiguration().AddElasticStack();
-
-        protected override void ConfigureLogging(ApplicationContext applicationContext,
-            LoggerConfiguration loggerConfiguration,
-            LogLevelSwitcher logLevelSwitcher)
-        {
-            base.ConfigureLogging(applicationContext, loggerConfiguration, logLevelSwitcher);
-            ConfigureLogLevel("Microsoft.AspNetCore", LogEventLevel.Warning);
-            ConfigureLogLevel("Sitko.Core.Search.ElasticSearch.ElasticSearcher", LogEventLevel.Warning);
-            ConfigureLogLevel("Microsoft.EntityFrameworkCore", LogEventLevel.Warning);
-        }
 
         public BioEngineApp<TStartup> AddPostgresDb(Assembly? migrationsAssembly = null)
         {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using BioEngine.Admin.Shared;
 using BioEngine.Core;
 using BioEngine.Core.Data.Entities;
@@ -12,7 +13,7 @@ namespace BioEngine.Admin.Pages.Sections
     public abstract partial class BaseSectionsListPage<TItem, TData, TRepository>
         where TItem : Section<TData>, new()
         where TData : SectionData, new()
-        where TRepository : IExternalRepository<TItem, Guid>
+        where TRepository : IRepository<TItem, Guid>
     {
         protected abstract string GetUrl(TItem item);
 
@@ -23,7 +24,12 @@ namespace BioEngine.Admin.Pages.Sections
     }
 
     public class SectionsList<TItem, TRepository> : BaseBioEngineList<TItem, Guid, TRepository>
-        where TItem : Section, IEntity<Guid>, new() where TRepository : IExternalRepository<TItem, Guid>
+        where TItem : Section, IEntity<Guid>, new() where TRepository : IRepository<TItem, Guid>
     {
+        protected override async Task ConfigureQueryAsync(IRepositoryQuery<TItem> query)
+        {
+            await base.ConfigureQueryAsync(query);
+            query.Include(s => s.Sites);
+        }
     }
 }

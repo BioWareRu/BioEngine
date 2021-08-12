@@ -6,7 +6,7 @@ using Sitko.Core.Repository.EntityFrameworkCore;
 
 namespace BioEngine.Core.Data.Repositories
 {
-    public interface IPublishableEntityRepository<TEntity> : IExternalRepository<TEntity, Guid>
+    public interface IPublishableEntityRepository<TEntity> : IRepository<TEntity, Guid>
         where TEntity : class, IPublishable, IBioEntity
     {
         Task PublishAsync(TEntity item, TEntity? snapshot = null);
@@ -27,14 +27,14 @@ namespace BioEngine.Core.Data.Repositories
         {
             item.IsPublished = true;
             item.DatePublished = DateTimeOffset.UtcNow;
-            await UpdateExternalAsync(item, snapshot);
+            await UpdateAsync(item, snapshot);
         }
 
         public virtual async Task UnPublishAsync(TEntity item, TEntity? snapshot = null)
         {
             item.IsPublished = false;
             item.DatePublished = null;
-            await UpdateExternalAsync(item, snapshot);
+            await UpdateAsync(item, snapshot);
         }
     }
 }

@@ -14,8 +14,7 @@ namespace BioEngine.Core.Data.Repositories
 
 
         public PostsRepository(EFRepositoryContext<Post, Guid, BioDbContext> repositoryContext,
-            SectionsRepository sectionsRepository,
-            IUserDataProvider userDataProvider) : base(repositoryContext, sectionsRepository) =>
+            IUserDataProvider userDataProvider) : base(repositoryContext) =>
             this.userDataProvider = userDataProvider;
 
         protected override async Task AfterLoadAsync(Post[] entities,

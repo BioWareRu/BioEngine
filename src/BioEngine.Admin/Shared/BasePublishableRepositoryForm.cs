@@ -12,8 +12,7 @@ namespace BioEngine.Admin.Shared
         BasePublishableRepositoryForm<TEntity, TEntityPk, TRepository> : BaseAntRepositoryForm<TEntity, TEntityPk,
             TRepository>
         where TEntity : class, IEntity<TEntityPk>, IPublishable, new()
-        where TRepository : class, IRepository<TEntity, TEntityPk>, IPublishableEntityRepository<TEntity>,
-        IExternalRepository<TEntity, TEntityPk>
+        where TRepository : class, IRepository<TEntity, TEntityPk>, IPublishableEntityRepository<TEntity>
     {
         public bool CanPublish()
         {
