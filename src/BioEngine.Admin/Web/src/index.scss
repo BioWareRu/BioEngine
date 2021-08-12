@@ -31,17 +31,31 @@ body {
   top: 0.5rem;
 }
 
-.ant-table-cell .ant-tag {
-  margin: .1em .2em .1em 0;
-}
+#bioengine {
+  .ant-table-cell .ant-tag {
+    margin: .1em .2em .1em 0;
+  }
 
-.ant-menu-item .fas, .ant-menu-submenu-title .fas {
-  min-width: 14px;
-  margin-right: 10px;
-  font-size: 14px;
-  transition: font-size .15s cubic-bezier(.215, .61, .355, 1), margin .3s cubic-bezier(.645, .045, .355, 1), color .3s cubic-bezier(.645, .045, .355, 1);
-}
+  .ant-menu-item .fas, .ant-menu-submenu-title .fas {
+    min-width: 14px;
+    margin-right: 10px;
+    font-size: 14px;
+    transition: font-size .15s cubic-bezier(.215, .61, .355, 1), margin .3s cubic-bezier(.645, .045, .355, 1), color .3s cubic-bezier(.645, .045, .355, 1);
+  }
 
-.anticon.fas::before {
-  display: block;
+  .anticon.fas::before {
+    display: block;
+  }
+
+  .add-block-button .ant-btn {
+    height: 36px;
+    font-size: 18px;
+    padding: 4px 15px;
+  }
+
+  .add-block-panel .plus-icon {
+    padding: 11px;
+    height: 40px;
+    font-size: 16px;
+  }
 }
