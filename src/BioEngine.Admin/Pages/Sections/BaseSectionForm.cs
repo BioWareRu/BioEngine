@@ -19,7 +19,7 @@ using Sitko.Core.Storage;
 namespace BioEngine.Admin.Pages.Sections
 {
     public abstract class BaseSectionForm<TSection, TSectionData, TRepository> :
-        BasePublishableRepositoryForm<TSection, Guid, TRepository>
+        BasePublishableForm<TSection, Guid, TRepository>
         where TSection : Section<TSectionData>, IEntity<Guid>, new()
         where TSectionData : SectionData, new()
         where TRepository : class, IPublishableEntityRepository<TSection>

@@ -9,7 +9,7 @@ namespace BioEngine.Core.Data.Entities
     {
         public string Title { get; set; } = string.Empty;
 
-        public List<Post> Posts { get; set; }
+        public List<Post> Posts { get; set; } = new();
     }
 
     public class TagValidator : AbstractValidator<Tag>

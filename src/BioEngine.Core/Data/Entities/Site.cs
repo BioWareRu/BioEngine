@@ -10,9 +10,9 @@ namespace BioEngine.Core.Data.Entities
 
         public string Title { get; set; } = string.Empty;
 
-        public List<Post> Posts { get; set; }
-        public List<Page> Pages { get; set; }
-        public List<Section> Sections { get; set; }
+        public List<Post> Posts { get; set; } = new();
+        public List<Page> Pages { get; set; } = new();
+        public List<Section> Sections { get; set; } = new();
     }
 
     public class SiteValidator : AbstractValidator<Site>

@@ -4,9 +4,8 @@ using Sitko.Core.Repository;
 
 namespace BioEngine.Core.Users
 {
-    public class User : IEntity<string>
+    public class User : Entity<string>
     {
-        public string Id { get; set; }
         public string Name { get; set; } = "";
         public string PhotoUrl { get; set; } = "";
         public string ProfileUrl { get; set; } = "";

@@ -9,10 +9,13 @@ using BioEngine.Core;
 using BioEngine.Core.Data.Entities;
 using BioEngine.Core.Data.Repositories;
 using BioEngine.Core.Users;
+using KellermanSoftware.CompareNetObjects;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Sitko.Blockly;
 using Sitko.Blockly.AntDesignComponents.Forms;
 using Sitko.Blockly.Blazor.Forms;
 using Sitko.Core.Repository;
@@ -25,7 +28,7 @@ namespace BioEngine.Admin.Pages.Posts
         protected override string Title => Form.IsNew ? "Новый пост" : Form.Entity.Title;
     }
 
-    public class PostForm : BasePublishableRepositoryForm<Post, Guid, PostsRepository>
+    public class PostForm : BasePublishableForm<Post, Guid, PostsRepository>
     {
         [Parameter] public RenderFragment<PostForm> ChildContent { get; set; } = null!;
         protected override RenderFragment ChildContentFragment => ChildContent(this);

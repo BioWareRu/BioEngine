@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BioEngine.Admin.Extensions;
+using BioEngine.Admin.Shared;
 using BioEngine.Core;
 using BioEngine.Core.Data.Entities;
 using BioEngine.Core.Data.Repositories;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Sitko.Blockly.AntDesignComponents.Forms;
 using Sitko.Blockly.Blazor.Forms;
 using Sitko.Core.Blazor.AntDesignComponents.Components;
+using Sitko.Core.Repository;
 using Sitko.Core.Storage;
 
 namespace BioEngine.Admin.Pages.Pages
@@ -21,7 +23,7 @@ namespace BioEngine.Admin.Pages.Pages
         protected override string Title => Form.IsNew ? "Новая страница" : Form.Entity.Title;
     }
 
-    public class PageForm : BaseAntRepositoryForm<Page, Guid, PagesRepository>
+    public class PageForm : BaseForm<Page, Guid, PagesRepository>
     {
         [Parameter] public RenderFragment<PageForm> ChildContent { get; set; } = null!;
         protected override RenderFragment ChildContentFragment => ChildContent(this);
@@ -73,6 +75,12 @@ namespace BioEngine.Admin.Pages.Pages
             using var scope = CreateServicesScope();
             SitesList = (await scope.ServiceProvider.GetRequiredService<SitesRepository>().GetAllAsync()).items
                 .ToList();
+        }
+
+        protected override async Task ConfigureQueryAsync(IRepositoryQuery<Page> query)
+        {
+            await base.ConfigureQueryAsync(query);
+            query.Include(q => q.Sites);
         }
     }
 }
