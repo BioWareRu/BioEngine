@@ -8,95 +8,47 @@ using System.Threading.Tasks;
 using BioEngine.Core.Users;
 using Flurl.Http;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace BioEngine.Core.IPB.Api
 {
-    public class IPBApiClientFactory<TOptions> where TOptions : IPBModuleOptions
+    public class IPBApiClient : IDisposable
     {
-        private TOptions Options => _optionsMonitor.CurrentValue;
-        private readonly IOptionsMonitor<TOptions> _optionsMonitor;
-        private readonly ILoggerFactory _loggerFactory;
-        private readonly IHttpClientFactory _httpClientFactory;
-
-        public IPBApiClientFactory(IOptionsMonitor<TOptions> optionsMonitor, ILoggerFactory loggerFactory,
-            IHttpClientFactory httpClientFactory)
-        {
-            _optionsMonitor = optionsMonitor;
-            _loggerFactory = loggerFactory;
-            _httpClientFactory = httpClientFactory;
-        }
-
-        public IPBApiClient GetClient(string token)
-        {
-            return new IPBApiClient(Options, token, null, _loggerFactory.CreateLogger<IPBApiClient>(),
-                _httpClientFactory);
-        }
-
-        public IPBApiClient GetReadOnlyClient()
-        {
-            if (string.IsNullOrEmpty(Options.ApiReadonlyKey))
-            {
-                throw new Exception("Api readonly key don't configured");
-            }
-
-            return new IPBApiClient(Options, null, Options.ApiReadonlyKey,
-                _loggerFactory.CreateLogger<IPBApiClient>(), _httpClientFactory);
-        }
-
-        public IPBApiClient GetPublishClient()
-        {
-            if (string.IsNullOrEmpty(Options.ApiPublishKey))
-            {
-                throw new Exception("Api publish key don't configured");
-            }
-
-            return new IPBApiClient(Options, null, Options.ApiPublishKey, _loggerFactory.CreateLogger<IPBApiClient>(),
-                _httpClientFactory);
-        }
-    }
-
-    public class IPBApiClient
-    {
-        private readonly IPBModuleOptions _options;
-        private readonly string? _token;
-        private readonly string? _apiKey;
-        private readonly ILogger<IPBApiClient> _logger;
-        private readonly FlurlClient _flurlClient;
+        private readonly IPBModuleOptions options;
+        private readonly string? token;
+        private readonly string? apiKey;
+        private readonly ILogger<IPBApiClient> logger;
+        private readonly FlurlClient flurlClient;
 
         public IPBApiClient(IPBModuleOptions options, string? token, string? apiKey, ILogger<IPBApiClient> logger,
             IHttpClientFactory httpClientFactory)
         {
-            _options = options;
-            _token = token;
-            _apiKey = apiKey;
-            _logger = logger;
-            _flurlClient = new FlurlClient(httpClientFactory.CreateClient());
+            this.options = options;
+            this.token = token;
+            this.apiKey = apiKey;
+            this.logger = logger;
+            flurlClient = new FlurlClient(httpClientFactory.CreateClient());
         }
 
-        public Task<User> GetUserAsync()
-        {
-            return GetAsync<User>("core/me");
-        }
+        public Task<User> GetUserAsync() => GetAsync<User>("core/me");
 
         private IFlurlRequest GetRequest(string url)
         {
-            var requestUrl = new FlurlRequest($"{_options.ApiUrl}/{url}").WithClient(_flurlClient);
-            if (!string.IsNullOrEmpty(_token))
+            var requestUrl = new FlurlRequest($"{options.ApiUrl}/{url}").WithClient(flurlClient);
+            if (!string.IsNullOrEmpty(token))
             {
-                requestUrl.WithOAuthBearerToken(_token);
+                requestUrl.WithOAuthBearerToken(token);
             }
             else
             {
-                if (!string.IsNullOrEmpty(_apiKey))
+                if (!string.IsNullOrEmpty(apiKey))
                 {
-                    requestUrl.SetQueryParam("key", _apiKey);
+                    requestUrl.SetQueryParam("key", apiKey);
                 }
                 else
                 {
-                    throw new Exception("No token and no key for ipb client");
+                    throw new InvalidOperationException("No token and no key for ipb client");
                 }
             }
 
@@ -112,7 +64,7 @@ namespace BioEngine.Core.IPB.Api
             }
             catch (FlurlHttpException ex)
             {
-                _logger.LogError(ex, "Error in request to IPB: {errorText}. Response: {response}", ex.ToString(),
+                logger.LogError(ex, "Error in request to IPB: {ErrorText}. Response: {Response}", ex.ToString(),
                     await ex.GetResponseStringAsync());
                 throw;
             }
@@ -136,11 +88,12 @@ namespace BioEngine.Core.IPB.Api
                         JsonConvert.DeserializeObject<IPBApiError>(json));
                 }
 
-                throw new IPBApiException(HttpStatusCode.BadRequest, new IPBApiError {ErrorMessage = "Empty request"});
+                throw new IPBApiException(HttpStatusCode.BadRequest,
+                    new IPBApiError { ErrorMessage = "Empty request" });
             }
             catch (FlurlHttpException ex)
             {
-                _logger.LogError(ex, "Error in request to IPB: {errorText}. Response: {response}", ex.ToString(),
+                logger.LogError(ex, "Error in request to IPB: {ErrorText}. Response: {Response}", ex.ToString(),
                     await ex.GetResponseStringAsync());
                 throw;
             }
@@ -151,9 +104,12 @@ namespace BioEngine.Core.IPB.Api
         //     return GetAsync<Response<Forum>>($"forums/forums?page={page.ToString()}&perPage={perPage.ToString()}");
         // }
 
-        public Task<User> GetUserByIdAsync(string id)
+        public Task<User> GetUserByIdAsync(string id) => GetAsync<User>($"core/members/{id}");
+
+        public void Dispose()
         {
-            return GetAsync<User>($"core/members/{id}");
+            flurlClient.Dispose();
+            GC.SuppressFinalize(this);
         }
 
         // public Task<ForumTopic> GetTopicAsync(int topicId)
@@ -227,7 +183,7 @@ namespace BioEngine.Core.IPB.Api
                 ? jValue.ToString("o", CultureInfo.InvariantCulture)
                 : jValue.ToString(CultureInfo.InvariantCulture);
 
-            return new Dictionary<string, string> {{token.Path.ToLowerInvariant(), value}};
+            return new Dictionary<string, string> { { token.Path.ToLowerInvariant(), value } };
         }
     }
 }
