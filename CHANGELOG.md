@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/BioWareRu/BioEngine/compare/v1.0.1...v1.0.2) (2021-08-13)
+
+
+### Bug Fixes
+
+* **ci:** run build on prs, release only on push ([8408f59](https://github.com/BioWareRu/BioEngine/commit/8408f59a924c70dcc903f3217a8b36a75aefa82c))
+
 ## [1.0.1](https://github.com/BioWareRu/BioEngine/compare/v1.0.0...v1.0.1) (2021-08-13)
 
 
