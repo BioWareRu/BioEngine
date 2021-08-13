@@ -1,3 +1,12 @@
+## [1.2.9](https://github.com/BioWareRu/BioEngine/compare/v1.2.8...v1.2.9) (2021-08-13)
+
+
+### Bug Fixes
+
+* **admin:** upd footer - fix copyright, add links, show version ([91aaf90](https://github.com/BioWareRu/BioEngine/commit/91aaf9050d66e0b3665789ed00e860093b2d3ec9))
+* **css:** align font-awesome icons in buttons ([4aa0f23](https://github.com/BioWareRu/BioEngine/commit/4aa0f239eef0ff226651e8ad15c9cf17883e437e))
+* **css:** use dark-geekblue theme ([00eaf79](https://github.com/BioWareRu/BioEngine/commit/00eaf79ecdd207ccaf88d4d2e361f6e9daa10fe9))
+
 ## [1.2.8](https://github.com/BioWareRu/BioEngine/compare/v1.2.7...v1.2.8) (2021-08-13)
 
 
