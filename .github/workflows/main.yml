@@ -22,6 +22,11 @@ jobs:
           cache: 'npm'
           cache-dependency-path: |
             src/${{ env.PROJECT }}/Web/package.json
+      - name: Install .NET 6.0.x
+        uses: actions/setup-dotnet@v1.8.1
+        with:
+          dotnet-version: '6.0.x'
+          include-prerelease: true
       - name: Build admin js
         working-directory: src/${{ env.PROJECT }}/Web
         shell: bash
