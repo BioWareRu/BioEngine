@@ -1,3 +1,10 @@
+## [1.2.8](https://github.com/BioWareRu/BioEngine/compare/v1.2.7...v1.2.8) (2021-08-13)
+
+
+### Bug Fixes
+
+* **ci:** trigger deploy on release ([daca030](https://github.com/BioWareRu/BioEngine/commit/daca030509c6f801f33ac1b3b94224a68a2462f8))
+
 ## [1.2.7](https://github.com/BioWareRu/BioEngine/compare/v1.2.6...v1.2.7) (2021-08-13)
 
 
