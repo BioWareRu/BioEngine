@@ -1,3 +1,17 @@
+# [1.1.0](https://github.com/BioWareRu/BioEngine/compare/v1.0.2...v1.1.0) (2021-08-13)
+
+
+### Bug Fixes
+
+* **ci:** fix tag parsing ([b244cc7](https://github.com/BioWareRu/BioEngine/commit/b244cc7144c7367e69a94ece7bfc5166bb2f2216))
+* **pages:** remove changes list from form ([791e7c3](https://github.com/BioWareRu/BioEngine/commit/791e7c3c3fec3bef237f7a07522c5e15cb5e6bab))
+
+
+### Features
+
+* **admin:** display debug view in forms for admins ([bacb3ab](https://github.com/BioWareRu/BioEngine/commit/bacb3ab085339ba8040b5180a2fe23c1366f1b01))
+* **users:** mark user as admin ([175db74](https://github.com/BioWareRu/BioEngine/commit/175db7450cba291c66916350ef92026567d286f8))
+
 ## [1.0.2](https://github.com/BioWareRu/BioEngine/compare/v1.0.1...v1.0.2) (2021-08-13)
 
 
