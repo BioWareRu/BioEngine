@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/BioWareRu/BioEngine/compare/v1.2.1...v1.2.2) (2021-08-13)
+
+
+### Bug Fixes
+
+* **ci:** deploy key required on release step ([5ddf0d5](https://github.com/BioWareRu/BioEngine/commit/5ddf0d560d40badc789bc28c2f8fd72d7c8db439))
+
 ## [1.2.1](https://github.com/BioWareRu/BioEngine/compare/v1.2.0...v1.2.1) (2021-08-13)
 
 
