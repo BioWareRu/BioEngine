@@ -19,7 +19,7 @@ jobs:
         shell: bash
         run: |
           DOCKER_IMAGE=ghcr.io/biowareru/admin
-          VERSION=${GITHUB_REF#refs/tags/admin-}
+          VERSION=${GITHUB_REF#refs/tags/v}
           TAGS="${DOCKER_IMAGE}:${VERSION}"
           if [[ $VERSION =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
               MINOR=${VERSION%.*}
