@@ -43,10 +43,6 @@
                                   AllowClear/>
             </FormItem>
             <AntBlocklyForm TEntity="Page" TForm="PageForm" @bind-Value="context.Entity.Blocks" Form="context" Options="context.BlocksOptions"></AntBlocklyForm>
-            @foreach (var diff in context.Changes)
-            {
-                <p>@diff.ToString()</p>
-            }
         </ChildContent>
     </PageContainer>
 </PageForm>
