@@ -1,3 +1,10 @@
+## [1.2.5](https://github.com/BioWareRu/BioEngine/compare/v1.2.4...v1.2.5) (2021-08-13)
+
+
+### Bug Fixes
+
+* **ci:** commit release as biowareru-bot ([0823caa](https://github.com/BioWareRu/BioEngine/commit/0823caa78436074f02c871d8648d7d37cfa953fd))
+
 ## [1.2.4](https://github.com/BioWareRu/BioEngine/compare/v1.2.3...v1.2.4) (2021-08-13)
 
 
