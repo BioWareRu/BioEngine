@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using BioEngine.Admin.Shared;
 using BioEngine.Core.Data.Entities;
 using BioEngine.Core.Data.Repositories;
 using Microsoft.AspNetCore.Components;
@@ -12,7 +13,7 @@ namespace BioEngine.Admin.Pages.Sites
         protected override string Title => Form.IsNew ? "Новый сайт" : Form.Entity.Title;
     }
 
-    public class SiteForm : BaseAntRepositoryForm<Site, Guid, SitesRepository>
+    public class SiteForm : BaseForm<Site, Guid, SitesRepository>
     {
         [Parameter] public RenderFragment<SiteForm> ChildContent { get; set; } = null!;
         protected override RenderFragment ChildContentFragment => ChildContent(this);

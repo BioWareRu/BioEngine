@@ -1,6 +1,4 @@
 ﻿using System.Threading.Tasks;
-using BioEngine.Core.Data.Entities.Abstractions;
-using BioEngine.Core.Data.Repositories;
 using BioEngine.Core.Users;
 using KellermanSoftware.CompareNetObjects;
 using Sitko.Blockly.Blazor.Extensions;
@@ -11,8 +9,8 @@ namespace BioEngine.Admin.Shared
 {
     public abstract class BaseForm<TEntity, TEntityPk, TRepository> : BaseAntRepositoryForm<TEntity, TEntityPk,
         TRepository>
-        where TEntity : class, IEntity<TEntityPk>, IPublishable, new()
-        where TRepository : class, IRepository<TEntity, TEntityPk>, IPublishableEntityRepository<TEntity>
+        where TEntity : class, IEntity<TEntityPk>, new()
+        where TRepository : class, IRepository<TEntity, TEntityPk>
     {
         protected override void ConfigureComparer(ComparisonConfig comparisonConfig)
         {
