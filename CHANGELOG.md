@@ -1,3 +1,10 @@
+## [1.1.3](https://github.com/BioWareRu/BioEngine/compare/v1.1.2...v1.1.3) (2021-08-13)
+
+
+### Bug Fixes
+
+* **ci:** try to fix admin workflow trigger ([fc14d33](https://github.com/BioWareRu/BioEngine/commit/fc14d331a6e64afaa6f5d4e9573ddf860990ece1))
+
 ## [1.1.1](https://github.com/BioWareRu/BioEngine/compare/v1.1.0...v1.1.1) (2021-08-13)
 
 
