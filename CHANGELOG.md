@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/BioWareRu/BioEngine/compare/v1.1.5...v1.2.0) (2021-08-13)
+
+
+### Features
+
+* **pages:** show page sites in list ([a5a6cd6](https://github.com/BioWareRu/BioEngine/commit/a5a6cd6159a879805ae080da2259ae2daa76efa3))
+
 ## [1.1.3](https://github.com/BioWareRu/BioEngine/compare/v1.1.2...v1.1.3) (2021-08-13)
 
 
