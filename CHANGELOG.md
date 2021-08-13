@@ -1,3 +1,10 @@
+## [1.2.7](https://github.com/BioWareRu/BioEngine/compare/v1.2.6...v1.2.7) (2021-08-13)
+
+
+### Bug Fixes
+
+* **ci:** trigger test on release ([0b17d05](https://github.com/BioWareRu/BioEngine/commit/0b17d052effab0abb5b01f9eff874f47a021607a))
+
 ## [1.2.6](https://github.com/BioWareRu/BioEngine/compare/v1.2.5...v1.2.6) (2021-08-13)
 
 
