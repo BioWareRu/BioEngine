@@ -1,6 +1,8 @@
 @using BioEngine.Admin.Helpers
+@using Sitko.Core.App
 @using Layout = AntDesign.ProLayout.Layout
 @inherits LayoutComponentBase
+@inject IApplication _application
 
 <BasicLayout MenuData="_menuData" Theme="MenuTheme.Dark" Layout="Layout.Side" HeaderRender="false" Logo="@("/img/logo.png")">
     <ChildContent>
@@ -10,7 +12,7 @@
         <GlobalFooter>
             <Copyright>
                 <div>
-                    BioWare Russian Community <Icon Type="@FontAwesomeHelper.IconClass("copyright")"/>@DateTimeOffset.UtcNow.Year Created by SonicGD
+                    BioWare Russian Community &copy; @DateTimeOffset.UtcNow.Year Created by <a href="https://github.com/sonicgd">SonicGD</a>. v@(_application.Version)
                 </div>
             </Copyright>
         </GlobalFooter>
