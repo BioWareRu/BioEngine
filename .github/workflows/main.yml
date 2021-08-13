@@ -8,6 +8,8 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     container: ghcr.io/sitkoru/actions-container
+    env:
+      PROJECT: BioEngine.Admin
     steps:
       - name: Checkout
         uses: actions/checkout@v2
