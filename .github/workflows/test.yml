@@ -1,0 +1,10 @@
+name: Test
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: echo event data
+        run: cat $GITHUB_EVENT_PATH
