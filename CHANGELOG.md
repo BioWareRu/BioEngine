@@ -1,3 +1,10 @@
+## [1.2.4](https://github.com/BioWareRu/BioEngine/compare/v1.2.3...v1.2.4) (2021-08-13)
+
+
+### Bug Fixes
+
+* **ci:** define GITHUB_TOKEN ([5c2900d](https://github.com/BioWareRu/BioEngine/commit/5c2900d2760ed2be5ba7a519de261c7db7c0cf26))
+
 ## [1.2.3](https://github.com/BioWareRu/BioEngine/compare/v1.2.2...v1.2.3) (2021-08-13)
 
 
