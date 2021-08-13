@@ -1,3 +1,10 @@
+## [1.2.6](https://github.com/BioWareRu/BioEngine/compare/v1.2.5...v1.2.6) (2021-08-13)
+
+
+### Bug Fixes
+
+* **ci:** add persist-credentials: false ([cfd71f4](https://github.com/BioWareRu/BioEngine/commit/cfd71f44947ded279ccc08bdaac0a48c4a2d4af7))
+
 ## [1.2.5](https://github.com/BioWareRu/BioEngine/compare/v1.2.4...v1.2.5) (2021-08-13)
 
 
