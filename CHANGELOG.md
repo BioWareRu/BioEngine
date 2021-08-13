@@ -1,3 +1,10 @@
+## [1.2.3](https://github.com/BioWareRu/BioEngine/compare/v1.2.2...v1.2.3) (2021-08-13)
+
+
+### Bug Fixes
+
+* **ci:** try use bot token ([ae0ccef](https://github.com/BioWareRu/BioEngine/commit/ae0ccef1b7a2c594245fadcda272f1d8412b2218))
+
 ## [1.2.2](https://github.com/BioWareRu/BioEngine/compare/v1.2.1...v1.2.2) (2021-08-13)
 
 
