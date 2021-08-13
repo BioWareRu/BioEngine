@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/BioWareRu/BioEngine/compare/v1.1.0...v1.1.1) (2021-08-13)
+
+
+### Bug Fixes
+
+* **ci:** fix tag pattern ([5ca019e](https://github.com/BioWareRu/BioEngine/commit/5ca019e1f868d2a0c15e4b0f236ef7c04bada884))
+
 # [1.1.0](https://github.com/BioWareRu/BioEngine/compare/v1.0.2...v1.1.0) (2021-08-13)
 
 
