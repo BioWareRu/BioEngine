@@ -1,3 +1,10 @@
+## [1.2.10](https://github.com/BioWareRu/BioEngine/compare/v1.2.9...v1.2.10) (2021-08-13)
+
+
+### Bug Fixes
+
+* **forms:** rebase site and tags form on top of BaseForm ([38bcbbd](https://github.com/BioWareRu/BioEngine/commit/38bcbbdd025e0954af7824bbbc8e64dccb1b5e35))
+
 ## [1.2.9](https://github.com/BioWareRu/BioEngine/compare/v1.2.8...v1.2.9) (2021-08-13)
 
 
