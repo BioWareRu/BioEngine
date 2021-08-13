@@ -1,5 +1,7 @@
-﻿using BioEngine.Core.Data.Entities.Abstractions;
+﻿using System.Threading.Tasks;
+using BioEngine.Core.Data.Entities.Abstractions;
 using BioEngine.Core.Data.Repositories;
+using BioEngine.Core.Users;
 using KellermanSoftware.CompareNetObjects;
 using Sitko.Blockly.Blazor.Extensions;
 using Sitko.Core.Blazor.AntDesignComponents.Components;
@@ -16,6 +18,16 @@ namespace BioEngine.Admin.Shared
         {
             base.ConfigureComparer(comparisonConfig);
             comparisonConfig.AddBlocklyCollectionMapping();
+        }
+
+        protected override async Task InitializeAsync()
+        {
+            await base.InitializeAsync();
+            var user = await GetRequiredService<ICurrentUserProvider>().GetCurrentUserAsync();
+            if (user?.IsAdmin == true)
+            {
+                Debug = true;
+            }
         }
     }
 }
