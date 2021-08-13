@@ -24,6 +24,12 @@
                 <a href="@url">@context.Title</a>
             </Column>
             <Column Title="Дата" @bind-Field="@context.DateAdded" Format="dd.MM.yyyy hh:mm:ss" Sortable DefaultSortOrder="SortDirection.Descending"/>
+            <Column Title="Сайты" @bind-Field="@context.Sites" Sortable>
+                @foreach (var site in context.Sites)
+                {
+                    <Tag Color="blue">@site.Title</Tag>
+                }
+            </Column>
             <Column Title="Адрес" @bind-Field="@context.Url" Sortable Filterable>
                 @context.Url
             </Column>
