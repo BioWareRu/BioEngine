@@ -1,8 +1,10 @@
+using System.Linq;
 using System.Threading.Tasks;
 using BioEngine.Core.IPB.Api;
 using BioEngine.Core.Users;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 
 namespace BioEngine.Core.IPB.Users
 {
@@ -11,12 +13,16 @@ namespace BioEngine.Core.IPB.Users
     {
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly IPBApiClientFactory<TIpbModuleOptions> ipbApiClientFactory;
+        private readonly IOptionsMonitor<IPBUsersModuleOptions> optionsMonitor;
+        private IPBUsersModuleOptions usersModuleOptions => optionsMonitor.CurrentValue;
 
         public IPBCurrentUserProvider(IHttpContextAccessor httpContextAccessor,
-            IPBApiClientFactory<TIpbModuleOptions> ipbApiClientFactory)
+            IPBApiClientFactory<TIpbModuleOptions> ipbApiClientFactory,
+            IOptionsMonitor<IPBUsersModuleOptions> optionsMonitor)
         {
             this.httpContextAccessor = httpContextAccessor;
             this.ipbApiClientFactory = ipbApiClientFactory;
+            this.optionsMonitor = optionsMonitor;
         }
 
         private User? user;
@@ -38,6 +44,10 @@ namespace BioEngine.Core.IPB.Users
             {
                 var client = ipbApiClientFactory.GetClient(await GetAccessTokenAsync());
                 user = await client.GetUserAsync();
+                if (user.GetGroupIds().Contains(usersModuleOptions.AdminGroupId))
+                {
+                    user.SetAdmin();
+                }
             }
 
             return user;
