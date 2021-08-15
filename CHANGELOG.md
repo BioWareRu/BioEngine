@@ -1,3 +1,10 @@
+## [1.2.11](https://github.com/BioWareRu/BioEngine/compare/v1.2.10...v1.2.11) (2021-08-15)
+
+
+### Bug Fixes
+
+* **admin:** fix page title prerendering ([a3ddc73](https://github.com/BioWareRu/BioEngine/commit/a3ddc73d1d3cda691fa5fd9dbf03f3403796d1fc))
+
 ## [1.2.10](https://github.com/BioWareRu/BioEngine/compare/v1.2.9...v1.2.10) (2021-08-13)
 
 
