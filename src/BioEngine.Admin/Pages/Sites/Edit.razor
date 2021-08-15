@@ -21,13 +21,16 @@
         </Extra>
         <ChildContent>
             <FormItem Label="Заголовок">
-                <Input @bind-Value="@context.Entity.Title"/>
+                <Input @bind-Value="@context.Entity.Title" Placeholder="Мегасайт"/>
+                <Text Type="secondary">Название сайта для отображения в админке</Text>
             </FormItem>
             <FormItem Label="Адрес">
-                <Input @bind-Value="@context.Entity.Url"/>
+                <Input @bind-Value="@context.Entity.Url" Placeholder="https://site.dev"/>
+                <Text Type="secondary">Полный адрес сайта с протоколом</Text>
             </FormItem>
-            <FormItem Label="Главный сайт">
-                <Checkbox @bind-Value="context.Entity.IsMain">Является приоритетным при публикации на форуме</Checkbox>
+            <FormItem>
+                <Checkbox @bind-Value="context.Entity.IsMain">Главный сайт</Checkbox>
+                <Text Type="secondary">Является приоритетным при публикации на форуме</Text>
             </FormItem>
         </ChildContent>
     </PageContainer>

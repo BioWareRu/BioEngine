@@ -13,8 +13,8 @@
                     <a href="/">BRCGames</a>
                 </BreadcrumbItem>
                 <BreadcrumbItem>
-                                    <a href="/Games">Игры</a>
-                                </BreadcrumbItem>
+                    <a href="/Games">Игры</a>
+                </BreadcrumbItem>
             </Breadcrumb>
         </Breadcrumb>
         <Extra>
@@ -37,13 +37,15 @@
         <ChildContent>
             <Row Gutter="24">
                 <AntDesign.Col Span="12">
-                    <FormItem Label="Заголовок">
-                        <Input @bind-Value="@context.Entity.Title" OnkeyUp="context.TitleChanged"/>
+                    <FormItem Label="Название">
+                        <Input @bind-Value="@context.Entity.Title" OnkeyUp="context.TitleChanged" Placeholder="Название игры"/>
+                        <Text Type="secondary">Название игры</Text>
                     </FormItem>
                 </AntDesign.Col>
                 <AntDesign.Col Span="12">
                     <FormItem Label="Адрес">
-                        <Input @bind-Value="@context.Entity.Url"/>
+                        <Input @bind-Value="@context.Entity.Url" Placeholder="gamename"/>
+                        <Text Type="secondary">Адрес игры на сайте — https://www.bioware.ru/games/gamename.html</Text>
                     </FormItem>
                 </AntDesign.Col>
             </Row>
@@ -63,11 +65,13 @@
                                 EnableSearch
                                 AllowClear>
                         </Select>
+                        <Text Type="secondary">Сайты, на которых отображать игру</Text>
                     </FormItem>
                 </AntDesign.Col>
                 <AntDesign.Col Span="12">
                     <FormItem Label="Хештег">
-                        <Input @bind-Value="@context.Entity.Data.Hashtag"/>
+                        <Input @bind-Value="@context.Entity.Data.Hashtag" Placeholder="gamename"/>
+                        <Text Type="secondary">Хештег для публикации в соцсетях</Text>
                     </FormItem>
                 </AntDesign.Col>
             </Row>
@@ -75,9 +79,8 @@
                 <AntDesign.Col Span="12">
                     <FormItem Label="Картинка в шапку">
                         <AntStorageImageInput @bind-Value="@context.Entity.Data.HeaderPicture" Storage="@context.Storage" UploadPath="/games" GenerateMetadata="@StorageUploadExtensions.GenerateMetadataAsync"></AntStorageImageInput>
+                        <Text Type="secondary">Картинка в шапке на странице игры</Text>
                     </FormItem>
-                </AntDesign.Col>
-                <AntDesign.Col Span="12">
                 </AntDesign.Col>
             </Row>
             <AntBlocklyForm TEntity="Game" TForm="GameForm" @bind-Value="context.Entity.Blocks" Form="context" Options="context.BlocksOptions"></AntBlocklyForm>

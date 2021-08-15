@@ -23,10 +23,12 @@
         </Extra>
         <ChildContent>
             <FormItem Label="Заголовок">
-                <AntDesign.Input @bind-Value="@context.Entity.Title"/>
+                <AntDesign.Input @bind-Value="@context.Entity.Title" Placeholder="О сайте"/>
+                <Text Type="secondary">Заголовок страницы</Text>
             </FormItem>
             <FormItem Label="Адрес">
-                <AntDesign.Input @bind-Value="@context.Entity.Url"/>
+                <AntDesign.Input @bind-Value="@context.Entity.Url" Placeholder="about"/>
+                <Text Type="secondary">Адрес страницы на сайте — https://www.bioware.ru/pages/about.html</Text>
             </FormItem>
             <FormItem Label="Сайты">
                 <AntDesign.Select Mode="multiple"
@@ -41,6 +43,7 @@
                                   TItem="Site"
                                   EnableSearch
                                   AllowClear/>
+                <Text Type="secondary">Сайты, на которых будет показываться страница</Text>
             </FormItem>
             <AntBlocklyForm TEntity="Page" TForm="PageForm" @bind-Value="context.Entity.Blocks" Form="context" Options="context.BlocksOptions"></AntBlocklyForm>
         </ChildContent>

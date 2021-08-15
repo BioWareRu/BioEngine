@@ -38,12 +38,14 @@
             <Row Gutter="24">
                 <AntDesign.Col Span="12">
                     <FormItem Label="Заголовок">
-                        <AntDesign.Input @bind-Value="@context.Entity.Title" OnkeyUp="context.TitleChanged"/>
+                        <AntDesign.Input @bind-Value="@context.Entity.Title" OnkeyUp="context.TitleChanged" Placeholder="Новый пост"/>
+                        <Text Type="secondary">Заголовок поста</Text>
                     </FormItem>
                 </AntDesign.Col>
                 <AntDesign.Col Span="12">
                     <FormItem Label="Адрес">
-                        <AntDesign.Input @bind-Value="@context.Entity.Url"/>
+                        <AntDesign.Input @bind-Value="@context.Entity.Url" Placeholder="newpost"/>
+                        <Text Type="secondary">Адрес поста на сайте — https://www.bioware.ru/posts/newpost.html</Text>
                     </FormItem>
                 </AntDesign.Col>
             </Row>
@@ -63,6 +65,7 @@
                                           EnableSearch
                                           AllowClear>
                         </AntDesign.Select>
+                        <Text Type="secondary">Разделы, к которым относится пост</Text>
                     </FormItem>
                 </AntDesign.Col>
                 <AntDesign.Col Span="12">
@@ -80,6 +83,7 @@
                                           EnableSearch
                                           AllowClear>
                         </AntDesign.Select>
+                        <Text Type="secondary">Тэги, описывающие пост</Text>
                     </FormItem>
                 </AntDesign.Col>
             </Row>

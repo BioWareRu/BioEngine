@@ -37,19 +37,21 @@
         <ChildContent>
             <Row Gutter="24">
                 <AntDesign.Col Span="12">
-                    <FormItem Label="Заголовок">
-                        <AntDesign.Input @bind-Value="@context.Entity.Title" OnkeyUp="context.TitleChanged"/>
+                    <FormItem Label="Название">
+                        <AntDesign.Input @bind-Value="@context.Entity.Title" OnkeyUp="context.TitleChanged" Placeholder="Название разработчик"/>
+                        <Text Type="secondary">Название разработчика</Text>
                     </FormItem>
                 </AntDesign.Col>
                 <AntDesign.Col Span="12">
                     <FormItem Label="Адрес">
-                        <AntDesign.Input @bind-Value="@context.Entity.Url"/>
+                        <AntDesign.Input @bind-Value="@context.Entity.Url" Placeholder="developername"/>
+                        <Text Type="secondary">Адрес разработчика на сайте — https://www.bioware.ru/developers/developername.html</Text>
                     </FormItem>
                 </AntDesign.Col>
             </Row>
             <Row Gutter="24">
                 <AntDesign.Col Span="12">
-                    <FormItem Label="Сайты" >
+                    <FormItem Label="Сайты">
                         <AntDesign.Select Mode="multiple"
                                           DataSource="@context.SitesList"
                                           @bind-Value="@context.DummySiteId"
@@ -62,11 +64,13 @@
                                           TItem="Site"
                                           EnableSearch
                                           AllowClear/>
+                        <Text Type="secondary">Сайты, на которых отображать разработчика</Text>
                     </FormItem>
                 </AntDesign.Col>
                 <AntDesign.Col Span="12">
                     <FormItem Label="Хештег">
-                        <AntDesign.Input @bind-Value="@context.Entity.Data.Hashtag"/>
+                        <AntDesign.Input @bind-Value="@context.Entity.Data.Hashtag" Placeholder="developername"/>
+                        <Text Type="secondary">Хештег для публикаций в соцсетях</Text>
                     </FormItem>
                 </AntDesign.Col>
             </Row>
@@ -74,9 +78,8 @@
                 <AntDesign.Col Span="12">
                     <FormItem Label="Картинка в шапку">
                         <AntStorageImageInput @bind-Value="@context.Entity.Data.HeaderPicture" Storage="@context.Storage" UploadPath="/developers" GenerateMetadata="@StorageUploadExtensions.GenerateMetadataAsync"></AntStorageImageInput>
+                        <Text Type="secondary">Картинка в шапке на странице разработчика</Text>
                     </FormItem>
-                </AntDesign.Col>
-                <AntDesign.Col Span="12">
                 </AntDesign.Col>
             </Row>
             <AntBlocklyForm TEntity="Developer" TForm="DeveloperForm" @bind-Value="context.Entity.Blocks" Form="context" Options="context.BlocksOptions"></AntBlocklyForm>

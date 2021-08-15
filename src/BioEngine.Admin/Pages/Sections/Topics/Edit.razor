@@ -37,13 +37,15 @@
         <ChildContent>
             <Row Gutter="24">
                 <AntDesign.Col Span="12">
-                    <FormItem Label="Заголовок">
-                        <Input @bind-Value="@context.Entity.Title" OnkeyUp="context.TitleChanged"/>
+                    <FormItem Label="Название">
+                        <Input @bind-Value="@context.Entity.Title" OnkeyUp="context.TitleChanged" Placeholder="Мегатема"/>
+                        <Text Type="secondary">Название темы</Text>
                     </FormItem>
                 </AntDesign.Col>
                 <AntDesign.Col Span="12">
                     <FormItem Label="Адрес">
-                        <Input @bind-Value="@context.Entity.Url"/>
+                        <Input @bind-Value="@context.Entity.Url" Placeholder="topicname"/>
+                        <Text Type="secondary">Адрес темы на сайте — https://www.bioware.ru/topics/topicname.html</Text>
                     </FormItem>
                 </AntDesign.Col>
             </Row>
@@ -62,11 +64,13 @@
                                 TItem="Site"
                                 EnableSearch
                                 AllowClear/>
+                        <Text Type="secondary">Сайты, на которых показывать тему</Text>
                     </FormItem>
                 </AntDesign.Col>
                 <AntDesign.Col Span="12">
                     <FormItem Label="Хештег">
                         <Input @bind-Value="@context.Entity.Data.Hashtag"/>
+                        <Text Type="secondary">Хештег для публикаций в соцсетях</Text>
                     </FormItem>
                 </AntDesign.Col>
             </Row>
@@ -74,9 +78,8 @@
                 <AntDesign.Col Span="12">
                     <FormItem Label="Картинка в шапку">
                         <AntStorageImageInput @bind-Value="@context.Entity.Data.HeaderPicture" Storage="@context.Storage" UploadPath="/topics" GenerateMetadata="@StorageUploadExtensions.GenerateMetadataAsync"></AntStorageImageInput>
+                        <Text Type="secondary">Картинка в шапке на странице темы</Text>
                     </FormItem>
-                </AntDesign.Col>
-                <AntDesign.Col Span="12">
                 </AntDesign.Col>
             </Row>
             <AntBlocklyForm TEntity="Topic" TForm="TopicForm" @bind-Value="context.Entity.Blocks" Form="context" Options="context.BlocksOptions"></AntBlocklyForm>
