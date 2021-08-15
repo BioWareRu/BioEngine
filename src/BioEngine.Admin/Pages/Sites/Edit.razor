@@ -26,6 +26,9 @@
             <FormItem Label="Адрес">
                 <Input @bind-Value="@context.Entity.Url"/>
             </FormItem>
+            <FormItem Label="Главный сайт">
+                <Checkbox @bind-Value="context.Entity.IsMain">Является приоритетным при публикации на форуме</Checkbox>
+            </FormItem>
         </ChildContent>
     </PageContainer>
 </SiteForm>
