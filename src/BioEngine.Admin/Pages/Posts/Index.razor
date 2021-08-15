@@ -28,7 +28,7 @@
                 </Column>
                 <Column Title="Дата" @bind-Field="@context.DateAdded" Format="dd.MM.yyyy hh:mm:ss" Sortable DefaultSortOrder="SortDirection.Descending"/>
                 <Column Title="Сайты" TData="Site">
-                    @foreach (var site in context.Sites)
+                    @foreach (var site in context.Sections.SelectMany(s=>s.Sites).Distinct())
                     {
                         <a href="@GetSiteFilterUrl(site)">
                             <Tag Color="blue">@site.Title</Tag>

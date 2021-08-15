@@ -14,7 +14,6 @@ namespace BioEngine.Core.Data.Entities
 
         public bool IsMain { get; set; }
 
-        public List<Post> Posts { get; set; } = new();
         public List<Page> Pages { get; set; } = new();
         public List<Section> Sections { get; set; } = new();
     }

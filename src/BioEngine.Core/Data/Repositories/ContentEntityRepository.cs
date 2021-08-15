@@ -14,9 +14,9 @@ namespace BioEngine.Core.Data.Repositories
         Task UnPublishAsync(TEntity item, TEntity? snapshot = null);
     }
 
-    public abstract class PublishableEntityRepository<TEntity> : SiteEntityRepository<TEntity>,
+    public abstract class PublishableEntityRepository<TEntity> : BioEntityRepository<TEntity>,
         IPublishableEntityRepository<TEntity>
-        where TEntity : class, IPublishable, ISiteEntity, IBioEntity
+        where TEntity : class, IPublishable, IBioEntity
     {
         protected PublishableEntityRepository(EFRepositoryContext<TEntity, Guid, BioDbContext> repositoryContext) :
             base(repositoryContext)

@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Sitko.Core.Blazor.AntDesignComponents.Components;
 using Sitko.Core.Repository;
+using Sitko.Core.Repository.EntityFrameworkCore;
 using Tag = BioEngine.Core.Data.Entities.Tag;
 
 namespace BioEngine.Admin.Pages.Posts
@@ -56,7 +57,7 @@ namespace BioEngine.Admin.Pages.Posts
         {
             if (filterSiteId != default)
             {
-                query.Where(p => p.Sites.Any(site => site.Id == filterSiteId));
+                query.Where(p => p.Sections.Any(section => section.Sites.Any(s => s.Id == filterSiteId)));
             }
 
             if (filterSectionId != default)
@@ -69,7 +70,7 @@ namespace BioEngine.Admin.Pages.Posts
                 query.Where(p => p.Tags.Any(tag => tag.Id == filterTagId));
             }
 
-            query.Include(p => p.Sites).Include(p => p.Sections).Include(p => p.Tags);
+            query.Include(p => p.Sections).ThenInclude(s => s.Sites).Include(p => p.Tags);
             return Task.CompletedTask;
         }
 

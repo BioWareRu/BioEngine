@@ -22,7 +22,6 @@ namespace BioEngine.Core.Data.Entities
         public DateTimeOffset? DatePublished { get; set; }
 
         public List<Section> Sections { get; set; } = new();
-        public List<Site> Sites { get; set; } = new();
         public List<Tag> Tags { get; set; } = new();
 
         public List<ContentBlock> Blocks { get; set; } = new();

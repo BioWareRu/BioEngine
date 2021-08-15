@@ -18,7 +18,9 @@ using Microsoft.Extensions.Logging;
 using Sitko.Blockly;
 using Sitko.Blockly.AntDesignComponents.Forms;
 using Sitko.Blockly.Blazor.Forms;
+using Sitko.Core.App.Blazor.Forms;
 using Sitko.Core.Repository;
+using Sitko.Core.Repository.EntityFrameworkCore;
 using Sitko.Core.Storage;
 
 namespace BioEngine.Admin.Pages.Posts
@@ -45,7 +47,6 @@ namespace BioEngine.Admin.Pages.Posts
             set
             {
                 Entity.Sections = SectionsList.Where(s => value.Contains(s.Id)).ToList();
-                Entity.Sites = Entity.Sections.SelectMany(s => s.Sites).Distinct().ToList();
                 NotifyChange(FieldIdentifier.Create(() => Entity.Sections));
             }
         }
@@ -110,7 +111,8 @@ namespace BioEngine.Admin.Pages.Posts
             };
             using var scope = CreateServicesScope();
             SectionsList.AddRange((await scope.ServiceProvider.GetRequiredService<SectionsRepository>()
-                .GetAllAsync(q => q.Where(s => s.IsPublished))).items);
+                    .GetAllAsync(q => q.Where(s => s.IsPublished)))
+                .items);
             TagsList.AddRange((await scope.ServiceProvider.GetRequiredService<TagsRepository>().GetAllAsync()).items);
         }
 
@@ -123,7 +125,9 @@ namespace BioEngine.Admin.Pages.Posts
         protected override async Task ConfigureQueryAsync(IRepositoryQuery<Post> query)
         {
             await base.ConfigureQueryAsync(query);
-            query.Include(p => p.Sites).Include(p => p.Sections).Include(p => p.Tags);
+            query
+                .Include(p => p.Sections)
+                .Include(p => p.Tags);
         }
     }
 }

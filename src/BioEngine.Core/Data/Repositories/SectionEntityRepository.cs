@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using BioEngine.Core.Data.Entities.Abstractions;
-using FluentValidation.Results;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Sitko.Core.Repository.EntityFrameworkCore;
 
 namespace BioEngine.Core.Data.Repositories
@@ -18,5 +11,27 @@ namespace BioEngine.Core.Data.Repositories
             base(repositoryContext)
         {
         }
+
+        // protected override async Task<bool> BeforeSaveAsync(TEntity item,
+        //     (bool isValid, IList<ValidationFailure> errors) validationResult, bool isNew,
+        //     CancellationToken cancellationToken = default)
+        // {
+        //     var result = await base.BeforeSaveAsync(item, validationResult, isNew, cancellationToken);
+        //     if (result)
+        //     {
+        //         await ExecuteDbContextOperationAsync(async context =>
+        //         {
+        //             //await context.Entry(item).Collection(p => p.Sites).LoadAsync(cancellationToken);
+        //             foreach (var section in context.Sections)
+        //             {
+        //                 await context.Entry(section).Collection(p => p.Sites).LoadAsync(cancellationToken);
+        //             }
+        //             return true;
+        //         });
+        //         item.Sites = item.Sections.SelectMany(s => s.Sites).Distinct().ToList();
+        //     }
+        //
+        //     return result;
+        // }
     }
 }

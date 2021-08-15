@@ -57,12 +57,6 @@ namespace BioEngine.Core.Data
                 .UsingEntity(j => j.ToTable("PostSections"));
 
             modelBuilder
-                .Entity<Post>()
-                .HasMany(p => p.Sites)
-                .WithMany(p => p.Posts)
-                .UsingEntity(j => j.ToTable("PostSites"));
-
-            modelBuilder
                 .Entity<Section>()
                 .HasMany(p => p.Sites)
                 .WithMany(p => p.Sections)

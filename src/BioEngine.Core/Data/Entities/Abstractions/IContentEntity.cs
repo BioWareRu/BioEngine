@@ -3,7 +3,7 @@ using Sitko.Blockly;
 
 namespace BioEngine.Core.Data.Entities.Abstractions
 {
-    public interface IContentEntity : ISiteEntity, IRoutable, IBlocksItem, IPublishable
+    public interface IContentEntity : IRoutable, IBlocksItem, IPublishable
     {
         string Title { get; set; }
     }

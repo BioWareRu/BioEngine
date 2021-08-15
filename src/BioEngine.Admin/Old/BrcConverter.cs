@@ -209,7 +209,6 @@ namespace BioEngine.Admin.Old
             var bioDbContext = scope.ServiceProvider.GetRequiredService<BioDbContext>();
             logger.LogInformation("Converting post {Title}", oldPost.Title);
             var post = await bioDbContext.Posts.Where(s => s.Id == oldPost.Id)
-                .Include(s => s.Sites)
                 .Include(s => s.Sections)
                 .Include(s => s.Tags)
                 .FirstOrDefaultAsync();
@@ -227,8 +226,6 @@ namespace BioEngine.Admin.Old
             post.IsPublished = oldPost.IsPublished;
             post.AuthorId = oldPost.AuthorId;
 
-            post.Sites.Clear();
-            post.Sites.AddRange(await bioDbContext.Sites.Where(s => oldPost.SiteIds.Contains(s.Id)).ToListAsync());
             post.Sections.Clear();
             post.Sections.AddRange(await bioDbContext.Sections.Where(s => oldPost.SectionIds.Contains(s.Id))
                 .ToListAsync());
