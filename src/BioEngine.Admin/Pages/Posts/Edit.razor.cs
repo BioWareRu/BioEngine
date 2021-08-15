@@ -32,11 +32,11 @@ namespace BioEngine.Admin.Pages.Posts
 
     public class PostForm : BasePublishableForm<Post, Guid, PostsRepository>
     {
-        [Parameter] public RenderFragment<PostForm> ChildContent { get; set; } = null!;
-        protected override RenderFragment ChildContentFragment => ChildContent(this);
-        private string oldTitle = string.Empty;
         public readonly List<Section> SectionsList = new();
         public readonly List<Tag> TagsList = new();
+        private string oldTitle = string.Empty;
+        [Parameter] public RenderFragment<PostForm> ChildContent { get; set; } = null!;
+        protected override RenderFragment ChildContentFragment => ChildContent(this);
         public AntDesignBlocklyFormOptions BlocksOptions { get; private set; } = null!;
         public Guid DummySectionId { get; set; }
         public Guid DummyTagId { get; set; }
