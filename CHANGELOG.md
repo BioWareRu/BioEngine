@@ -1,3 +1,14 @@
+# [1.3.0](https://github.com/BioWareRu/BioEngine/compare/v1.2.11...v1.3.0) (2021-08-15)
+
+
+### Features
+
+* **deps:** Sitko.Core 8.0.0-preview.59 ([776b00b](https://github.com/BioWareRu/BioEngine/commit/776b00bc84b239ad1d4edf451e5e508f13a9cd5c))
+* **deps:** Sitko.Core 8.0.0-preview.60 ([19efc76](https://github.com/BioWareRu/BioEngine/commit/19efc76e3908e5238325e395f5b5b8970ff38450))
+* **forms:** add form field descriptions ([34879db](https://github.com/BioWareRu/BioEngine/commit/34879db4c89fe53afab93a2361691b456aa9106f))
+* **posts:** remove direct relation from posts to sites, use relation via sections ([8494818](https://github.com/BioWareRu/BioEngine/commit/84948180e5fae7688ee8aaf1a4717fc92f38e4e9))
+* **sites:** option to mark site as main ([b907524](https://github.com/BioWareRu/BioEngine/commit/b907524c57e8a61e324b8874fccd4ec16598956c))
+
 ## [1.2.11](https://github.com/BioWareRu/BioEngine/compare/v1.2.10...v1.2.11) (2021-08-15)
 
 
