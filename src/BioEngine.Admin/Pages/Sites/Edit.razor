@@ -1,5 +1,6 @@
 ﻿@page "/Sites/Add"
 @page "/Sites/{EntityId:guid}"
+@using BioEngine.Core.IPB.Models
 @inherits BaseFormPage<BioEngine.Core.Data.Entities.Site, SiteForm>
 <SiteForm Layout="@FormLayout.Vertical" EntityId="EntityId" @ref="Form">
     <PageTitle>@PageTitle</PageTitle>
@@ -20,18 +21,44 @@
             </AntDesign.Button>
         </Extra>
         <ChildContent>
-            <FormItem Label="Заголовок">
-                <Input @bind-Value="@context.Entity.Title" Placeholder="Мегасайт"/>
-                <Text Type="secondary">Название сайта для отображения в админке</Text>
-            </FormItem>
-            <FormItem Label="Адрес">
-                <Input @bind-Value="@context.Entity.Url" Placeholder="https://site.dev"/>
-                <Text Type="secondary">Полный адрес сайта с протоколом</Text>
-            </FormItem>
-            <FormItem>
-                <Checkbox @bind-Value="context.Entity.IsMain">Главный сайт</Checkbox>
-                <Text Type="secondary">Является приоритетным при публикации на форуме</Text>
-            </FormItem>
+            <Row Gutter="24">
+                <AntDesign.Col Span="12">
+                    <FormItem Label="Заголовок">
+                        <Input @bind-Value="@context.Entity.Title" Placeholder="Мегасайт"/>
+                        <Text Type="secondary">Название сайта для отображения в админке</Text>
+                    </FormItem>
+                </AntDesign.Col>
+                <AntDesign.Col Span="12">
+                    <FormItem Label="Адрес">
+                        <Input @bind-Value="@context.Entity.Url" Placeholder="https://site.dev"/>
+                        <Text Type="secondary">Полный адрес сайта с протоколом</Text>
+                    </FormItem>
+                </AntDesign.Col>
+            </Row>
+            <Row Gutter="24">
+                <AntDesign.Col Span="12">
+                    <FormItem>
+                        <Checkbox @bind-Value="context.Entity.IsMain">Главный сайт</Checkbox>
+                        <Text Type="secondary">Является приоритетным при публикации на форуме</Text>
+                    </FormItem>
+                </AntDesign.Col>
+                <AntDesign.Col Span="12">
+                    <FormItem>
+                        <Select DataSource="@context.Forums"
+                                @bind-Value="@context.Entity.ForumId"
+                                LabelName="@nameof(Forum.Name)"
+                                ValueName="@nameof(Forum.Id)"
+                                Placeholder="Выберите раздел"
+                                DefaultActiveFirstItem="false"
+                                TItemValue="int"
+                                TItem="Forum"
+                                EnableSearch
+                                AllowClear>
+                        </Select>
+                        <Text Type="secondary">Раздел для публикации постов на форуме</Text>
+                    </FormItem>
+                </AntDesign.Col>
+            </Row>
         </ChildContent>
     </PageContainer>
 </SiteForm>

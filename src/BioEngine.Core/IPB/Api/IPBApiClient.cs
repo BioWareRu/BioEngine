@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using BioEngine.Core.IPB.Models;
 using BioEngine.Core.Users;
 using Flurl.Http;
 using Microsoft.Extensions.Logging;
@@ -99,10 +100,25 @@ namespace BioEngine.Core.IPB.Api
             }
         }
 
-        // public Task<Response<Forum>> GetForumsAsync(int page = 1, int perPage = 25)
-        // {
-        //     return GetAsync<Response<Forum>>($"forums/forums?page={page.ToString()}&perPage={perPage.ToString()}");
-        // }
+        public async Task<List<Forum>> GetForumsAsync()
+        {
+            var page = 1;
+            var perPage = 100;
+            var forums = new List<Forum>();
+            while (true)
+            {
+                var response = await GetAsync<Response<Forum>>($"forums/forums?page={page.ToString(CultureInfo.CurrentCulture)}&perPage={perPage.ToString(CultureInfo.CurrentCulture)}");
+                forums.AddRange(response.Results);
+                if (response.TotalResults == forums.Count)
+                {
+                    break;
+                }
+
+                page++;
+            }
+
+            return forums;
+        }
 
         public Task<User> GetUserByIdAsync(string id) => GetAsync<User>($"core/members/{id}");
 
