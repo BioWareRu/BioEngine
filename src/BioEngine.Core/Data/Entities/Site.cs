@@ -16,6 +16,7 @@ namespace BioEngine.Core.Data.Entities
 
         public List<Page> Pages { get; set; } = new();
         public List<Section> Sections { get; set; } = new();
+        public int ForumId { get; set; }
     }
 
     public class SiteValidator : AbstractValidator<Site>
@@ -28,6 +29,7 @@ namespace BioEngine.Core.Data.Entities
             RuleFor(e => e.Url).NotEmpty().WithMessage("Укажите адрес")
                 .Must(uri => Uri.TryCreate(uri, UriKind.Absolute, out _))
                 .WithMessage("Значение должно быть ссылкой");
+            RuleFor(e => e.ForumId).GreaterThan(0).WithMessage("Выберите раздел на форуме");
             RuleFor(e => e.Url).CustomAsync(async (url, context, cancellationToken) =>
             {
                 if (context.InstanceToValidate is not null && !string.IsNullOrEmpty(url))

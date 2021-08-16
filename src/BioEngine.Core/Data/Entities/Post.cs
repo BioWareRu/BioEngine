@@ -25,6 +25,8 @@ namespace BioEngine.Core.Data.Entities
         public List<Tag> Tags { get; set; } = new();
 
         public List<ContentBlock> Blocks { get; set; } = new();
+        public int? ForumTopicId { get; set; }
+        public int? ForumPostId { get; set; }
     }
 
     [UsedImplicitly]
