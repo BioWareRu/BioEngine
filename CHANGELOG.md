@@ -1,3 +1,18 @@
+# [1.4.0](https://github.com/BioWareRu/BioEngine/compare/v1.3.0...v1.4.0) (2021-08-20)
+
+
+### Bug Fixes
+
+* **admin:** load and-design-blazor.js after _framework/blazor.server.js ([716fd40](https://github.com/BioWareRu/BioEngine/commit/716fd408b95aaa8165f774687075c51233e009fa))
+
+
+### Features
+
+* **forms:** use AntFormItem for hints ([3c26a38](https://github.com/BioWareRu/BioEngine/commit/3c26a389f18a987516820a1490b0cf84e7bf3d92))
+* **ipb:** add forum properties to site and post ([da5b9ec](https://github.com/BioWareRu/BioEngine/commit/da5b9ec24d7ed11c76a2919f57fc864a3ee70781))
+* **ipb:** add forum selection to site form ([5538761](https://github.com/BioWareRu/BioEngine/commit/5538761e344d452653ffdc5855fc33cc3c67a25e))
+* **ipb:** return api models ([6b3ab13](https://github.com/BioWareRu/BioEngine/commit/6b3ab133b53169b21f99d81d96fc9e070e30f506))
+
 # [1.3.0](https://github.com/BioWareRu/BioEngine/compare/v1.2.11...v1.3.0) (2021-08-15)
 
 
