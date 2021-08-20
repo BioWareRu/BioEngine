@@ -23,27 +23,24 @@
         <ChildContent>
             <Row Gutter="24">
                 <AntDesign.Col Span="12">
-                    <FormItem Label="Заголовок">
+                    <AntFormItem Label="Заголовок" Hint="Название сайта для отображения в админке">
                         <Input @bind-Value="@context.Entity.Title" Placeholder="Мегасайт"/>
-                        <Text Type="secondary">Название сайта для отображения в админке</Text>
-                    </FormItem>
+                    </AntFormItem>
                 </AntDesign.Col>
                 <AntDesign.Col Span="12">
-                    <FormItem Label="Адрес">
+                    <AntFormItem Label="Адрес" Hint="Полный адрес сайта с протоколом">
                         <Input @bind-Value="@context.Entity.Url" Placeholder="https://site.dev"/>
-                        <Text Type="secondary">Полный адрес сайта с протоколом</Text>
-                    </FormItem>
+                    </AntFormItem>
                 </AntDesign.Col>
             </Row>
             <Row Gutter="24">
                 <AntDesign.Col Span="12">
-                    <FormItem>
-                        <Checkbox @bind-Value="context.Entity.IsMain">Главный сайт</Checkbox>
-                        <Text Type="secondary">Является приоритетным при публикации на форуме</Text>
-                    </FormItem>
+                    <AntFormItem Label="Главный сайт" Hint="Является приоритетным при публикации на форуме">
+                        <Checkbox @bind-Value="context.Entity.IsMain">Да</Checkbox>
+                    </AntFormItem>
                 </AntDesign.Col>
                 <AntDesign.Col Span="12">
-                    <FormItem>
+                    <AntFormItem Label="Раздел форума" Hint="Раздел для публикации постов на форуме">
                         <Select DataSource="@context.Forums"
                                 @bind-Value="@context.Entity.ForumId"
                                 LabelName="@nameof(Forum.Name)"
@@ -55,8 +52,7 @@
                                 EnableSearch
                                 AllowClear>
                         </Select>
-                        <Text Type="secondary">Раздел для публикации постов на форуме</Text>
-                    </FormItem>
+                    </AntFormItem>
                 </AntDesign.Col>
             </Row>
         </ChildContent>

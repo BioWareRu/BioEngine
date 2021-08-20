@@ -37,21 +37,19 @@
         <ChildContent>
             <Row Gutter="24">
                 <AntDesign.Col Span="12">
-                    <FormItem Label="Заголовок">
+                    <AntFormItem Label="Заголовок" Hint="Заголовок поста">
                         <AntDesign.Input @bind-Value="@context.Entity.Title" OnkeyUp="context.TitleChanged" Placeholder="Новый пост"/>
-                        <Text Type="secondary">Заголовок поста</Text>
-                    </FormItem>
+                    </AntFormItem>
                 </AntDesign.Col>
                 <AntDesign.Col Span="12">
-                    <FormItem Label="Адрес">
+                    <AntFormItem Label="Адрес" Hint="Адрес поста на сайте — https://www.bioware.ru/posts/newpost.html">
                         <AntDesign.Input @bind-Value="@context.Entity.Url" Placeholder="newpost"/>
-                        <Text Type="secondary">Адрес поста на сайте — https://www.bioware.ru/posts/newpost.html</Text>
-                    </FormItem>
+                    </AntFormItem>
                 </AntDesign.Col>
             </Row>
             <Row Gutter="24">
                 <AntDesign.Col Span="12">
-                    <FormItem Label="Разделы">
+                    <AntFormItem Label="Разделы" Hint="Разделы, к которым относится пост">
                         <AntDesign.Select Mode="multiple"
                                           DataSource="@context.SectionsList"
                                           @bind-Value="@context.DummySectionId"
@@ -65,11 +63,10 @@
                                           EnableSearch
                                           AllowClear>
                         </AntDesign.Select>
-                        <Text Type="secondary">Разделы, к которым относится пост</Text>
-                    </FormItem>
+                    </AntFormItem>
                 </AntDesign.Col>
                 <AntDesign.Col Span="12">
-                    <FormItem Label="Теги">
+                    <AntFormItem Label="Теги" Hint="Тэги, описывающие пост">
                         <AntDesign.Select Mode="multiple"
                                           DataSource="@context.TagsList"
                                           @bind-Value="@context.DummyTagId"
@@ -83,8 +80,7 @@
                                           EnableSearch
                                           AllowClear>
                         </AntDesign.Select>
-                        <Text Type="secondary">Тэги, описывающие пост</Text>
-                    </FormItem>
+                    </AntFormItem>
                 </AntDesign.Col>
             </Row>
             <AntBlocklyForm TEntity="Post" TForm="PostForm" @bind-Value="context.Entity.Blocks" Form="context" Options="context.BlocksOptions"></AntBlocklyForm>

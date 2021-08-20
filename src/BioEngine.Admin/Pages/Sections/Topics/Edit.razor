@@ -37,21 +37,19 @@
         <ChildContent>
             <Row Gutter="24">
                 <AntDesign.Col Span="12">
-                    <FormItem Label="Название">
+                    <AntFormItem Label="Название" Hint="Название темы">
                         <Input @bind-Value="@context.Entity.Title" OnkeyUp="context.TitleChanged" Placeholder="Мегатема"/>
-                        <Text Type="secondary">Название темы</Text>
-                    </FormItem>
+                    </AntFormItem>
                 </AntDesign.Col>
                 <AntDesign.Col Span="12">
-                    <FormItem Label="Адрес">
+                    <AntFormItem Label="Адрес" Hint="Адрес темы на сайте — https://www.bioware.ru/topics/topicname.html">
                         <Input @bind-Value="@context.Entity.Url" Placeholder="topicname"/>
-                        <Text Type="secondary">Адрес темы на сайте — https://www.bioware.ru/topics/topicname.html</Text>
-                    </FormItem>
+                    </AntFormItem>
                 </AntDesign.Col>
             </Row>
             <Row Gutter="24">
                 <AntDesign.Col Span="12">
-                    <FormItem Label="Сайты">
+                    <AntFormItem Label="Сайты" Hint="Сайты, на которых показывать тему">
                         <Select Mode="multiple"
                                 DataSource="@context.SitesList"
                                 @bind-Value="@context.DummySiteId"
@@ -64,22 +62,19 @@
                                 TItem="Site"
                                 EnableSearch
                                 AllowClear/>
-                        <Text Type="secondary">Сайты, на которых показывать тему</Text>
-                    </FormItem>
+                    </AntFormItem>
                 </AntDesign.Col>
                 <AntDesign.Col Span="12">
-                    <FormItem Label="Хештег">
+                    <AntFormItem Label="Хештег" Hint="Хештег для публикаций в соцсетях">
                         <Input @bind-Value="@context.Entity.Data.Hashtag"/>
-                        <Text Type="secondary">Хештег для публикаций в соцсетях</Text>
-                    </FormItem>
+                    </AntFormItem>
                 </AntDesign.Col>
             </Row>
             <Row Gutter="24">
                 <AntDesign.Col Span="12">
-                    <FormItem Label="Картинка в шапку">
+                    <AntFormItem Label="Картинка в шапку" Hint="Картинка в шапке на странице темы">
                         <AntStorageImageInput @bind-Value="@context.Entity.Data.HeaderPicture" Storage="@context.Storage" UploadPath="/topics" GenerateMetadata="@StorageUploadExtensions.GenerateMetadataAsync"></AntStorageImageInput>
-                        <Text Type="secondary">Картинка в шапке на странице темы</Text>
-                    </FormItem>
+                    </AntFormItem>
                 </AntDesign.Col>
             </Row>
             <AntBlocklyForm TEntity="Topic" TForm="TopicForm" @bind-Value="context.Entity.Blocks" Form="context" Options="context.BlocksOptions"></AntBlocklyForm>

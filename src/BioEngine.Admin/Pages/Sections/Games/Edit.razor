@@ -37,21 +37,19 @@
         <ChildContent>
             <Row Gutter="24">
                 <AntDesign.Col Span="12">
-                    <FormItem Label="Название">
+                    <AntFormItem Label="Название" Hint="Название игры">
                         <Input @bind-Value="@context.Entity.Title" OnkeyUp="context.TitleChanged" Placeholder="Название игры"/>
-                        <Text Type="secondary">Название игры</Text>
-                    </FormItem>
+                    </AntFormItem>
                 </AntDesign.Col>
                 <AntDesign.Col Span="12">
-                    <FormItem Label="Адрес">
+                    <AntFormItem Label="Адрес" Hint="Адрес игры на сайте — https://www.bioware.ru/games/gamename.html">
                         <Input @bind-Value="@context.Entity.Url" Placeholder="gamename"/>
-                        <Text Type="secondary">Адрес игры на сайте — https://www.bioware.ru/games/gamename.html</Text>
-                    </FormItem>
+                    </AntFormItem>
                 </AntDesign.Col>
             </Row>
             <Row Gutter="24">
                 <AntDesign.Col Span="12">
-                    <FormItem Label="Сайты">
+                    <AntFormItem Label="Сайты" Hint="Сайты, на которых отображать игру">
                         <Select Mode="multiple"
                                 DataSource="@context.SitesList"
                                 @bind-Value="@context.DummySiteId"
@@ -65,22 +63,19 @@
                                 EnableSearch
                                 AllowClear>
                         </Select>
-                        <Text Type="secondary">Сайты, на которых отображать игру</Text>
-                    </FormItem>
+                    </AntFormItem>
                 </AntDesign.Col>
                 <AntDesign.Col Span="12">
-                    <FormItem Label="Хештег">
+                    <AntFormItem Label="Хештег" Hint="Хештег для публикации в соцсетях">
                         <Input @bind-Value="@context.Entity.Data.Hashtag" Placeholder="gamename"/>
-                        <Text Type="secondary">Хештег для публикации в соцсетях</Text>
-                    </FormItem>
+                    </AntFormItem>
                 </AntDesign.Col>
             </Row>
             <Row Gutter="24">
                 <AntDesign.Col Span="12">
-                    <FormItem Label="Картинка в шапку">
+                    <AntFormItem Label="Картинка в шапку" Hint="Картинка в шапке на странице игры">
                         <AntStorageImageInput @bind-Value="@context.Entity.Data.HeaderPicture" Storage="@context.Storage" UploadPath="/games" GenerateMetadata="@StorageUploadExtensions.GenerateMetadataAsync"></AntStorageImageInput>
-                        <Text Type="secondary">Картинка в шапке на странице игры</Text>
-                    </FormItem>
+                    </AntFormItem>
                 </AntDesign.Col>
             </Row>
             <AntBlocklyForm TEntity="Game" TForm="GameForm" @bind-Value="context.Entity.Blocks" Form="context" Options="context.BlocksOptions"></AntBlocklyForm>
