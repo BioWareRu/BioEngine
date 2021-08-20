@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/BioWareRu/BioEngine/compare/v1.4.0...v1.5.0) (2021-08-20)
+
+
+### Features
+
+* **ipb:** refresh expired tokens ([d4376ee](https://github.com/BioWareRu/BioEngine/commit/d4376ee1c90bb873cf628f0b6e6aeb6bbec35fd8))
+
 # [1.4.0](https://github.com/BioWareRu/BioEngine/compare/v1.3.0...v1.4.0) (2021-08-20)
 
 
