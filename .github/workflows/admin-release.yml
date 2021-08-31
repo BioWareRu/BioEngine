@@ -83,5 +83,6 @@ jobs:
           script_stop: true
           script: |
             export VERSION=${{ steps.prep.outputs.version }}
+            export VAULT__TOKEN=$(docker exec -e VAULT_TOKEN=$(docker exec ${{ secrets.VAULT_CONTAINER }} vault login -method=userpass -token-only -no-store username=${{ secrets.VAULT_USERNAME }} password=${{ secrets.VAULT_PASSWORD }}) ${{ secrets.VAULT_CONTAINER }} vault token create -policy=${{ secrets.VAULT_POLICY }} --orphan -field=token)
             cd ${{ secrets.HOST_WORKING_DIR }}
             ./${{ secrets.HOST_COMPOSE_SCRIPT }} up -d ${{ secrets.SERVICE_NAME_ADMIN }}
