@@ -6,5 +6,7 @@ namespace BioEngine.Admin.Shared
     {
         protected abstract string Title { get; }
         protected string PageTitle => $"{Title} / BRC Admin";
+
+        public override ScopeType ScopeType { get; set; } = ScopeType.Isolated;
     }
 }
