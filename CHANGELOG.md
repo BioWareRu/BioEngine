@@ -1,3 +1,11 @@
+## [1.5.1](https://github.com/BioWareRu/BioEngine/compare/v1.5.0...v1.5.1) (2021-08-31)
+
+
+### Bug Fixes
+
+* **admin:** run every page in isolated scope ([8a4d1e6](https://github.com/BioWareRu/BioEngine/commit/8a4d1e6bb4d38464c7dad74c11af91fb4241ac1a))
+* **ci:** generate vault token on deploy ([8692f69](https://github.com/BioWareRu/BioEngine/commit/8692f695e2d82cb0bc59861e748339ed41b343ad))
+
 # [1.5.0](https://github.com/BioWareRu/BioEngine/compare/v1.4.0...v1.5.0) (2021-08-20)
 
 
