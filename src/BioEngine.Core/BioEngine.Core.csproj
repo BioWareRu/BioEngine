@@ -6,7 +6,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AntDesign.ProLayout" Version="0.1.6" />
-    <PackageReference Include="Sitko.Core.App.Blazor" Version="8.0.0-preview.65" />
+    <PackageReference Include="Sitko.Core.App.Blazor" Version="8.2.0" />
     <PackageReference Include="Sitko.Core.Blazor.AntDesign" Version="8.0.0-preview.65" />
     <PackageReference Include="Sitko.Core.Configuration.Vault" Version="8.0.0-preview.65" />
     <PackageReference Include="Sitko.Core.Db.Postgres" Version="8.0.0-preview.65" />
