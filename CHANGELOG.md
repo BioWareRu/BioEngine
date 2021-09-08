@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/BioWareRu/BioEngine/compare/v1.5.1...v1.6.0) (2021-09-08)
+
+
+### Features
+
+* **core:** upd Sitko.Core and Sitko.Blockly ([648bffb](https://github.com/BioWareRu/BioEngine/commit/648bffbd06d2eac1e393babe27322554887d4a3a))
+
 ## [1.5.1](https://github.com/BioWareRu/BioEngine/compare/v1.5.0...v1.5.1) (2021-08-31)
 
 
