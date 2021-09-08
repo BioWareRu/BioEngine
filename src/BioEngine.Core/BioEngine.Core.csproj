@@ -6,18 +6,18 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AntDesign.ProLayout" Version="0.1.6" />
-    <PackageReference Include="Sitko.Core.App.Blazor" Version="8.0.0-preview.65" />
-    <PackageReference Include="Sitko.Core.Blazor.AntDesign" Version="8.0.0-preview.65" />
-    <PackageReference Include="Sitko.Core.Configuration.Vault" Version="8.0.0-preview.65" />
-    <PackageReference Include="Sitko.Core.Db.Postgres" Version="8.0.0-preview.65" />
-    <PackageReference Include="Sitko.Core.ElasticStack" Version="8.0.0-preview.65" />
-    <PackageReference Include="Sitko.Core.Storage.S3" Version="8.0.0-preview.65" />
-    <PackageReference Include="Sitko.Core.Storage.Metadata.Postgres" Version="8.0.0-preview.65" />
-    <PackageReference Include="Sitko.Core.Storage.ImgProxy" Version="8.0.0-preview.65" />
-    <PackageReference Include="Sitko.Core.Repository.EntityFrameworkCore" Version="8.0.0-preview.65" />
-    <PackageReference Include="Sitko.Core.Search.ElasticSearch" Version="8.0.0-preview.65" />
-    <PackageReference Include="Sitko.Blockly.AntDesign" Version="1.0.0-preview.31" />
-    <PackageReference Include="Sitko.Blockly.EntityFrameworkCore" Version="1.0.0-preview.31" />
+    <PackageReference Include="Sitko.Core.App.Blazor" Version="8.2.0" />
+    <PackageReference Include="Sitko.Core.Blazor.AntDesign" Version="8.2.0" />
+    <PackageReference Include="Sitko.Core.Configuration.Vault" Version="8.2.0" />
+    <PackageReference Include="Sitko.Core.Db.Postgres" Version="8.2.0" />
+    <PackageReference Include="Sitko.Core.ElasticStack" Version="8.2.0" />
+    <PackageReference Include="Sitko.Core.Storage.S3" Version="8.2.0" />
+    <PackageReference Include="Sitko.Core.Storage.Metadata.Postgres" Version="8.2.0" />
+    <PackageReference Include="Sitko.Core.Storage.ImgProxy" Version="8.2.0" />
+    <PackageReference Include="Sitko.Core.Repository.EntityFrameworkCore" Version="8.2.0" />
+    <PackageReference Include="Sitko.Core.Search.ElasticSearch" Version="8.2.0" />
+    <PackageReference Include="Sitko.Blockly.AntDesign" Version="1.0.0-preview.35" />
+    <PackageReference Include="Sitko.Blockly.EntityFrameworkCore" Version="1.0.0-preview.35" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="6.0.0-preview.7.21378.6" />
     <PackageReference Include="Flurl.Http" Version="3.2.0" />
   </ItemGroup>

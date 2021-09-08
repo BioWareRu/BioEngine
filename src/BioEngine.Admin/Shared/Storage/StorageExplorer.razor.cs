@@ -30,7 +30,7 @@ namespace BioEngine.Admin.Shared.Storage
 
             foreach (var sort in request.Sort)
             {
-                query = sort(query);
+                query = sort.Operation(query);
             }
 
             return (query.ToArray(), items.Length);
