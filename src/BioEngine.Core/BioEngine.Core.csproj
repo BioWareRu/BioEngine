@@ -12,7 +12,7 @@
     <PackageReference Include="Sitko.Core.Db.Postgres" Version="8.2.0" />
     <PackageReference Include="Sitko.Core.ElasticStack" Version="8.2.0" />
     <PackageReference Include="Sitko.Core.Storage.S3" Version="8.2.0" />
-    <PackageReference Include="Sitko.Core.Storage.Metadata.Postgres" Version="8.2.0" />
+    <PackageReference Include="Sitko.Core.Storage.Metadata.Postgres" Version="8.9.0" />
     <PackageReference Include="Sitko.Core.Storage.ImgProxy" Version="8.2.0" />
     <PackageReference Include="Sitko.Core.Repository.EntityFrameworkCore" Version="8.2.0" />
     <PackageReference Include="Sitko.Core.Search.ElasticSearch" Version="8.2.0" />
