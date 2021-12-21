@@ -10,7 +10,7 @@
     <PackageReference Include="Sitko.Core.Blazor.AntDesign" Version="8.2.0" />
     <PackageReference Include="Sitko.Core.Configuration.Vault" Version="8.2.0" />
     <PackageReference Include="Sitko.Core.Db.Postgres" Version="8.2.0" />
-    <PackageReference Include="Sitko.Core.ElasticStack" Version="8.2.0" />
+    <PackageReference Include="Sitko.Core.ElasticStack" Version="8.32.0" />
     <PackageReference Include="Sitko.Core.Storage.S3" Version="8.2.0" />
     <PackageReference Include="Sitko.Core.Storage.Metadata.Postgres" Version="8.2.0" />
     <PackageReference Include="Sitko.Core.Storage.ImgProxy" Version="8.2.0" />
