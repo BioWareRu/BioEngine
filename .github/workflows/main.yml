@@ -19,7 +19,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Install node.js
-        uses: actions/setup-node@v2.4.0
+        uses: actions/setup-node@v3.1.1
         with:
           node-version: '15'
           cache: 'npm'
@@ -68,7 +68,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: Install node.js
-        uses: actions/setup-node@v2.4.0
+        uses: actions/setup-node@v3.1.1
         with:
           node-version: '15'
       - name: Semantic Release
