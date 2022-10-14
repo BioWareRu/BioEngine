@@ -26,7 +26,7 @@ jobs:
           cache-dependency-path: |
             src/${{ env.PROJECT }}/Web/package.json
       - name: Install .NET 6.0.x
-        uses: actions/setup-dotnet@v1.8.1
+        uses: actions/setup-dotnet@v3.0.2
         with:
           dotnet-version: '6.0.x'
           include-prerelease: true
