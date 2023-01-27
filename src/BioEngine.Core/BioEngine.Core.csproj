@@ -13,7 +13,7 @@
     <PackageReference Include="Sitko.Core.ElasticStack" Version="8.2.0" />
     <PackageReference Include="Sitko.Core.Storage.S3" Version="8.2.0" />
     <PackageReference Include="Sitko.Core.Storage.Metadata.Postgres" Version="8.2.0" />
-    <PackageReference Include="Sitko.Core.Storage.ImgProxy" Version="8.2.0" />
+    <PackageReference Include="Sitko.Core.Storage.ImgProxy" Version="10.2.0" />
     <PackageReference Include="Sitko.Core.Repository.EntityFrameworkCore" Version="8.2.0" />
     <PackageReference Include="Sitko.Core.Search.ElasticSearch" Version="8.2.0" />
     <PackageReference Include="Sitko.Blockly.AntDesign" Version="1.0.0-preview.35" />
